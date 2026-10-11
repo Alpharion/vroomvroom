@@ -24,8 +24,10 @@ _POLICY_DOC_PATH = (
     Path(__file__).resolve().parents[2] / "docs" / "ryde_dispute_policy.md"
 )
 
-# Heading regex: ### <ID> — <title>  or  ### <ID> - <title>
-_HEADING_RE = re.compile(r"^###\s+([A-Z]+-\d+\.\d+)\s*[—–-]\s*(.+)$")
+# Heading regex: ### <ID> — <title>
+# Matches any dash-like character (em-dash, en-dash, hyphen, minus sign, etc.)
+# so the parser doesn't break when the doc uses a different dash variant.
+_HEADING_RE = re.compile(r"^###\s+([A-Z]+-\d+\.\d+)\s*[\u2010-\u2015\u2212\u002d]\s*(.+)$")
 
 # Whitelisted dispute_ticket fields for case_summary.
 _TICKET_WHITELIST = ("dispute_id", "dispute_type", "filed_by", "description")
