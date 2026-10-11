@@ -49,7 +49,7 @@ def load_policy_clauses() -> dict[str, str]:
     if _POLICY_CLAUSES is not None:
         return _POLICY_CLAUSES
 
-    text = _POLICY_DOC_PATH.read_text()
+    text = _POLICY_DOC_PATH.read_text(encoding="utf-8")
     lines = text.splitlines()
 
     clauses: dict[str, str] = {}
