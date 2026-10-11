@@ -13,6 +13,8 @@ AGENT_STYLES = {
     "system": {"icon": "⚙️", "color": "#5f6368", "label": "System"},
 }
 
+LOG_HEIGHT = 450  # px; the log scrolls inside a fixed-height window
+
 TYPE_ICONS = {
     "evidence": "🔍",
     "argument": "📋",
@@ -58,6 +60,27 @@ def render_courtroom_log(messages: list[dict[str, Any]]) -> None:
     st.subheader("Courtroom")
     st.caption("Agents build their cases in real time")
 
-    with st.container():
+    with st.container(height=LOG_HEIGHT, border=True):
         for msg in messages:
             render_message(msg)
+
+
+def render_briefs(briefs: list[dict[str, Any]]) -> None:
+    """Show each advocate's structured brief: position, cited arguments, weaknesses."""
+    with st.expander("Advocate briefs (evidence and clauses cited)"):
+        cols = st.columns(len(briefs)) if briefs else []
+        for col, brief in zip(cols, sorted(briefs, key=lambda b: b.get("side", ""), reverse=True)):
+            style = AGENT_STYLES.get(f"{brief.get('side')}_advocate", AGENT_STYLES["system"])
+            with col:
+                st.markdown(f"**{style['icon']} {style['label']}**")
+                st.markdown(f"_{brief.get('position', '')}_")
+                for arg in brief.get("arguments", []):
+                    st.markdown(f"- {arg.get('point', '')}")
+                    refs = ", ".join(f"`{r}`" for r in arg.get("evidence_refs", []))
+                    clauses = ", ".join(f"`{c}`" for c in arg.get("clauses", []))
+                    st.caption(f"Evidence: {refs} · Clauses: {clauses}")
+                weaknesses = brief.get("weaknesses_acknowledged") or []
+                if weaknesses:
+                    st.markdown("**Weaknesses acknowledged**")
+                    for w in weaknesses:
+                        st.markdown(f"- {w}")
