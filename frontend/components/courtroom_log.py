@@ -13,6 +13,8 @@ AGENT_STYLES = {
     "system": {"icon": "⚙️", "color": "#5f6368", "label": "System"},
 }
 
+LOG_HEIGHT = 450  # px; the log scrolls inside a fixed-height window
+
 TYPE_ICONS = {
     "evidence": "🔍",
     "argument": "📋",
@@ -58,7 +60,7 @@ def render_courtroom_log(messages: list[dict[str, Any]]) -> None:
     st.subheader("Courtroom")
     st.caption("Agents build their cases in real time")
 
-    with st.container():
+    with st.container(height=LOG_HEIGHT, border=True):
         for msg in messages:
             render_message(msg)
 

@@ -27,7 +27,7 @@ from state import (
     stream_events,
 )
 from components.dispute_form import render_dispute_form
-from components.courtroom_log import render_courtroom_log, render_briefs, _message_html
+from components.courtroom_log import LOG_HEIGHT, render_courtroom_log, render_briefs, _message_html
 from components.ruling_cards import render_ruling_card, render_evidence_card
 
 st.set_page_config(
@@ -91,7 +91,8 @@ def main() -> None:
         st.subheader("Courtroom")
         st.caption("Agents build their cases in real time")
 
-        courtroom_placeholder = st.empty()
+        with st.container(height=LOG_HEIGHT, border=True):
+            courtroom_placeholder = st.empty()
         status_placeholder = st.empty()
 
         accumulated_html = ""
