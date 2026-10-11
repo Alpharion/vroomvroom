@@ -53,20 +53,27 @@ def _mock_stream():
     for msg in load_mock_agent_log():
         time.sleep(random.uniform(0.6, 1.2))
         yield msg
+    for ev in load_mock_evidence():
+        yield {"type": "evidence_data", "data": ev}
+    yield {"type": "ruling_data", "data": load_mock_ruling()}
 
 
-def stream_agent_log(dispute_payload: dict[str, Any], demo_mode: bool = True):
-    """Yield agent log messages.
+def stream_events(dispute_payload: dict[str, Any], demo_mode: bool = True):
+    """Yield every stream event as a dict.
+
+    Event shapes (see docs/team-brief.md "API contract"): agent log lines
+    (have an ``agent`` key), ``evidence_data``, ``brief_data``, ``ruling_data``
+    and ``error``.
 
     In demo mode, replays the mock log with simulated delays. Otherwise streams
-    NDJSON from the backend and raises BackendError on any failure, so the UI
-    never passes off mock data as a real ruling.
+    NDJSON from the backend and raises BackendError on any failure (including an
+    ``error`` event), so the UI never passes off mock data as a real ruling.
     """
     if demo_mode:
         yield from _mock_stream()
         return
 
-    timeout = httpx.Timeout(connect=5.0, read=120.0, write=10.0, pool=5.0)
+    timeout = httpx.Timeout(connect=5.0, read=180.0, write=10.0, pool=5.0)
     try:
         with httpx.Client(timeout=timeout) as client:
             with client.stream(
@@ -76,10 +83,18 @@ def stream_agent_log(dispute_payload: dict[str, Any], demo_mode: bool = True):
             ) as resp:
                 resp.raise_for_status()
                 for line in resp.iter_lines():
-                    if line:
-                        yield json.loads(line)
+                    if not line:
+                        continue
+                    event = json.loads(line)
+                    if event.get("type") == "error":
+                        raise BackendError(f"Backend error: {event.get('content', 'unknown')}.")
+                    yield event
     except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            raise BackendError("Unknown dispute ID: the backend has no case with that ID.") from e
         raise BackendError(f"Backend returned HTTP {e.response.status_code}.") from e
+    except httpx.TimeoutException as e:
+        raise BackendError("The backend took too long to respond.") from e
     except httpx.HTTPError as e:
         raise BackendError(f"Could not reach the backend at {BACKEND_URL}.") from e
     except json.JSONDecodeError as e:

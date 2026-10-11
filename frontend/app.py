@@ -24,7 +24,7 @@ from state import (
     load_mock_agent_log,
     load_mock_evidence,
     load_mock_ruling,
-    stream_agent_log,
+    stream_events,
 )
 from components.dispute_form import render_dispute_form
 from components.courtroom_log import render_courtroom_log, _message_html
@@ -91,21 +91,36 @@ def main() -> None:
 
         accumulated_html = ""
         failed = False
-        with status_placeholder.status("Resolving dispute...", expanded=True) as status:
+        live_evidence: list = []
+        live_ruling = None
+        with status_placeholder.status(
+            "Gathering evidence and briefing the advocates (this can take up to a minute)...",
+            expanded=True,
+        ) as status:
             try:
-                for msg in stream_agent_log(
+                for event in stream_events(
                     st.session_state.get("payload") or {}, demo_mode=st.session_state.demo_mode
                 ):
-                    st.session_state.agent_log.append(msg)
-                    accumulated_html += _message_html(msg)
-                    courtroom_placeholder.markdown(accumulated_html, unsafe_allow_html=True)
-                # TODO: use real evidence/ruling from the stream once the contract is agreed
-                st.session_state.evidence = load_mock_evidence()
-                st.session_state.ruling = load_mock_ruling()
+                    kind = event.get("type")
+                    if kind == "evidence_data":
+                        live_evidence.append(event["data"])
+                    elif kind == "ruling_data":
+                        live_ruling = event["data"]
+                    elif kind == "brief_data":
+                        pass  # advocate positions already arrive as log lines
+                    elif "agent" in event:
+                        st.session_state.agent_log.append(event)
+                        accumulated_html += _message_html(event)
+                        courtroom_placeholder.markdown(accumulated_html, unsafe_allow_html=True)
+                if live_ruling is None:
+                    raise BackendError("The stream ended without a ruling.")
+                st.session_state.evidence = live_evidence
+                st.session_state.ruling = live_ruling
                 status.update(label="Resolution complete", state="complete")
             except BackendError as e:
                 failed = True
                 st.session_state.error = str(e)
+                st.session_state.evidence = live_evidence
                 status.update(label="Resolution failed", state="error")
         st.session_state.resolving = False
         if not failed:

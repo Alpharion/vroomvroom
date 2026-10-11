@@ -29,6 +29,7 @@ TOOL_LABELS = {
     "route_deviation": "Route Deviation",
     "fare_validate": "Fare Validation",
     "history_lookup": "History Lookup",
+    "safety_check": "Safety Check",
 }
 
 TOOL_ICONS = {
@@ -36,6 +37,7 @@ TOOL_ICONS = {
     "route_deviation": "🗺️",
     "fare_validate": "💳",
     "history_lookup": "📋",
+    "safety_check": "🛡️",
 }
 
 
