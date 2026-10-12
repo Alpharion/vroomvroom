@@ -93,13 +93,19 @@ _CSS = """
 .stApp [data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"]):not(:has([data-testid="stVerticalBlockBorderWrapper"])){
   border-radius:22px;}
 .stApp [data-testid="stVerticalBlock"]{border-color:var(--line-strong)!important;scrollbar-color:var(--line-strong) transparent;}
-.stApp [class*="st-key-evcard"]{background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:14px 16px;
-  box-shadow:var(--shadow);}
-.vp-facts{line-height:1.35;}
-.vp-fact{padding:3px 0;color:var(--fg);}
-.vp-fact.head{margin-top:6px;}
-.vp-fact b{font-weight:700;}
-.vp-scrollhint{color:var(--muted);font-size:.8rem;margin:6px 0 0;display:flex;align-items:center;gap:6px;}
+.stApp [class*="st-key-evcard"]{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;
+  padding:0;box-shadow:var(--shadow);transition:transform .15s,border-color .15s,box-shadow .15s;cursor:pointer;}
+.stApp [class*="st-key-evcard"]:hover{transform:translateY(-3px);border-color:var(--accent);}
+.stApp [class*="st-key-evcard"]:has(button:focus-visible){outline:3px solid var(--accent);outline-offset:2px;}
+.stApp [class*="st-key-evbtn"]{position:absolute!important;inset:0;width:100%!important;height:100%!important;margin:0!important;z-index:3;}
+.stApp [class*="st-key-evbtn"] :is([data-testid="stButton"],div){width:100%;height:100%;}
+.stApp [class*="st-key-evbtn"] button{width:100%;height:100%;opacity:0;cursor:pointer;border-radius:18px;}
+.vp-evcard{display:flex;flex-direction:column;height:340px;padding:16px 18px 12px;}
+.vp-evhead{font-family:var(--font-display);font-weight:600;font-size:1.25rem;color:var(--fg);margin-bottom:8px;}
+.vp-evflags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.vp-evbody{flex:1;min-height:0;overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent);}
+.vp-evhint{color:var(--accent);font-size:.82rem;font-weight:800;padding-top:8px;}
 .stApp .st-key-view_you,.stApp [class*="st-key-view_other"]{background:var(--surface);border:1px solid var(--line-strong);
   border-radius:22px;padding:20px;box-shadow:var(--shadow);}
 .stApp .st-key-view_you{border:2px solid var(--accent)!important;}
