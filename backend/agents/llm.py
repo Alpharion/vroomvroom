@@ -96,7 +96,7 @@ def _cache_read(key: str, cache_dir: Path | None = None) -> LLMResult | None:
     path = _cache_path(key, cache_dir)
     if not path.is_file():
         return None
-    data = json.loads(path.read_text())
+    data = json.loads(path.read_text(encoding="utf-8"))
     return LLMResult(
         text=data["text"],
         input_tokens=data.get("input_tokens"),
@@ -113,7 +113,7 @@ def _cache_write(key: str, result: LLMResult, cache_dir: Path | None = None) -> 
     # original live result, not the cached flag.
     data = asdict(result)
     data["cached"] = False
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 # ---------- SSE parser ----------

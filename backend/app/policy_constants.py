@@ -41,3 +41,9 @@ SAFETY_KEYWORDS = [
 # Confidence / escalation (E-1.6)
 AUTO_RULING_THRESHOLD = 0.85
 SPOT_CHECK_THRESHOLD = 0.70
+
+# Human review queue SLA routing (PROPOSED, team brief: "urgent or
+# high-value disputes get prioritised"; Ryde's current turnaround is 24-72 h)
+HIGH_VALUE_DISPUTE_SGD = 30.00  # charged fare at or above this is high priority
+SLA_HOURS_HIGH = 4  # safety incidents and high-value disputes
+SLA_HOURS_NORMAL = 24
