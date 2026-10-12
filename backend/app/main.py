@@ -21,6 +21,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from agents.graph import dispute_graph
+from app.review_queue import ReviewDecision, review_queue
 from schemas import AdvocateBrief, AgentLogMessage, Argument, DisputeCase, EvidenceOutput, Ruling
 from tools.history_lookup import history_lookup
 from tools.no_show_check import compute_no_show_outcome, no_show_check
@@ -94,7 +95,7 @@ def _load_case_index() -> dict[str, DisputeCase]:
             if m is None:
                 continue
             tc_key = m.group(1)  # e.g. "TC-01"
-            case = DisputeCase.model_validate_json(path.read_text())
+            case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
             index[tc_key] = case
             dispute_id = case.dispute_ticket.dispute_id
             if dispute_id not in index:
@@ -104,7 +105,7 @@ def _load_case_index() -> dict[str, DisputeCase]:
     for path in sorted(_DATA_DIR.glob("*.json")):
         if path.name.endswith(".expected.json"):
             continue
-        case = DisputeCase.model_validate_json(path.read_text())
+        case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
         index[case.dispute_ticket.dispute_id] = case
 
     return index
@@ -126,7 +127,7 @@ def _lookup_case(dispute_id: str) -> DisputeCase:
 
 def _load_mock_agent_log() -> list[dict[str, Any]]:
     if _MOCK_AGENT_LOG_PATH.is_file():
-        return json.loads(_MOCK_AGENT_LOG_PATH.read_text())
+        return json.loads(_MOCK_AGENT_LOG_PATH.read_text(encoding="utf-8"))
     return []
 
 
@@ -315,6 +316,7 @@ async def _stub_stream(case: DisputeCase):
             conduct_flag=conduct,
             missing_evidence=missing,
         )
+        review_queue.remember_result(case, ruling, evidence_outputs)
         yield json.dumps({
             "type": "ruling_data",
             "data": ruling.model_dump(mode="json"),
@@ -356,6 +358,7 @@ def _ruling_summary(ruling: Ruling) -> str:
 async def _agent_stream(case: DisputeCase, driver_first: bool):
     """Stream the LangGraph run node by node in the agreed NDJSON format."""
     seq = 0
+    evidence: list[EvidenceOutput] = []
     try:
         async for update in dispute_graph.astream(
             {"case": case, "driver_first": driver_first},
@@ -364,7 +367,8 @@ async def _agent_stream(case: DisputeCase, driver_first: bool):
             for node, out in update.items():
                 out = out or {}
                 if node == "gather_evidence":
-                    for ev in out["evidence"]:
+                    evidence = out["evidence"]
+                    for ev in evidence:
                         seq += 1
                         yield _log(seq, "system", "evidence", _evidence_summary(ev))
                         yield _line({"type": "evidence_data", "data": ev.model_dump(mode="json")})
@@ -378,6 +382,7 @@ async def _agent_stream(case: DisputeCase, driver_first: bool):
                     yield _line({"type": "brief_data", "data": brief.model_dump(mode="json")})
                 elif node == "judge":
                     ruling = out["ruling"]
+                    review_queue.remember_result(case, ruling, evidence)
                     seq += 1
                     yield _log(seq, "judge", "ruling", _ruling_summary(ruling))
                     yield _line({"type": "ruling_data", "data": ruling.model_dump(mode="json")})
@@ -402,7 +407,40 @@ async def resolve_dispute(req: ResolveRequest):
         stream = _stub_stream(case)
     else:
         stream = _agent_stream(case, req.driver_first)
-    return StreamingResponse(stream, media_type="application/x-ndjson")
+    # Stop proxies and gateways from buffering the stream, which would hold
+    # back each agent message until the whole hearing has finished.
+    return StreamingResponse(
+        stream,
+        media_type="application/x-ndjson",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# ---------- Human review queue ----------
+
+
+@app.get("/api/review-queue")
+def list_review_queue():
+    """Escalated and appealed disputes: pending first, high priority first."""
+    return review_queue.list_items()
+
+
+@app.post("/api/review-queue/{dispute_id}/decision")
+def decide_review(dispute_id: str, decision: ReviewDecision):
+    """A reviewer approves or overrides the pending item for *dispute_id*."""
+    item = review_queue.decide(dispute_id, decision)
+    if item is None:
+        raise HTTPException(status_code=404, detail=f"No pending review for {dispute_id}")
+    return item
+
+
+@app.post("/api/review-queue/{dispute_id}/appeal")
+def appeal_ruling(dispute_id: str):
+    """The filer asks for a person to review the latest AI ruling."""
+    item = review_queue.appeal(dispute_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail=f"No ruling yet for {dispute_id}")
+    return item
 
 
 @app.get("/health")

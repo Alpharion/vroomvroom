@@ -472,3 +472,83 @@ def test_relevant_clauses_trimmed_for_agents():
     rd23 = relevant_clauses("route_deviation")["RD-2.3"]
     assert "Judge LLM makes the final intent determination." in rd23
     assert "**Expected outcome:**" in rd23
+
+
+# ---------- 9. Advocate evidence refs: case summary fields, graceful drop ----------
+
+
+@pytest.mark.asyncio
+async def test_advocate_may_cite_case_summary_fields():
+    """TC-06 live run: the driver advocate cited app_events.7.details."""
+    case = _load_tc("TC-06")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    refs = ["app_events.7.details", "chat_logs.0", "trip_data.fare_breakdown", "route_deviation.deviation_pct"]
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(_make_advocate_json("driver", "x", refs, ["RD-2.3"]))
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat) as chat:
+        brief = await run_advocate("driver", case, evidence, clauses)
+    assert chat.call_count == 1
+    assert brief.arguments[0].evidence_refs == refs
+
+
+@pytest.mark.asyncio
+async def test_advocate_drops_bad_citations_after_retry():
+    """Two replies with a bad ref: drop it instead of failing the dispute."""
+    case = _load_tc("TC-06")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    reply = json.dumps({
+        "dispute_id": "x", "side": "rider", "position": "p",
+        "arguments": [
+            {"point": "kept", "evidence_refs": ["chat_logs.999", "route_deviation.deviation_pct"], "clauses": ["RD-2.2", "XX-9"]},
+            {"point": "dropped", "evidence_refs": ["app_events.999"], "clauses": ["RD-2.2"]},
+        ],
+    })
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(reply)
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat) as chat:
+        brief = await run_advocate("rider", case, evidence, clauses)
+    assert chat.call_count == 2
+    assert [a.point for a in brief.arguments] == ["kept"]
+    assert brief.arguments[0].evidence_refs == ["route_deviation.deviation_pct"]
+    assert brief.arguments[0].clauses == ["RD-2.2"]
+
+
+@pytest.mark.asyncio
+async def test_advocate_fails_when_no_argument_survives():
+    case = _load_tc("TC-06")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(_make_advocate_json("rider", "x", ["nothing.here"], ["RD-2.2"]))
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat):
+        with pytest.raises(LLMError, match="no argument has a valid citation"):
+            await run_advocate("rider", case, evidence, clauses)
+
+
+@pytest.mark.asyncio
+async def test_advocate_trims_overlong_reply_after_retry():
+    """TC-06 live run: a position over 200 characters twice failed the dispute."""
+    case = _load_tc("TC-06")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    reply = json.loads(_make_advocate_json("rider", "x", ["route_deviation.deviation_pct"], ["RD-2.3"]))
+    reply["position"] = "The rider asked for this route " * 10
+    reply["arguments"] = reply["arguments"] * 7
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(json.dumps(reply))
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat) as chat:
+        brief = await run_advocate("rider", case, evidence, clauses)
+    assert chat.call_count == 2
+    assert len(brief.position) <= 200
+    assert brief.position.endswith("…")
+    assert len(brief.arguments) == 5

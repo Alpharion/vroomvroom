@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,12 @@ try:
 except Exception:
     BACKEND_URL = "http://localhost:8000"
     DEFAULT_DEMO_MODE = True
+
+# Environment variables win over secrets.toml, so a deployed container can be
+# configured without a secrets file (see Dockerfile.frontend).
+BACKEND_URL = os.environ.get("BACKEND_URL", BACKEND_URL).rstrip("/")
+if "DEMO_MODE" in os.environ:
+    DEFAULT_DEMO_MODE = os.environ["DEMO_MODE"].strip().lower() == "true"
 
 
 def load_mock_ruling() -> dict[str, Any]:

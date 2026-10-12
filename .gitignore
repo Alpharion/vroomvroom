@@ -32,3 +32,6 @@ backend/.llm_cache/
 
 # ADP smoke test raw response (local only)
 backend/scripts/adp_raw_response.txt
+
+# Human review queue (local only)
+backend/.review_queue.json

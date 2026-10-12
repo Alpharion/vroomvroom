@@ -97,7 +97,7 @@ def main() -> None:
                         sys.exit(1)
 
     raw_body = "\n".join(raw_chunks)
-    _RAW_OUTPUT.write_text(raw_body)
+    _RAW_OUTPUT.write_text(raw_body, encoding="utf-8")
     print(f"Raw response saved to {_RAW_OUTPUT} ({len(raw_body)} bytes)")
     print(f"Reply text: {reply_text!r}")
     if reply_text.strip().upper() == "PONG":

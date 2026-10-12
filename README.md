@@ -48,3 +48,27 @@ log streams real agent messages from `POST /api/disputes/resolve`.
 
 Copy `.streamlit/secrets.example.toml` to `.streamlit/secrets.toml` to point at a
 non-default backend URL.
+
+## Deploy
+
+Two services, each with a Dockerfile at the repo root. Build both **from the repo
+root** (they read `data/` and `docs/`). Configuration comes from environment
+variables; `.env`, `secrets.toml` and local caches are excluded by `.dockerignore`.
+
+| Service | Build | Port | Environment variables |
+|---|---|---|---|
+| Backend (FastAPI) | `docker build -f Dockerfile.backend -t vroomvroom-backend .` | 8000 | `ADP_APP_KEY` (secret), `USE_MOCK_LLM=false`. Leave `USE_STUB_AGENTS` unset. |
+| Frontend (Streamlit) | `docker build -f Dockerfile.frontend -t vroomvroom-frontend .` | 8501 | `BACKEND_URL=https://<backend address>`, `DEMO_MODE=false` |
+
+Both honour `PORT` if the platform sets it. Check the backend with `GET /health`.
+
+- **CloudBase Run:** create one service per Dockerfile; set the build context to the
+  repo root and the Dockerfile path to `Dockerfile.backend` / `Dockerfile.frontend`.
+- **Lighthouse (one VM):** run both containers, e.g.
+  `docker run -d -p 8000:8000 -e ADP_APP_KEY=... -e USE_MOCK_LLM=false vroomvroom-backend` and
+  `docker run -d -p 80:8501 -e BACKEND_URL=http://<vm-ip>:8000 -e DEMO_MODE=false vroomvroom-frontend`.
+
+The agent stream sends nothing for 15–30 s while the advocates run, so set the
+platform's request/idle timeout to at least 120 s. The human review queue is stored
+in `backend/.review_queue.json` inside the container: it survives restarts of the
+process but not a redeploy.

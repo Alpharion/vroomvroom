@@ -1,0 +1,15 @@
+# Secrets and local state never go into an image.
+.env
+.env.*
+!.env.example
+frontend/.streamlit/secrets.toml
+backend/.llm_cache/
+backend/.review_queue.json
+backend/scripts/adp_raw_response.txt
+
+.git
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.venv/
+**/venv/
