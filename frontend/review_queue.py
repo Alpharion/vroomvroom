@@ -77,6 +77,31 @@ def record_escalation(payload: dict[str, Any], ruling: dict[str, Any], evidence:
     )
 
 
+def record_appeal(payload: dict[str, Any], ruling: dict[str, Any], evidence: list[dict[str, Any]]) -> None:
+    """A filer asks for a person to look at an AI ruling. The AI outcome becomes the
+    suggestion, so the reviewer can approve it or override it."""
+    ticket = (payload or {}).get("dispute_ticket", {})
+    dispute_id = ruling.get("dispute_id") or ticket.get("dispute_id")
+    if any(i["dispute_id"] == dispute_id and i["status"] == "pending" for i in _local()):
+        return
+    _local().append(
+        {
+            "dispute_id": dispute_id,
+            "dispute_type": ticket.get("dispute_type"),
+            "filed_by": ticket.get("filed_by"),
+            "description": ticket.get("description"),
+            "priority": _priority(ruling, evidence),
+            "status": "pending",
+            "escalation_reason": f"Appeal: the {ticket.get('filed_by') or 'filer'} asked for a person to review the AI ruling.",
+            "suggested_outcome": ruling.get("outcome"),
+            "suggested_amount_sgd": ruling.get("amount_sgd"),
+            "ruling": ruling,
+            "evidence": evidence,
+            "decision": None,
+        }
+    )
+
+
 def list_queue() -> tuple[list[dict[str, Any]], str]:
     """Return (items, source) where source is "backend" or "local"."""
     try:

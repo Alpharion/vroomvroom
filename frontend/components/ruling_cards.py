@@ -6,6 +6,8 @@ from typing import Any
 
 import streamlit as st
 
+from components.friendly import confidence_label
+
 OUTCOME_LABELS = {
     "refund": "Refund",
     "compensation": "Compensation",
@@ -41,12 +43,11 @@ TOOL_ICONS = {
 }
 
 
-def render_ruling_card(ruling: dict[str, Any], audience: str) -> None:
+def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = False) -> None:
     """Render a ruling card for either the rider or driver perspective."""
     outcome = ruling.get("outcome", "no_action")
     label = OUTCOME_LABELS.get(outcome, outcome)
     color = OUTCOME_COLORS.get(outcome, "#5f6368")
-    confidence = ruling.get("confidence") or 0
     amount = ruling.get("amount_sgd") or 0
     clauses = ruling.get("clauses_cited") or []
     escalated = ruling.get("escalated", False)
@@ -57,7 +58,9 @@ def render_ruling_card(ruling: dict[str, Any], audience: str) -> None:
         else ruling.get("explanation_driver", "")
     )
 
-    title = "Rider View" if audience == "rider" else "Driver View"
+    title = "Rider view" if audience == "rider" else "Driver view"
+    if highlight:
+        title += " · you"
 
     with st.container(border=True):
         st.markdown(f"#### {title}")
@@ -67,20 +70,16 @@ def render_ruling_card(ruling: dict[str, Any], audience: str) -> None:
         )
 
         col1, col2 = st.columns(2)
-        if outcome != "escalate":
+        if not escalated:
             col1.metric("Amount (SGD)", f"${amount:.2f}")
-        col2.metric("Confidence", f"{confidence:.0%}")
+        col2.metric("Confidence", confidence_label(ruling.get("confidence")))
 
-        st.markdown("**Clauses cited**")
-        st.markdown(" ".join(f"`{c}`" for c in clauses) if clauses else "—")
-
-        st.markdown("**Explanation**")
+        st.markdown("**Why**")
         st.info(explanation)
 
-        if escalated:
-            st.warning(
-                f"⚠️ Escalated to human review: {ruling.get('escalation_reason', 'low confidence')}"
-            )
+        if clauses:
+            with st.expander("Policy references"):
+                st.markdown(" ".join(f"`{c}`" for c in clauses))
 
 
 def _format_value(value: Any) -> str:
@@ -95,23 +94,77 @@ def _format_value(value: Any) -> str:
     return html.escape(str(value))
 
 
+FACT_LABELS = {
+    "driver_distance_from_pickup_m": ("Driver distance from pickup", "m"),
+    "driver_within_arrival_radius": ("Driver reached the pickup point", ""),
+    "arrived_minutes_vs_scheduled": ("Arrival vs scheduled time", "min (negative = early)"),
+    "total_wait_min": ("Driver waited", "min"),
+    "free_wait_expired": ("Free wait period used up", ""),
+    "no_show_threshold_reached": ("No-show wait reached", ""),
+    "contact_attempts": ("Driver contact attempts", ""),
+    "rider_replies": ("Rider replies", ""),
+    "minimum_contact_attempts": ("Contact attempts required", ""),
+    "missing_evidence": ("Missing evidence", ""),
+    "baseline_distance_km": ("Direct route", "km"),
+    "actual_distance_km": ("Route taken", "km"),
+    "deviation_pct": ("Extra distance", "%"),
+    "review_triggered": ("Over the deviation limit", ""),
+    "rider_requested_detour": ("Rider asked for a detour", ""),
+    "traffic_justified": ("Traffic explains the detour", ""),
+    "trip_duration_min": ("Trip duration", "min"),
+    "avg_speed_kmh": ("Average speed", "km/h"),
+    "max_speed_kmh": ("Top speed", "km/h"),
+    "actual_fare_sgd": ("Fare charged", "S$"),
+    "per_km_rate_sgd": ("Rate per km", "S$"),
+    "components_sum_sgd": ("Fare parts add up to", "S$"),
+    "breakdown_consistent": ("Fare breakdown adds up", ""),
+    "surge_applied": ("Surge pricing", ""),
+    "fare_type": ("Fare type", ""),
+    "fare_source": ("Fare source", ""),
+    "safety_incident": ("Safety concern", ""),
+    "speeding": ("Speeding", ""),
+    "categories": ("Concerns found", ""),
+    "keyword_hits": ("Concerning words", ""),
+    "avg_rating": ("Average rating", ""),
+    "total_trips": ("Trips", ""),
+    "account_age_days": ("Account age", "days"),
+    "total_disputes": ("Disputes filed", ""),
+    "fraud_flags": ("Fraud flags", ""),
+}
+
+FLAG_LABELS = {
+    "RD_MISSING_EVIDENCE": "Some route evidence is missing",
+    "NS-1.8_MISSING_EVIDENCE": "Some pickup evidence is missing",
+    "FARE_DATA_MISSING": "Some fare details are missing",
+    "RIDER_FRAUD_FLAG": "Rider has a fraud flag on file",
+    "DRIVER_FRAUD_FLAG": "Driver has a fraud flag on file",
+}
+
+
 def _humanize_flag(flag: str) -> str:
+    if flag in FLAG_LABELS:
+        return FLAG_LABELS[flag]
     return flag.replace("_", " ").capitalize() if flag.isupper() else flag
 
 
-def _render_facts(facts: dict[str, Any], depth: int = 0) -> None:
-    """Render a (possibly nested) facts dict as indented key/value lines."""
+def _render_facts(facts: dict[str, Any], depth: int = 0, technical: bool = False) -> None:
+    """Render a (possibly nested) facts dict as indented, labelled lines."""
     indent = "&nbsp;" * 4 * depth
     for key, value in facts.items():
-        display_key = key.replace("_", " ").title()
+        if not technical and (value is None or value == [] or value == {}):
+            continue
+        label, unit = FACT_LABELS.get(key, (key.replace("_", " ").capitalize(), ""))
+        if technical:
+            label = key
         if isinstance(value, dict):
-            st.markdown(f"{indent}**{display_key}**", unsafe_allow_html=True)
-            _render_facts(value, depth + 1)
+            st.markdown(f"{indent}**{label.capitalize() if not technical else label}**", unsafe_allow_html=True)
+            _render_facts(value, depth + 1, technical)
         else:
-            st.markdown(f"{indent}**{display_key}**: {_format_value(value)}", unsafe_allow_html=True)
+            suffix = f" {unit}" if unit and not isinstance(value, bool) and value is not None else ""
+            st.markdown(f"{indent}**{label}**: {_format_value(value)}{suffix}", unsafe_allow_html=True)
 
 
-def render_evidence_card(evidence: dict[str, Any]) -> None:
+def render_evidence_card(evidence: dict[str, Any], technical: bool = False) -> None:
     """Render an evidence tool output card.
 
     Expected schema (see schemas.md §2 Evidence output):
@@ -125,9 +178,10 @@ def render_evidence_card(evidence: dict[str, Any]) -> None:
 
     with st.container(border=True):
         st.markdown(f"#### {icon} {label}")
-        st.caption(f"Dispute {evidence.get('dispute_id', '—')}")
+        if technical:
+            st.caption(f"Dispute {evidence.get('dispute_id', '—')} · tool: {tool}")
 
-        _render_facts(facts)
+        _render_facts(facts, technical=technical)
 
         if flags:
             for flag in flags:

@@ -12,8 +12,6 @@ from components.ruling_cards import OUTCOME_LABELS, render_evidence_card
 from review_queue import list_queue, seed_samples, submit_decision
 from state import DEFAULT_DEMO_MODE
 
-st.set_page_config(page_title="Review Queue — Ryde Track", page_icon="🧑‍⚖️", layout="wide")
-
 DECISION_OUTCOMES = ["charge_reversed", "charge_upheld", "refund", "compensation", "no_action"]
 TYPE_LABELS = {"no_show_charge": "No-Show Charge", "route_deviation": "Route Deviation"}
 
@@ -94,7 +92,7 @@ def _render_item(item: dict, source: str) -> None:
             _decision_form(item, source)
 
 
-st.title("Human Review Queue")
+st.title("Human Review Queue (staff)")
 st.caption("Cases the AI did not decide: low confidence, missing evidence, or safety. Safety cases are never auto-resolved.")
 
 if "demo_mode" not in st.session_state:

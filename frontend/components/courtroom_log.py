@@ -55,32 +55,33 @@ def render_message(msg: dict[str, Any]) -> None:
     st.markdown(_message_html(msg), unsafe_allow_html=True)
 
 
-def render_courtroom_log(messages: list[dict[str, Any]]) -> None:
-    """Render the full courtroom log from a list of agent messages."""
-    st.subheader("Courtroom")
-    st.caption("Agents build their cases in real time")
+def render_courtroom_log(messages: list[dict[str, Any]], technical: bool = False) -> None:
+    """Render the full courtroom log in a scrollable window.
 
+    ``technical`` shows the raw tool output lines stored under each message's ``raw`` key.
+    """
     with st.container(height=LOG_HEIGHT, border=True):
         for msg in messages:
+            if technical and msg.get("raw"):
+                msg = {**msg, "content": msg["raw"]}
             render_message(msg)
 
 
-def render_briefs(briefs: list[dict[str, Any]]) -> None:
+def render_briefs(briefs: list[dict[str, Any]], expanded: bool = False) -> None:
     """Show each advocate's structured brief: position, cited arguments, weaknesses."""
-    with st.expander("Advocate briefs (evidence and clauses cited)"):
-        cols = st.columns(len(briefs)) if briefs else []
-        for col, brief in zip(cols, sorted(briefs, key=lambda b: b.get("side", ""), reverse=True)):
-            style = AGENT_STYLES.get(f"{brief.get('side')}_advocate", AGENT_STYLES["system"])
-            with col:
-                st.markdown(f"**{style['icon']} {style['label']}**")
-                st.markdown(f"_{brief.get('position', '')}_")
-                for arg in brief.get("arguments", []):
-                    st.markdown(f"- {arg.get('point', '')}")
-                    refs = ", ".join(f"`{r}`" for r in arg.get("evidence_refs", []))
-                    clauses = ", ".join(f"`{c}`" for c in arg.get("clauses", []))
-                    st.caption(f"Evidence: {refs} · Clauses: {clauses}")
-                weaknesses = brief.get("weaknesses_acknowledged") or []
-                if weaknesses:
-                    st.markdown("**Weaknesses acknowledged**")
-                    for w in weaknesses:
-                        st.markdown(f"- {w}")
+    cols = st.columns(len(briefs)) if briefs else []
+    for col, brief in zip(cols, sorted(briefs, key=lambda b: b.get("side", ""), reverse=True)):
+        style = AGENT_STYLES.get(f"{brief.get('side')}_advocate", AGENT_STYLES["system"])
+        with col:
+            st.markdown(f"**{style['icon']} {style['label']}**")
+            st.markdown(f"_{brief.get('position', '')}_")
+            for arg in brief.get("arguments", []):
+                st.markdown(f"- {arg.get('point', '')}")
+                refs = ", ".join(f"`{r}`" for r in arg.get("evidence_refs", []))
+                clauses = ", ".join(f"`{c}`" for c in arg.get("clauses", []))
+                st.caption(f"Evidence: {refs} · Policy: {clauses}")
+            weaknesses = brief.get("weaknesses_acknowledged") or []
+            if weaknesses:
+                st.markdown("**Weaknesses acknowledged**")
+                for w in weaknesses:
+                    st.markdown(f"- {w}")

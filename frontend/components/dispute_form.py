@@ -1,85 +1,91 @@
-"""Dispute filing form component."""
+"""Dispute filing form: who you are, what happened, which trip."""
 from __future__ import annotations
 
 import streamlit as st
 
+from cases import case_label, cases_for_type, list_test_scenarios
 from state import load_dispute_types
 
-# Defaults per dispute type, taken from the sample dataset (data/DISP-00x.json).
-SAMPLE_DEFAULTS = {
-    "no_show_charge": {
-        "dispute_id": "DISP-002",
-        "trip_id": "TRIP-2026-09945",
-        "description": (
-            "I was at the pickup point at Tiong Bahru Plaza on time but the driver "
-            "never showed up. The app charged me a $5.00 cancellation fee for a "
-            "'no-show'. I want the charge reversed."
-        ),
-    },
-    "route_deviation": {
-        "dispute_id": "DISP-001",
-        "trip_id": "TRIP-2026-10012",
-        "description": (
-            "The driver took a significantly longer route from Tiong Bahru Plaza to "
-            "VivoCity instead of the direct route. I want a refund for the extra distance."
-        ),
-    },
+TYPE_HELP = {
+    "no_show_charge": "I was charged a no-show fee",
+    "route_deviation": "The driver took a longer route",
 }
 
 
-def _apply_defaults() -> None:
-    """When the dispute type changes, reset the fields to that type's sample case."""
-    defaults = SAMPLE_DEFAULTS[st.session_state.form_dispute_type]
-    st.session_state.form_dispute_id = defaults["dispute_id"]
-    st.session_state.form_trip_id = defaults["trip_id"]
-    st.session_state.form_description = defaults["description"]
+def _apply_trip_defaults() -> None:
+    """When the trip changes, show that trip's record as the description."""
+    case = _selected_case()
+    if case:
+        st.session_state.form_description = case["description"]
+
+
+def _on_type_change() -> None:
+    options = cases_for_type(st.session_state.form_dispute_type)
+    st.session_state.form_trip = options[0]["dispute_id"] if options else None
+    _apply_trip_defaults()
+
+
+def _selected_case() -> dict | None:
+    options = cases_for_type(st.session_state.get("form_dispute_type", ""))
+    return next((c for c in options if c["dispute_id"] == st.session_state.get("form_trip")), None)
 
 
 def render_dispute_form() -> dict | None:
     """Render the dispute filing form. Returns a dispute payload dict on submit."""
-    st.subheader("File a Dispute")
+    st.subheader("Tell us what happened")
 
+    types = [d["value"] for d in load_dispute_types()]
     if "form_dispute_type" not in st.session_state:
-        st.session_state.form_dispute_type = "no_show_charge"
-        _apply_defaults()
+        st.session_state.form_dispute_type = types[0]
+        _on_type_change()
 
-    dispute_types = load_dispute_types()
-    col1, col2 = st.columns(2)
-    with col1:
+    st.radio("I am the", ["rider", "driver"], horizontal=True, key="form_filed_by",
+             format_func=str.capitalize)
+    st.radio(
+        "What is this about?", types, key="form_dispute_type", on_change=_on_type_change,
+        format_func=lambda v: TYPE_HELP.get(v, v),
+    )
+
+    options = cases_for_type(st.session_state.form_dispute_type)
+    by_id = {c["dispute_id"]: c for c in options}
+    st.selectbox(
+        "Which trip?", list(by_id), key="form_trip", on_change=_apply_trip_defaults,
+        format_func=lambda i: case_label(by_id[i]),
+    )
+    st.text_area("What happened, in your words", height=110, key="form_description")
+    st.caption("For this demo, the review uses the record we already hold for the trip you pick.")
+
+    scenarios = {c["dispute_id"]: c for c in list_test_scenarios()}
+    with st.expander("Advanced (testing)"):
         st.selectbox(
-            "Dispute Type",
-            options=[d["value"] for d in dispute_types],
-            format_func=lambda v: next(d["label"] for d in dispute_types if d["value"] == v),
-            key="form_dispute_type",
-            on_change=_apply_defaults,
+            "Test scenario", [""] + list(scenarios), key="form_scenario",
+            format_func=lambda i: "None: use the trip above" if not i else scenarios[i]["scenario"],
+            help="Runs one of the team's test cases instead of the trip above.",
         )
-        st.text_input("Trip ID", key="form_trip_id")
-    with col2:
-        st.radio("Filed By", options=["rider", "driver"], horizontal=True, key="form_filed_by")
-        st.text_input("Dispute ID", key="form_dispute_id")
+        st.text_input(
+            "Case ID override", key="form_case_override",
+            help="Any backend case ID, e.g. DISP-001-T5. Takes priority over everything above.",
+        )
 
-    st.text_area("Description", height=100, key="form_description")
-
-    if st.button("Submit Dispute", type="primary", disabled=st.session_state.get("resolving", False)):
-        missing = [
-            label
-            for label, key in (
-                ("Trip ID", "form_trip_id"),
-                ("Dispute ID", "form_dispute_id"),
-                ("Description", "form_description"),
-            )
-            if not st.session_state[key].strip()
-        ]
-        if missing:
-            st.error(f"Please fill in: {', '.join(missing)}")
+    if st.button("Submit dispute", type="primary", disabled=st.session_state.get("resolving", False)):
+        scenario = scenarios.get(st.session_state.get("form_scenario") or "")
+        case = scenario or _selected_case()
+        override = (st.session_state.get("form_case_override") or "").strip()
+        dispute_id = override or (case["dispute_id"] if case else "")
+        if not dispute_id:
+            st.error("Please pick a trip.")
+            return None
+        description = (scenario["description"] if scenario else st.session_state.form_description).strip()
+        if not description:
+            st.error("Please describe what happened.")
             return None
         return {
             "dispute_ticket": {
-                "dispute_id": st.session_state.form_dispute_id.strip(),
-                "trip_id": st.session_state.form_trip_id.strip(),
-                "filed_by": st.session_state.form_filed_by,
-                "dispute_type": st.session_state.form_dispute_type,
-                "description": st.session_state.form_description.strip(),
+                "dispute_id": dispute_id,
+                "trip_id": case["trip_id"] if case else None,
+                "filed_by": scenario["filed_by"] if scenario else st.session_state.form_filed_by,
+                "dispute_type": scenario["dispute_type"] if scenario else st.session_state.form_dispute_type,
+                "description": description,
             }
         }
     return None
