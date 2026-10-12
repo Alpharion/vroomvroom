@@ -407,7 +407,13 @@ async def resolve_dispute(req: ResolveRequest):
         stream = _stub_stream(case)
     else:
         stream = _agent_stream(case, req.driver_first)
-    return StreamingResponse(stream, media_type="application/x-ndjson")
+    # Stop proxies and gateways from buffering the stream, which would hold
+    # back each agent message until the whole hearing has finished.
+    return StreamingResponse(
+        stream,
+        media_type="application/x-ndjson",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ---------- Human review queue ----------
