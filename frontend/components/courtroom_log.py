@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import html
+import itertools
 import re
 from typing import Any
 
 import streamlit as st
 
 from components.friendly import confidence_label
-from components.ruling_cards import FACT_LABELS, OUTCOME_LABELS
+from components.ruling_cards import FACT_LABELS, OUTCOME_LABELS, clause_popup_html
 
 AGENT_STYLES = {
     "rider_advocate": {"icon": "🅡", "color": "#0e8a82", "label": "Rider Advocate", "cls": "rider", "letter": "R"},
@@ -72,12 +73,22 @@ def _advocate_parts(msg: dict[str, Any], briefs, technical: bool) -> tuple[str, 
     return tag, claim, refs, clauses
 
 
+_anchor_ids = itertools.count(1)
+
+
 def _chips(clauses: list[str]) -> str:
-    return (
-        '<div class="vp-chips">' + "".join(f'<span class="vp-chip">{html.escape(c)}</span>' for c in clauses) + "</div>"
-        if clauses
-        else ""
-    )
+    """Clause chips. The chat scrolls, which would clip an ordinary popup, so each popup is
+    fixed-position and tied to its chip with CSS anchor positioning (see ``.vp-chip`` in theme.py)."""
+    if not clauses:
+        return ""
+    chips = []
+    for c in clauses:
+        name = f"--vpc{next(_anchor_ids)}"
+        chips.append(
+            f'<span class="vp-chip" tabindex="0" style="anchor-name:{name};--vp-anchor:{name}" '
+            f'aria-label="Policy clause {html.escape(c)}">{html.escape(c)}{clause_popup_html(c)}</span>'
+        )
+    return '<div class="vp-chips">' + "".join(chips) + "</div>"
 
 
 def _judge_parts(msg: dict[str, Any], ruling: dict[str, Any] | None) -> tuple[str, list[str]]:

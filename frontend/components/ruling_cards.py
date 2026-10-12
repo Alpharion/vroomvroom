@@ -63,27 +63,29 @@ def verdict_banner_html(ruling: dict[str, Any]) -> str:
     )
 
 
+def clause_popup_html(cid: str) -> str:
+    """The popup body for a clause id, or "" when the policy text has no such clause."""
+    info = load_clauses().get(cid)
+    if not info:
+        return ""
+    return (
+        f'<span class="vp-pop" role="tooltip"><b>{html.escape(cid)} · {html.escape(info["title"])}</b>'
+        f'<span>{html.escape(info["text"])}</span></span>'
+    )
+
+
 def policy_refs_html(clauses: list[str], align: str = "left") -> str:
     """Clause chips; hovering (or focusing) one shows that clause's text in a small popup.
 
     The page's scroll container clips anything that sticks out of it, so popups must open toward
     the free space: ``align="left"`` opens rightwards (left-hand card), ``"right"`` opens leftwards.
     """
-    known = load_clauses()
-    chips = []
-    for cid in clauses:
-        info = known.get(cid)
-        pop = (
-            f'<span class="vp-pop" role="tooltip"><b>{html.escape(cid)} · {html.escape(info["title"])}</b>'
-            f'<span>{html.escape(info["text"])}</span></span>'
-            if info
-            else ""
-        )
-        side = " right" if align == "right" else ""
-        chips.append(
-            f'<span class="vp-clause{side}" tabindex="0" aria-label="Policy clause {html.escape(cid)}">'
-            f"{html.escape(cid)}{pop}</span>"
-        )
+    side = " right" if align == "right" else ""
+    chips = [
+        f'<span class="vp-clause{side}" tabindex="0" aria-label="Policy clause {html.escape(cid)}">'
+        f"{html.escape(cid)}{clause_popup_html(cid)}</span>"
+        for cid in clauses
+    ]
     return f'<div class="vp-refs"><span class="vp-refs-label">Policy references</span>{"".join(chips)}</div>'
 
 

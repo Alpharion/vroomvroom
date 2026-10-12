@@ -210,7 +210,17 @@ _CSS = """
 .vp-based em{font-style:italic;}
 .vp-based code{background:var(--surface);color:var(--fg);}
 .vp-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.vp-chip{font-size:.74rem;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--surface);color:var(--fg);border:1px solid var(--line-strong);}
+.vp-chip{position:relative;font-size:.74rem;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--surface);color:var(--fg);
+  border:1px solid var(--line-strong);cursor:help;transition:border-color .15s,background .15s;}
+.vp-chip:hover,.vp-chip:focus{border-color:var(--accent);background:var(--accent-soft);outline:none;}
+.vp-chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+/* The chat scrolls and clips, so its popups are fixed: a bottom sheet by default, anchored to the chip where supported. */
+.vp-chip .vp-pop{position:fixed;left:12px;right:12px;bottom:12px;width:auto;padding-bottom:0;}
+.vp-chip:hover .vp-pop,.vp-chip:focus .vp-pop{display:block;animation:vp-rise .18s ease both;}
+@supports (position-anchor:--x){
+  .vp-chip .vp-pop{position-anchor:var(--vp-anchor);right:auto;bottom:anchor(top);left:anchor(left);width:min(340px,86vw);
+    padding-bottom:10px;position-try-fallbacks:flip-inline,flip-block,flip-block flip-inline;}
+}
 .vp-sys{text-align:center;color:var(--muted);font-size:.88rem;background:var(--surface);border:1px dashed var(--line);
   border-radius:18px;padding:6px 16px;margin-inline:auto;max-width:100%;}
 .vp-typing{display:inline-flex;gap:4px;padding:6px 2px;}
