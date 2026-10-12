@@ -32,7 +32,7 @@ _FONTS = (
 )
 
 _CSS = """
-:root{--font-display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+:root{--z-popup:1000010;--font-display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
       --font-body:'Nunito Sans',system-ui,-apple-system,'Segoe UI',sans-serif;}
 
 /* ---- Streamlit surfaces ---- */
@@ -239,7 +239,7 @@ _CSS = """
   background:var(--surface);color:var(--fg);border:1px solid var(--line-strong);transition:border-color .15s,background .15s;}
 .vp-clause:hover,.vp-clause:focus{border-color:var(--accent);background:var(--accent-soft);outline:none;}
 .vp-clause:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
-.vp-pop{display:none;position:absolute;z-index:80;bottom:100%;left:0;width:min(340px,72vw);padding-bottom:10px;
+.vp-pop{display:none;position:absolute;z-index:var(--z-popup);bottom:100%;left:0;width:min(340px,72vw);padding-bottom:10px;
   text-align:left;font-weight:400;cursor:default;}
 .vp-clause.right .vp-pop{left:auto;right:0;}
 .vp-pop>b,.vp-pop>span{display:block;background:var(--surface);color:var(--fg);border-left:1px solid var(--line-strong);
@@ -271,6 +271,11 @@ _CSS = """
   .stApp .st-key-form_dispute_type [data-testid="stRadioGroup"]{grid-template-columns:1fr;}
   .stApp .st-key-vp_header{position:static;}
   .vp-msg{max-width:100%;}
+}
+@media (max-width:880px){
+  /* With the sidebar open the content area is narrow: show clause popups as a bottom sheet, above the sidebar. */
+  .stApp:has([data-testid="stSidebar"][aria-expanded="true"]) .vp-pop{position:fixed;left:12px!important;right:12px!important;
+    bottom:12px;width:auto;padding-bottom:0;}
 }
 @media (prefers-reduced-motion:reduce){.stApp *,.vp-verdict,.vp-car{animation:none!important;transition:none!important;}}
 """

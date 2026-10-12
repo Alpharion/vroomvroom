@@ -63,11 +63,15 @@ def verdict_banner_html(ruling: dict[str, Any]) -> str:
     )
 
 
-def policy_refs_html(clauses: list[str]) -> str:
-    """Clause chips; hovering (or focusing) one shows that clause's text in a small popup."""
+def policy_refs_html(clauses: list[str], align: str = "left") -> str:
+    """Clause chips; hovering (or focusing) one shows that clause's text in a small popup.
+
+    The page's scroll container clips anything that sticks out of it, so popups must open toward
+    the free space: ``align="left"`` opens rightwards (left-hand card), ``"right"`` opens leftwards.
+    """
     known = load_clauses()
     chips = []
-    for i, cid in enumerate(clauses):
+    for cid in clauses:
         info = known.get(cid)
         pop = (
             f'<span class="vp-pop" role="tooltip"><b>{html.escape(cid)} · {html.escape(info["title"])}</b>'
@@ -75,7 +79,7 @@ def policy_refs_html(clauses: list[str]) -> str:
             if info
             else ""
         )
-        side = " right" if i >= 3 else ""
+        side = " right" if align == "right" else ""
         chips.append(
             f'<span class="vp-clause{side}" tabindex="0" aria-label="Policy clause {html.escape(cid)}">'
             f"{html.escape(cid)}{pop}</span>"
@@ -83,7 +87,9 @@ def policy_refs_html(clauses: list[str]) -> str:
     return f'<div class="vp-refs"><span class="vp-refs-label">Policy references</span>{"".join(chips)}</div>'
 
 
-def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = False) -> None:
+def render_ruling_card(
+    ruling: dict[str, Any], audience: str, highlight: bool = False, popup_align: str = "left"
+) -> None:
     """Render a ruling card for either the rider or driver perspective."""
     clauses = ruling.get("clauses_cited") or []
     escalated = ruling.get("escalated", False)
@@ -107,7 +113,7 @@ def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = 
             unsafe_allow_html=True,
         )
         if clauses:
-            st.markdown(policy_refs_html(clauses), unsafe_allow_html=True)
+            st.markdown(policy_refs_html(clauses, popup_align), unsafe_allow_html=True)
 
 
 _TILE_KEYS = {

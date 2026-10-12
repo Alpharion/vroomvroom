@@ -200,9 +200,9 @@ def _render_ruling_section() -> None:
     st.write("")
 
     order = ["rider", "driver"] if filer == "rider" else ["driver", "rider"]
-    for col, audience in zip(st.columns(2), order):
+    for col, audience, align in zip(st.columns(2), order, ("left", "right")):
         with col:
-            render_ruling_card(ruling, audience=audience, highlight=audience == filer)
+            render_ruling_card(ruling, audience=audience, highlight=audience == filer, popup_align=align)
 
     if not ruling.get("escalated"):
         st.write("")
