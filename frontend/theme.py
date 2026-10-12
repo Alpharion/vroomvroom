@@ -233,6 +233,22 @@ _CSS = """
 .vp-viewhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;}
 .vp-viewhead h3{margin:0;font-size:1.2rem;}
 .vp-why{color:var(--fg);margin:8px 0;}
+.vp-refs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
+.vp-refs-label{font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-right:2px;}
+.vp-clause{position:relative;display:inline-block;font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;cursor:help;
+  background:var(--surface);color:var(--fg);border:1px solid var(--line-strong);transition:border-color .15s,background .15s;}
+.vp-clause:hover,.vp-clause:focus{border-color:var(--accent);background:var(--accent-soft);outline:none;}
+.vp-clause:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+.vp-pop{display:none;position:absolute;z-index:80;bottom:100%;left:0;width:min(340px,72vw);padding-bottom:10px;
+  text-align:left;font-weight:400;cursor:default;}
+.vp-clause.right .vp-pop{left:auto;right:0;}
+.vp-pop>b,.vp-pop>span{display:block;background:var(--surface);color:var(--fg);border-left:1px solid var(--line-strong);
+  border-right:1px solid var(--line-strong);padding:0 14px;}
+.vp-pop>b{border-top:1px solid var(--line-strong);border-radius:14px 14px 0 0;padding-top:12px;font-family:var(--font-display);
+  font-weight:600;font-size:.95rem;color:var(--accent);}
+.vp-pop>span{border-bottom:1px solid var(--line-strong);border-radius:0 0 14px 14px;padding-bottom:12px;padding-top:4px;
+  font-size:.86rem;line-height:1.5;box-shadow:0 14px 30px rgba(0,0,0,.28);}
+.vp-clause:hover .vp-pop,.vp-clause:focus .vp-pop,.vp-clause:focus-within .vp-pop{display:block;animation:vp-rise .18s ease both;}
 
 /* ---- Evidence tiles ---- */
 .vp-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px;}
@@ -250,6 +266,7 @@ _CSS = """
 @keyframes vp-pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent);}50%{box-shadow:0 0 0 7px transparent;}}
 @keyframes vp-drive{from{transform:translateX(-30px);}to{transform:translateX(30px);}}
 @media (max-width:760px){
+  .vp-pop{position:fixed;left:12px!important;right:12px!important;bottom:12px;width:auto;padding-bottom:0;}
   .vp-hero,.vp-how{grid-template-columns:1fr;}
   .stApp .st-key-form_dispute_type [data-testid="stRadioGroup"]{grid-template-columns:1fr;}
   .stApp .st-key-vp_header{position:static;}

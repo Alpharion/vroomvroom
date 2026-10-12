@@ -7,6 +7,7 @@ from typing import Any
 import streamlit as st
 
 from components.friendly import confidence_label, outcome_headline
+from policy import load_clauses
 
 OUTCOME_LABELS = {
     "refund": "Refund",
@@ -62,6 +63,26 @@ def verdict_banner_html(ruling: dict[str, Any]) -> str:
     )
 
 
+def policy_refs_html(clauses: list[str]) -> str:
+    """Clause chips; hovering (or focusing) one shows that clause's text in a small popup."""
+    known = load_clauses()
+    chips = []
+    for i, cid in enumerate(clauses):
+        info = known.get(cid)
+        pop = (
+            f'<span class="vp-pop" role="tooltip"><b>{html.escape(cid)} · {html.escape(info["title"])}</b>'
+            f'<span>{html.escape(info["text"])}</span></span>'
+            if info
+            else ""
+        )
+        side = " right" if i >= 3 else ""
+        chips.append(
+            f'<span class="vp-clause{side}" tabindex="0" aria-label="Policy clause {html.escape(cid)}">'
+            f"{html.escape(cid)}{pop}</span>"
+        )
+    return f'<div class="vp-refs"><span class="vp-refs-label">Policy references</span>{"".join(chips)}</div>'
+
+
 def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = False) -> None:
     """Render a ruling card for either the rider or driver perspective."""
     clauses = ruling.get("clauses_cited") or []
@@ -86,8 +107,7 @@ def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = 
             unsafe_allow_html=True,
         )
         if clauses:
-            with st.expander("Policy references"):
-                st.markdown(" ".join(f"`{c}`" for c in clauses))
+            st.markdown(policy_refs_html(clauses), unsafe_allow_html=True)
 
 
 _TILE_KEYS = {
