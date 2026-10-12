@@ -28,6 +28,8 @@ from state import (
 )
 from components.dispute_form import render_dispute_form
 from components.courtroom_log import LOG_HEIGHT, render_courtroom_log, render_briefs, _message_html
+from components.route_map import load_trip_geo, render_route_map
+from review_queue import record_escalation
 from components.ruling_cards import render_ruling_card, render_evidence_card
 
 st.set_page_config(
@@ -134,6 +136,7 @@ def main() -> None:
                 st.session_state.evidence = live_evidence
                 st.session_state.briefs = live_briefs
                 st.session_state.ruling = live_ruling
+                record_escalation(st.session_state.get("payload"), live_ruling, live_evidence)
                 status.update(label="Resolution complete", state="complete")
             except BackendError as e:
                 failed = True
@@ -181,13 +184,22 @@ def main() -> None:
         st.subheader("Ruling")
         if st.session_state.ruling.get("escalated"):
             st.warning(
-                "This case was not auto-resolved. It has been routed to the human review queue."
+                "This case was not auto-resolved. It has been routed to the human review queue "
+                "(see the Review Queue page in the sidebar)."
             )
         col_r, col_d = st.columns(2)
         with col_r:
             render_ruling_card(st.session_state.ruling, audience="rider")
         with col_d:
             render_ruling_card(st.session_state.ruling, audience="driver")
+
+        geo = load_trip_geo(
+            (st.session_state.get("payload") or {}).get("dispute_ticket", {}).get("dispute_id")
+            or st.session_state.ruling.get("dispute_id", "")
+        )
+        if geo:
+            with st.expander("Route replay (planned vs actual GPS)"):
+                render_route_map(geo)
 
 
 if __name__ == "__main__":
