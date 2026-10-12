@@ -187,42 +187,83 @@ def _humanize_flag(flag: str) -> str:
     return flag.replace("_", " ").capitalize() if flag.isupper() else flag
 
 
-def _render_facts(facts: dict[str, Any], depth: int = 0, technical: bool = False) -> None:
-    """Render a (possibly nested) facts dict as indented, labelled lines."""
-    indent = "&nbsp;" * 4 * depth
+def _facts_html(facts: dict[str, Any], depth: int = 0, technical: bool = False) -> str:
+    """A (possibly nested) facts dict as compact, indented label/value lines in one HTML block."""
+    rows: list[str] = []
     for key, value in facts.items():
         if not technical and (value is None or value == [] or value == {}):
             continue
         label, unit = FACT_LABELS.get(key, (key.replace("_", " ").capitalize(), ""))
         if technical:
             label = key
+        pad = f' style="margin-left:{depth * 16}px"' if depth else ""
         if isinstance(value, dict):
-            st.markdown(f"{indent}**{label.capitalize() if not technical else label}**", unsafe_allow_html=True)
-            _render_facts(value, depth + 1, technical)
+            rows.append(f'<div class="vp-fact head"{pad}><b>{html.escape(label)}</b></div>')
+            rows.append(_facts_html(value, depth + 1, technical))
         else:
             suffix = f" {unit}" if unit and not isinstance(value, bool) and value is not None else ""
-            st.markdown(f"{indent}**{label}**: {_format_value(value)}{suffix}", unsafe_allow_html=True)
+            rows.append(f'<div class="vp-fact"{pad}><b>{html.escape(label)}</b>: {_format_value(value)}{suffix}</div>')
+    return "".join(rows)
 
 
-def render_evidence_card(evidence: dict[str, Any], technical: bool = False) -> None:
+def _render_facts(facts: dict[str, Any], depth: int = 0, technical: bool = False) -> None:
+    st.markdown(f'<div class="vp-facts">{_facts_html(facts, depth, technical)}</div>', unsafe_allow_html=True)
+
+
+CARD_HEIGHT = 300  # px; longer cards scroll inside themselves
+LONG_CARD_LINES = 11  # cards with more lines than this get a fixed height
+
+
+def _count_lines(facts: dict[str, Any], technical: bool = False) -> int:
+    """How many label/value lines _render_facts will draw."""
+    n = 0
+    for value in facts.values():
+        if not technical and (value is None or value == [] or value == {}):
+            continue
+        n += 1 + (_count_lines(value, technical) if isinstance(value, dict) else 0)
+    return n
+
+
+def _render_evidence_body(evidence: dict[str, Any], technical: bool) -> None:
+    tool = evidence.get("tool", "unknown")
+    if technical:
+        st.caption(f"Dispute {evidence.get('dispute_id', '—')} · tool: {tool}")
+    _render_facts(evidence.get("facts", {}), technical=technical)
+    for flag in evidence.get("flags", []):
+        st.warning(f"⚠️ {_humanize_flag(flag)}")
+
+
+def _open_evidence_dialog(evidence: dict[str, Any], technical: bool) -> None:
+    tool = evidence.get("tool", "unknown")
+    title = f"{TOOL_ICONS.get(tool, '🔧')} {TOOL_LABELS.get(tool, tool)}"
+
+    def body() -> None:
+        _render_evidence_body(evidence, technical)
+
+    st.dialog(title, width="large")(body)()
+
+
+def render_evidence_card(evidence: dict[str, Any], technical: bool = False, index: int = 0) -> None:
     """Render an evidence tool output card.
 
     Expected schema (see schemas.md §2 Evidence output):
         dispute_id, tool, facts (dict), flags (list[str])
+
+    Long cards keep a fixed height and scroll; "Expand" opens everything in a dialog.
     """
     tool = evidence.get("tool", "unknown")
-    facts = evidence.get("facts", {})
-    flags = evidence.get("flags", [])
     label = TOOL_LABELS.get(tool, tool)
     icon = TOOL_ICONS.get(tool, "🔧")
+    long = _count_lines(evidence.get("facts", {}), technical) > LONG_CARD_LINES
 
-    with st.container(border=True):
-        st.markdown(f"#### {icon} {label}")
-        if technical:
-            st.caption(f"Dispute {evidence.get('dispute_id', '—')} · tool: {tool}")
-
-        _render_facts(facts, technical=technical)
-
-        if flags:
-            for flag in flags:
-                st.warning(f"⚠️ {_humanize_flag(flag)}")
+    with st.container(key=f"evcard_{index}_{tool}"):
+        title, action = st.columns([3, 1], vertical_alignment="center")
+        title.markdown(f"#### {icon} {label}")
+        if action.button("Expand", key=f"ev_expand_{index}_{tool}", help="Open all details in a window"):
+            _open_evidence_dialog(evidence, technical)
+        if long:
+            with st.container(height=CARD_HEIGHT, border=False):
+                _render_evidence_body(evidence, technical)
+            st.markdown('<div class="vp-scrollhint">↕ Scroll for more, or press Expand</div>', unsafe_allow_html=True)
+        else:
+            _render_evidence_body(evidence, technical)

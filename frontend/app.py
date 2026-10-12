@@ -112,7 +112,9 @@ def _run_hearing() -> None:
     typing = ""
 
     def draw() -> None:
-        courtroom_placeholder.markdown(chat_html(live_log, trailing=typing), unsafe_allow_html=True)
+        courtroom_placeholder.markdown(
+            chat_html(live_log, trailing=typing, briefs=live_briefs, ruling=live_ruling), unsafe_allow_html=True
+        )
 
     def show(msg: dict) -> None:
         live_log.append(msg)
@@ -143,6 +145,7 @@ def _run_hearing() -> None:
                 elif kind == "ruling_data":
                     live_ruling = event["data"]
                     render_stepper(4, stepper)
+                    draw()
                 elif kind == "brief_data":
                     live_briefs.append(event["data"])
                     both = len(live_briefs) >= 2
@@ -214,6 +217,18 @@ def _render_ruling_section() -> None:
             right.caption("Safety concerns are always reviewed by a person.")
 
 
+@st.fragment
+def _evidence_tab(technical: bool) -> None:
+    """A fragment, so opening an Expand dialog reruns only this tab and not the whole page."""
+    tiles = evidence_tiles_html(st.session_state.evidence)
+    if tiles:
+        st.markdown(tiles, unsafe_allow_html=True)
+    col_a, col_b = st.columns(2)
+    for i, ev in enumerate(st.session_state.evidence):
+        with (col_a if i % 2 == 0 else col_b):
+            render_evidence_card(ev, technical=technical, index=i)
+
+
 def _render_how_we_decided() -> None:
     section_head("How we decided", "The evidence behind the ruling")
     technical = st.toggle("Show technical details", key="show_technical")
@@ -228,20 +243,17 @@ def _render_how_we_decided() -> None:
     with tabs[0]:
         st.caption("What the agents said, in order.")
         if st.session_state.agent_log:
-            render_courtroom_log(st.session_state.agent_log, technical=technical)
+            render_courtroom_log(
+                st.session_state.agent_log, technical=technical,
+                briefs=st.session_state.briefs, ruling=st.session_state.ruling,
+            )
     with tabs[1]:
         if st.session_state.briefs:
             render_briefs(st.session_state.briefs, expanded=True)
         else:
             st.caption("No advocate briefs for this result.")
     with tabs[2]:
-        tiles = evidence_tiles_html(st.session_state.evidence)
-        if tiles:
-            st.markdown(tiles, unsafe_allow_html=True)
-        col_a, col_b = st.columns(2)
-        for i, ev in enumerate(st.session_state.evidence):
-            with (col_a if i % 2 == 0 else col_b):
-                render_evidence_card(ev, technical=technical)
+        _evidence_tab(technical)
     if geo:
         with tabs[3]:
             render_route_map(geo)
