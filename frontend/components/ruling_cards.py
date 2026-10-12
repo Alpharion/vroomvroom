@@ -202,22 +202,30 @@ def _facts_html(facts: dict[str, Any], depth: int = 0, technical: bool = False) 
             rows.append(_facts_html(value, depth + 1, technical))
         else:
             suffix = f" {unit}" if unit and not isinstance(value, bool) and value is not None else ""
-            rows.append(f'<div class="vp-fact"{pad}><b>{html.escape(label)}</b>: {_format_value(value)}{suffix}</div>')
+            rows.append(
+                f'<div class="vp-fact"{pad}><b>{html.escape(label)}</b><span class="sep">: </span>'
+                f'<span class="v">{_format_value(value)}{suffix}</span></div>'
+            )
     return "".join(rows)
 
 
-def _render_facts(facts: dict[str, Any], depth: int = 0, technical: bool = False) -> None:
-    st.markdown(f'<div class="vp-facts">{_facts_html(facts, depth, technical)}</div>', unsafe_allow_html=True)
+def _render_facts(facts: dict[str, Any], depth: int = 0, technical: bool = False, roomy: bool = False) -> None:
+    cls = "vp-facts roomy" if roomy else "vp-facts"
+    st.markdown(f'<div class="{cls}">{_facts_html(facts, depth, technical)}</div>', unsafe_allow_html=True)
+
+
+DIALOG_BODY_HEIGHT = 480  # px; the expanded view scrolls inside this window
 
 
 def _render_evidence_body(evidence: dict[str, Any], technical: bool) -> None:
-    """Full facts and flags (used inside the expanded view)."""
+    """Full facts and flags for the expanded view, in a scrollable window with roomy rows."""
     tool = evidence.get("tool", "unknown")
-    if technical:
-        st.caption(f"Dispute {evidence.get('dispute_id', '—')} · tool: {tool}")
-    _render_facts(evidence.get("facts", {}), technical=technical)
-    for flag in evidence.get("flags", []):
-        st.warning(f"⚠️ {_humanize_flag(flag)}")
+    with st.container(height=DIALOG_BODY_HEIGHT, border=False):
+        if technical:
+            st.caption(f"Dispute {evidence.get('dispute_id', '—')} · tool: {tool}")
+        for flag in evidence.get("flags", []):
+            st.warning(f"⚠️ {_humanize_flag(flag)}")
+        _render_facts(evidence.get("facts", {}), technical=technical, roomy=True)
 
 
 def _open_evidence_dialog(evidence: dict[str, Any], technical: bool) -> None:
@@ -231,7 +239,7 @@ def _open_evidence_dialog(evidence: dict[str, Any], technical: bool) -> None:
 
 
 def _card_html(evidence: dict[str, Any], technical: bool) -> str:
-    """Fixed-height preview: title, flags, then the facts clipped with a fade."""
+    """Fixed-height card: clickable title and flags, a scrollable facts area, a clickable footer."""
     tool = evidence.get("tool", "unknown")
     flags = "".join(
         f'<span class="vp-pill warn">{html.escape(_humanize_flag(f))}</span>' for f in evidence.get("flags", [])
@@ -242,7 +250,7 @@ def _card_html(evidence: dict[str, Any], technical: bool) -> str:
         f'<div class="vp-evhead">{TOOL_ICONS.get(tool, "🔧")} {html.escape(TOOL_LABELS.get(tool, tool))}</div>'
         f'{flags_html}<div class="vp-evbody"><div class="vp-facts">'
         f'{_facts_html(evidence.get("facts", {}), technical=technical)}</div></div>'
-        '<div class="vp-evhint">Click to see all details</div></div>'
+        '<div class="vp-evhint">Open full view ›</div></div>'
     )
 
 
@@ -252,8 +260,9 @@ def render_evidence_card(evidence: dict[str, Any], technical: bool = False, inde
     Expected schema (see schemas.md §2 Evidence output):
         dispute_id, tool, facts (dict), flags (list[str])
 
-    Every card has the same height and shows a clipped preview. The whole card is a
-    click target (an invisible button laid over it) that opens the full facts in a dialog.
+    Every card has the same height. The title, flags and footer are a click target (an invisible
+    button laid under the facts area) that opens the full facts in a dialog; the facts area
+    scrolls on its own.
     """
     tool = evidence.get("tool", "unknown")
     label = TOOL_LABELS.get(tool, tool)

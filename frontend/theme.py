@@ -100,12 +100,23 @@ _CSS = """
 .stApp [class*="st-key-evbtn"]{position:absolute!important;inset:0;width:100%!important;height:100%!important;margin:0!important;z-index:3;}
 .stApp [class*="st-key-evbtn"] :is([data-testid="stButton"],div){width:100%;height:100%;}
 .stApp [class*="st-key-evbtn"] button{width:100%;height:100%;opacity:0;cursor:pointer;border-radius:18px;}
-.vp-evcard{display:flex;flex-direction:column;height:340px;padding:16px 18px 12px;}
+.vp-evcard{display:flex;flex-direction:column;height:352px;padding:16px 18px 16px;}
 .vp-evhead{font-family:var(--font-display);font-weight:600;font-size:1.25rem;color:var(--fg);margin-bottom:8px;}
 .vp-evflags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-.vp-evbody{flex:1;min-height:0;overflow:hidden;position:relative;
-  -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent);}
-.vp-evhint{color:var(--accent);font-size:.82rem;font-weight:800;padding-top:8px;}
+.vp-evbody{flex:1;min-height:0;overflow-y:auto;position:relative;z-index:4;padding-right:6px;scrollbar-width:thin;
+  scrollbar-color:var(--line-strong) transparent;overscroll-behavior:contain;
+  background:linear-gradient(var(--surface) 30%,transparent) top/100% 24px no-repeat local,
+    linear-gradient(transparent,var(--surface) 70%) bottom/100% 24px no-repeat local,
+    radial-gradient(farthest-side at 50% 0,color-mix(in srgb,var(--fg) 22%,transparent),transparent) top/100% 10px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%,color-mix(in srgb,var(--fg) 22%,transparent),transparent) bottom/100% 10px no-repeat scroll;}
+.vp-evhint{color:var(--accent);font-size:.84rem;font-weight:800;padding-top:8px;}
+.vp-facts.roomy{line-height:1.5;display:grid;gap:2px;padding:4px 2px;}
+.vp-facts.roomy .vp-fact{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:11px 6px;
+  border-bottom:1px solid var(--line);}
+.vp-facts.roomy .vp-fact .sep{display:none;}
+.vp-facts.roomy .vp-fact .v{text-align:right;overflow-wrap:anywhere;}
+.vp-facts.roomy .vp-fact.head{margin-top:14px;padding:9px 12px;background:var(--surface-2);border-radius:10px;border-bottom:0;
+  font-family:var(--font-display);}
 .stApp .st-key-view_you,.stApp [class*="st-key-view_other"]{background:var(--surface);border:1px solid var(--line-strong);
   border-radius:22px;padding:20px;box-shadow:var(--shadow);}
 .stApp .st-key-view_you{border:2px solid var(--accent)!important;}
