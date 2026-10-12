@@ -2,69 +2,71 @@
 from __future__ import annotations
 
 import html
+import re
 from typing import Any
 
 import streamlit as st
 
 AGENT_STYLES = {
-    "rider_advocate": {"icon": "🅡", "color": "#1a73e8", "label": "Rider Advocate"},
-    "driver_advocate": {"icon": "🅓", "color": "#e8451a", "label": "Driver Advocate"},
-    "judge": {"icon": "⚖️", "color": "#6b21a8", "label": "Judge"},
-    "system": {"icon": "⚙️", "color": "#5f6368", "label": "System"},
+    "rider_advocate": {"icon": "🅡", "color": "#0e8a82", "label": "Rider Advocate", "cls": "rider", "letter": "R"},
+    "driver_advocate": {"icon": "🅓", "color": "#c26a12", "label": "Driver Advocate", "cls": "driver", "letter": "D"},
+    "judge": {"icon": "⚖️", "color": "#5b2a86", "label": "Judge", "cls": "judge", "letter": "J"},
+    "system": {"icon": "⚙️", "color": "#7a6670", "label": "System", "cls": "system", "letter": "·"},
 }
 
 LOG_HEIGHT = 450  # px; the log scrolls inside a fixed-height window
 
-TYPE_ICONS = {
-    "evidence": "🔍",
-    "argument": "📋",
-    "rebuttal": "⚡",
-    "ruling": "⚖️",
-}
+_CLAUSE_RE = re.compile(r"\b[A-Z]{1,3}-\d+(?:\.\d+)+\b")
 
 
 def _message_html(msg: dict[str, Any]) -> str:
-    """Build the HTML for a single agent message bubble."""
+    """Build the HTML for a single chat message: advocates on opposite sides, judge centred."""
     agent = msg.get("agent", "system")
-    msg_type = msg.get("type", "evidence")
-    content = html.escape(str(msg.get("content", "")))
+    raw = str(msg.get("content", ""))
+    content = html.escape(raw)
     style = AGENT_STYLES.get(agent, AGENT_STYLES["system"])
-    type_icon = TYPE_ICONS.get(msg_type, "•")
 
-    return f"""
-        <div style="
-            border-left: 3px solid {style['color']};
-            padding: 8px 12px;
-            margin: 6px 0;
-            background: #f8f9fa;
-            border-radius: 0 4px 4px 0;
-        ">
-            <span style="color:{style['color']};font-weight:600;">
-                {type_icon} {style['label']}
-            </span>
-            <span style="color:#80868b;font-size:0.8em;margin-left:8px;">
-                {msg_type}
-            </span>
-            <div style="margin-top:4px;color:#202124;">{content}</div>
-        </div>
-    """
+    if agent not in ("rider_advocate", "driver_advocate", "judge"):
+        return f'<div class="vp-msg system" style="display:block;max-width:100%"><div class="vp-sys">{content}</div></div>'
+
+    clauses = list(dict.fromkeys(_CLAUSE_RE.findall(raw)))
+    chips = (
+        '<div class="vp-chips">' + "".join(f'<span class="vp-chip">{html.escape(c)}</span>' for c in clauses) + "</div>"
+        if clauses
+        else ""
+    )
+    return (
+        f'<div class="vp-msg {style["cls"]}"><div class="vp-avatar" aria-hidden="true">{style["letter"]}</div>'
+        f'<div class="vp-bubble"><div class="vp-who">{style["label"]}</div>{content}{chips}</div></div>'
+    )
 
 
-def render_message(msg: dict[str, Any]) -> None:
-    """Render a single agent message as a styled bubble."""
-    st.markdown(_message_html(msg), unsafe_allow_html=True)
+def typing_html(agent: str, label: str) -> str:
+    """A 'writing...' bubble shown while the next speaker prepares."""
+    style = AGENT_STYLES.get(agent, AGENT_STYLES["system"])
+    return (
+        f'<div class="vp-msg {style["cls"]}"><div class="vp-avatar" aria-hidden="true">{style["letter"]}</div>'
+        f'<div class="vp-bubble"><div class="vp-who">{html.escape(label)}</div>'
+        '<span class="vp-typing" role="status" aria-label="Writing"><i></i><i></i><i></i></span></div></div>'
+    )
+
+
+def chat_html(messages: list[dict[str, Any]], technical: bool = False, trailing: str = "") -> str:
+    parts = []
+    for msg in messages:
+        if technical and msg.get("raw"):
+            msg = {**msg, "content": msg["raw"]}
+        parts.append(_message_html(msg))
+    return '<div class="vp-chat">' + "".join(parts) + trailing + "</div>"
 
 
 def render_courtroom_log(messages: list[dict[str, Any]], technical: bool = False) -> None:
-    """Render the full courtroom log in a scrollable window.
+    """Render the full courtroom log as a chat in a scrollable window.
 
     ``technical`` shows the raw tool output lines stored under each message's ``raw`` key.
     """
     with st.container(height=LOG_HEIGHT, border=True):
-        for msg in messages:
-            if technical and msg.get("raw"):
-                msg = {**msg, "content": msg["raw"]}
-            render_message(msg)
+        st.markdown(chat_html(messages, technical), unsafe_allow_html=True)
 
 
 def render_briefs(briefs: list[dict[str, Any]], expanded: bool = False) -> None:

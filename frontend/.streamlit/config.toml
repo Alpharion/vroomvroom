@@ -1,9 +1,13 @@
 [theme]
 base = "light"
-primaryColor = "#1a73e8"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f8f9fa"
-textColor = "#202124"
+primaryColor = "#e0356f"
+backgroundColor = "#fff8fa"
+secondaryBackgroundColor = "#fdeef3"
+textColor = "#2a1822"
+font = "sans serif"
 
 [server]
 port = 8501
+
+[client]
+toolbarMode = "minimal"

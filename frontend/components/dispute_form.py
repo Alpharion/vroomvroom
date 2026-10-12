@@ -6,6 +6,11 @@ import streamlit as st
 from cases import case_label, cases_for_type, list_test_scenarios
 from state import load_dispute_types
 
+TYPE_SUB = {
+    "no_show_charge": "The driver says I did not turn up",
+    "route_deviation": "The fare is higher than it should be",
+}
+
 TYPE_HELP = {
     "no_show_charge": "I was charged a no-show fee",
     "route_deviation": "The driver took a longer route",
@@ -39,11 +44,15 @@ def render_dispute_form() -> dict | None:
         st.session_state.form_dispute_type = types[0]
         _on_type_change()
 
-    st.radio("I am the", ["rider", "driver"], horizontal=True, key="form_filed_by",
-             format_func=str.capitalize)
+    st.caption("I am the")
+    filer = st.segmented_control(
+        "I am the", ["rider", "driver"], default="rider", key="form_filed_by",
+        format_func=str.capitalize, label_visibility="collapsed",
+    )
     st.radio(
         "What is this about?", types, key="form_dispute_type", on_change=_on_type_change,
         format_func=lambda v: TYPE_HELP.get(v, v),
+        captions=[TYPE_SUB.get(t, "") for t in types],
     )
 
     options = cases_for_type(st.session_state.form_dispute_type)
@@ -83,7 +92,7 @@ def render_dispute_form() -> dict | None:
             "dispute_ticket": {
                 "dispute_id": dispute_id,
                 "trip_id": case["trip_id"] if case else None,
-                "filed_by": scenario["filed_by"] if scenario else st.session_state.form_filed_by,
+                "filed_by": scenario["filed_by"] if scenario else (filer or "rider"),
                 "dispute_type": scenario["dispute_type"] if scenario else st.session_state.form_dispute_type,
                 "description": description,
             }

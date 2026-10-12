@@ -8,6 +8,8 @@ from typing import Any
 import pydeck as pdk
 import streamlit as st
 
+from theme import is_dark
+
 _DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 
 
@@ -40,12 +42,12 @@ def render_route_map(geo: dict[str, Any]) -> None:
     if len(geo["planned"]) >= 2:
         layers.append(pdk.Layer(
             "PathLayer", [{"path": geo["planned"]}], get_path="path",
-            get_color=[26, 115, 232], width_min_pixels=4,
+            get_color=[91, 42, 134], width_min_pixels=4,
         ))
     if len(geo["actual"]) >= 2:
         layers.append(pdk.Layer(
             "PathLayer", [{"path": geo["actual"]}], get_path="path",
-            get_color=[232, 69, 26], width_min_pixels=4,
+            get_color=[224, 53, 111], width_min_pixels=4,
         ))
     points = [
         {"pos": [p["lng"], p["lat"]], "name": p.get("name", label)}
@@ -55,7 +57,7 @@ def render_route_map(geo: dict[str, Any]) -> None:
     points += [{"pos": pt, "name": "GPS point"} for pt in geo["actual"]]
     layers.append(pdk.Layer(
         "ScatterplotLayer", points, get_position="pos", get_radius=40,
-        get_fill_color=[32, 33, 36], pickable=True,
+        get_fill_color=[42, 24, 34], pickable=True,
     ))
     all_pts = geo["planned"] + geo["actual"] or [p["pos"] for p in points]
     if not all_pts:
@@ -67,5 +69,11 @@ def render_route_map(geo: dict[str, Any]) -> None:
         layers=layers,
         initial_view_state=pdk.ViewState(latitude=lat, longitude=lng, zoom=12.5),
         tooltip={"text": "{name}"},
+        map_style="dark" if is_dark() else "light",
     ))
-    st.caption("🟦 Planned route · 🟥 Actual GPS path · ⚫ pickup, drop-off and GPS points")
+    st.markdown(
+        '<div class="vp-legend"><span><i style="background:#5b2a86"></i>Planned route</span>'
+        '<span><i style="background:#e0356f"></i>Actual GPS path</span>'
+        '<span><i style="background:#2a1822"></i>Pickup, drop-off and GPS points</span></div>',
+        unsafe_allow_html=True,
+    )

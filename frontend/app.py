@@ -28,17 +28,19 @@ from state import (
     stream_events,
 )
 from components.dispute_form import render_dispute_form
-from components.courtroom_log import LOG_HEIGHT, render_courtroom_log, render_briefs, _message_html
+from components.courtroom_log import LOG_HEIGHT, chat_html, render_courtroom_log, render_briefs, typing_html
 from components.flow import STAGES, render_stepper
-from components.friendly import friendly_error, friendly_evidence_line, outcome_headline
+from components.friendly import friendly_error, friendly_evidence_line
 from components.route_map import load_trip_geo, render_route_map
-from components.ruling_cards import render_ruling_card, render_evidence_card
+from components.ruling_cards import evidence_tiles_html, render_evidence_card, render_ruling_card, verdict_banner_html
 from review_queue import record_appeal, record_escalation
+from theme import MODES, brand_html, hero_html, inject_theme, section_head
 
 st.set_page_config(
     page_title="Ryde Track — Dispute Resolution",
     page_icon="⚖️",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
 _DONE = len(STAGES)  # stepper value meaning every step is finished
@@ -91,27 +93,30 @@ def _dispute_summary() -> str:
 
 def _run_hearing() -> None:
     """Stream the agents live. The courtroom stays on screen so the agents' exchange is visible."""
-    st.subheader("The hearing")
-    st.caption("Two advocates, one for each side, review the evidence. Then a judge decides.")
+    section_head(
+        "Step 2", "The hearing, live",
+        "Each advocate speaks from their own side. The judge speaks last. Policy clauses appear as small tags.",
+    )
     stepper = st.empty()
     render_stepper(1, stepper)
     with st.container(height=LOG_HEIGHT, border=True):
         courtroom_placeholder = st.empty()
     status_placeholder = st.empty()
 
-    accumulated_html = ""
     failed = False
     live_evidence: list = []
     live_briefs: list = []
     live_log: list = []
     live_ruling = None
     pending_raw = None
+    typing = ""
+
+    def draw() -> None:
+        courtroom_placeholder.markdown(chat_html(live_log, trailing=typing), unsafe_allow_html=True)
 
     def show(msg: dict) -> None:
-        nonlocal accumulated_html
         live_log.append(msg)
-        accumulated_html += _message_html(msg)
-        courtroom_placeholder.markdown(accumulated_html, unsafe_allow_html=True)
+        draw()
 
     with status_placeholder.status("Checking the evidence...", expanded=False) as status:
         try:
@@ -129,6 +134,8 @@ def _run_hearing() -> None:
                         "raw": pending_raw,
                     })
                     pending_raw = None
+                    typing = typing_html("judge", "The advocates are preparing their cases")
+                    draw()
                     status.update(
                         label="Evidence gathered. The advocates are preparing their cases "
                         "(this can take up to a minute)..."
@@ -140,6 +147,8 @@ def _run_hearing() -> None:
                     live_briefs.append(event["data"])
                     both = len(live_briefs) >= 2
                     render_stepper(3 if both else 2, stepper)
+                    typing = typing_html("judge", "The judge is deliberating") if both else typing
+                    draw()
                     status.update(
                         label="Both advocates have filed. The judge is deliberating..."
                         if both
@@ -151,7 +160,11 @@ def _run_hearing() -> None:
                         continue
                     if event["agent"] in ("rider_advocate", "driver_advocate"):
                         render_stepper(2, stepper)
+                    if event["agent"] == "judge":
+                        typing = ""
                     show(event)
+            typing = ""
+            draw()
             if live_ruling is None:
                 raise BackendError("The stream ended without a ruling.")
             st.session_state.evidence = live_evidence
@@ -179,15 +192,9 @@ def _render_ruling_section() -> None:
     ticket = (st.session_state.payload or {}).get("dispute_ticket", {})
     filer = ticket.get("filed_by", "rider")
 
-    st.subheader("The ruling")
-    if ruling.get("escalated"):
-        st.warning(
-            f"**{outcome_headline(ruling)}** Safety concerns, missing evidence and low-confidence "
-            f"cases are never decided automatically. Reason: {ruling.get('escalation_reason') or 'low confidence'}. "
-            "It is now in the review queue."
-        )
-    else:
-        st.success(f"**{outcome_headline(ruling)}**")
+    section_head("Step 3", "The ruling")
+    st.markdown(verdict_banner_html(ruling), unsafe_allow_html=True)
+    st.write("")
 
     order = ["rider", "driver"] if filer == "rider" else ["driver", "rider"]
     for col, audience in zip(st.columns(2), order):
@@ -195,16 +202,20 @@ def _render_ruling_section() -> None:
             render_ruling_card(ruling, audience=audience, highlight=audience == filer)
 
     if not ruling.get("escalated"):
+        st.write("")
         if st.session_state.appealed:
             st.info("Sent. A person will look at this case. You can find it in the review queue.")
-        elif st.button("Ask for a person to review this decision"):
-            record_appeal(st.session_state.payload, ruling, st.session_state.evidence)
-            st.session_state.appealed = True
-            st.rerun()
+        else:
+            left, right = st.columns([2, 3], vertical_alignment="center")
+            if left.button("Ask for a person to review this decision"):
+                record_appeal(st.session_state.payload, ruling, st.session_state.evidence)
+                st.session_state.appealed = True
+                st.rerun()
+            right.caption("Safety concerns are always reviewed by a person.")
 
 
 def _render_how_we_decided() -> None:
-    st.subheader("How we decided")
+    section_head("How we decided", "The evidence behind the ruling")
     technical = st.toggle("Show technical details", key="show_technical")
 
     tab_names = ["Courtroom", "Advocate briefs", "Evidence"]
@@ -224,6 +235,9 @@ def _render_how_we_decided() -> None:
         else:
             st.caption("No advocate briefs for this result.")
     with tabs[2]:
+        tiles = evidence_tiles_html(st.session_state.evidence)
+        if tiles:
+            st.markdown(tiles, unsafe_allow_html=True)
         col_a, col_b = st.columns(2)
         for i, ev in enumerate(st.session_state.evidence):
             with (col_a if i % 2 == 0 else col_b):
@@ -234,11 +248,15 @@ def _render_how_we_decided() -> None:
 
 
 def file_dispute_page() -> None:
-    st.title("Ryde Track")
-    st.caption("Fair, fast dispute resolution for riders and drivers")
-
     _init_state()
     _developer_tools()
+    # One slot for the whole page body: a new run replaces the old content at once,
+    # instead of leaving the previous screen faded underneath while the agents stream.
+    with st.empty().container():
+        _file_dispute_body()
+
+
+def _file_dispute_body() -> None:
     if st.session_state.demo_mode:
         st.info("Demo mode: everything shown is simulated, not live.")
 
@@ -247,12 +265,9 @@ def file_dispute_page() -> None:
         return
 
     if st.session_state.ruling is None:
+        st.markdown(hero_html(), unsafe_allow_html=True)
+        section_head("Step 1", "Tell us what happened")
         render_stepper(0)
-        st.markdown(
-            "**How it works:** you tell us what happened. Two AI advocates, one for each side, "
-            "gather the evidence and argue their case. A judge then decides, usually within a minute. "
-            "Anything involving safety goes to a person."
-        )
         if st.session_state.error:
             st.error(st.session_state.error)
             with st.expander("Technical detail"):
@@ -272,7 +287,7 @@ def file_dispute_page() -> None:
 
     # --- Result ---
     render_stepper(_DONE)
-    head, action = st.columns([4, 1])
+    head, action = st.columns([4, 1], vertical_alignment="center")
     head.markdown(_dispute_summary())
     if action.button("File another dispute"):
         _reset_result()
@@ -283,8 +298,28 @@ def file_dispute_page() -> None:
     _render_how_we_decided()
 
 
-review_page = st.Page("pages/1_Review_Queue.py", title="Review queue (staff)", icon="🧑‍⚖️")
-file_page = st.Page(file_dispute_page, title="File a dispute", icon="⚖️", default=True)
+file_page = st.Page(file_dispute_page, title="File a dispute", default=True)
+review_page = st.Page("pages/1_Review_Queue.py", title="Review queue (staff)")
+
+
+def _header() -> None:
+    with st.container(key="vp_header"):
+        brand, link_a, link_b, theme = st.columns([2.6, 2, 2.8, 3], vertical_alignment="center")
+        brand.markdown(brand_html(), unsafe_allow_html=True)
+        link_a.page_link(file_page, label="File a dispute")
+        link_b.page_link(review_page, label="Review queue (staff)")
+        theme.segmented_control(
+            "Theme", MODES, default="Auto", key="theme_mode", label_visibility="collapsed",
+            help="Light, dark, or follow your device",
+        )
+
+
+def main() -> None:
+    nav = st.navigation([file_page, review_page], position="hidden")
+    inject_theme()
+    _header()
+    nav.run()
+
 
 if __name__ == "__main__":
-    st.navigation([file_page, review_page]).run()
+    main()

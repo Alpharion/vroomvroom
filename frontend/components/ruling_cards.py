@@ -6,7 +6,7 @@ from typing import Any
 
 import streamlit as st
 
-from components.friendly import confidence_label
+from components.friendly import confidence_label, outcome_headline
 
 OUTCOME_LABELS = {
     "refund": "Refund",
@@ -43,43 +43,83 @@ TOOL_ICONS = {
 }
 
 
+def verdict_banner_html(ruling: dict[str, Any]) -> str:
+    """Big verdict moment: headline, one-line reason and the amount."""
+    escalated = ruling.get("escalated", False)
+    headline = html.escape(outcome_headline(ruling))
+    if escalated:
+        reason = html.escape(ruling.get("escalation_reason") or "low confidence")
+        return (
+            '<div class="vp-verdict review"><div>'
+            f"<h3>{headline}</h3><p>Safety concerns, missing evidence and low-confidence cases are never "
+            f"decided automatically. Reason: {reason}. It is now in the review queue.</p></div></div>"
+        )
+    amount = ruling.get("amount_sgd") or 0
+    return (
+        f'<div class="vp-verdict"><div><h3>{headline}</h3>'
+        "<p>Each of you gets your own explanation below.</p></div>"
+        f'<div class="vp-amount">${amount:.2f}</div></div>'
+    )
+
+
 def render_ruling_card(ruling: dict[str, Any], audience: str, highlight: bool = False) -> None:
     """Render a ruling card for either the rider or driver perspective."""
-    outcome = ruling.get("outcome", "no_action")
-    label = OUTCOME_LABELS.get(outcome, outcome)
-    color = OUTCOME_COLORS.get(outcome, "#5f6368")
-    amount = ruling.get("amount_sgd") or 0
     clauses = ruling.get("clauses_cited") or []
     escalated = ruling.get("escalated", False)
-
+    confidence = ruling.get("confidence") or 0
     explanation = (
         ruling.get("explanation_rider", "")
         if audience == "rider"
         else ruling.get("explanation_driver", "")
     )
-
     title = "Rider view" if audience == "rider" else "Driver view"
-    if highlight:
-        title += " · you"
+    you = '<span class="vp-pill">You</span>' if highlight else ""
+    level = confidence_label(confidence)
+    pill_cls = "good" if level == "High" else "warn" if level == "Low" else ""
 
-    with st.container(border=True):
-        st.markdown(f"#### {title}")
+    with st.container(key="view_you" if highlight else f"view_other_{audience}"):
         st.markdown(
-            f"<span style='color:{color};font-weight:700;font-size:1.2em;'>{label}</span>",
+            f'<div class="vp-viewhead"><h3>{title}</h3>{you}</div>'
+            f'<div class="vp-meter" role="img" aria-label="Confidence {confidence:.0%}"><i style="width:{confidence:.0%}"></i></div>'
+            f'<span class="vp-pill {pill_cls}">{level} confidence</span>'
+            f'<p class="vp-why">{html.escape(explanation)}</p>',
             unsafe_allow_html=True,
         )
-
-        col1, col2 = st.columns(2)
-        if not escalated:
-            col1.metric("Amount (SGD)", f"${amount:.2f}")
-        col2.metric("Confidence", confidence_label(ruling.get("confidence")))
-
-        st.markdown("**Why**")
-        st.info(explanation)
-
         if clauses:
             with st.expander("Policy references"):
                 st.markdown(" ".join(f"`{c}`" for c in clauses))
+
+
+_TILE_KEYS = {
+    "no_show_check": [
+        ("total_wait_min", "min", "Driver waited"),
+        ("driver_distance_from_pickup_m", "m", "Driver from pickup"),
+        ("contact_attempts", "", "Contact attempts"),
+        ("rider_replies", "", "Rider replies"),
+    ],
+    "route_deviation": [
+        ("deviation_pct", "%", "Extra distance"),
+        ("actual_distance_km", "km", "Route taken"),
+        ("baseline_distance_km", "km", "Direct route"),
+        ("trip_duration_min", "min", "Trip duration"),
+    ],
+}
+
+
+def evidence_tiles_html(evidence: list[dict[str, Any]]) -> str:
+    """Key numbers from the evidence tools as small stat tiles, plus any flags."""
+    tiles: list[str] = []
+    for ev in evidence:
+        facts = ev.get("facts", {})
+        for key, unit, label in _TILE_KEYS.get(ev.get("tool", ""), []):
+            value = facts.get(key)
+            if value is None:
+                continue
+            text = f"{round(float(value), 1):g}" if isinstance(value, (int, float)) else html.escape(str(value))
+            tiles.append(f'<div class="vp-tile"><b>{text}{(" " + unit) if unit else ""}</b><span>{label}</span></div>')
+        for flag in ev.get("flags", []):
+            tiles.append(f'<div class="vp-tile flag"><b>!</b><span>{html.escape(_humanize_flag(flag))}</span></div>')
+    return '<div class="vp-tiles">' + "".join(tiles) + "</div>" if tiles else ""
 
 
 def _format_value(value: Any) -> str:

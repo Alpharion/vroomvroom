@@ -11,6 +11,7 @@ import streamlit as st
 from components.ruling_cards import OUTCOME_LABELS, render_evidence_card
 from review_queue import list_queue, seed_samples, submit_decision
 from state import DEFAULT_DEMO_MODE
+from theme import section_head
 
 DECISION_OUTCOMES = ["charge_reversed", "charge_upheld", "refund", "compensation", "no_action"]
 TYPE_LABELS = {"no_show_charge": "No-Show Charge", "route_deviation": "Route Deviation"}
@@ -41,9 +42,9 @@ def _decision_form(item: dict, source: str) -> None:
             value=float(item.get("suggested_amount_sgd") or 0.0), key=f"amount_{key}",
         )
         note = st.text_area("Reviewer note (kept with the case)", key=f"note_{key}")
-        b1, b2, _ = st.columns([1, 1, 2])
+        b1, b2, _ = st.columns([1.3, 1.3, 2])
         approve = b1.form_submit_button(
-            "✅ Approve AI recommendation", disabled=not suggested, type="primary"
+            "✅ Approve suggestion", disabled=not suggested, type="primary"
         )
         override = b2.form_submit_button("✏️ Submit my decision" if not suggested else "✏️ Override")
     if approve or override:
@@ -92,8 +93,10 @@ def _render_item(item: dict, source: str) -> None:
             _decision_form(item, source)
 
 
-st.title("Human Review Queue (staff)")
-st.caption("Cases the AI did not decide: low confidence, missing evidence, or safety. Safety cases are never auto-resolved.")
+section_head(
+    "Staff only", "Review queue",
+    "Cases the AI did not decide: low confidence, missing evidence, or safety. Safety cases are never auto-resolved.",
+)
 
 if "demo_mode" not in st.session_state:
     st.session_state.demo_mode = DEFAULT_DEMO_MODE
