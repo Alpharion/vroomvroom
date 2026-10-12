@@ -268,17 +268,18 @@ Each day lists what each person does, what they hand to someone else, and a **"d
 - [x] Judge option to see the driver's brief first (`--driver-first` in `run_case.py`, `"driver_first": true` in the API), for the advocate-order fairness test
 - [x] Tighten advocate prompt: quote fact values exactly; dispute description is the filer's claim, not evidence
 - [x] `safety_check()` (S-1.1): any hit escalates to human review (`S-1.1, S-1.2`, $0). TC-08 now escalates (verified live). Keywords match at word start: the handoff's substring match flagged 12 of 13 cases ("hit" in "White Toyota")
-- [ ] `fare_validate()` if time allows
+- [x] `fare_validate()`: fare type, charged amount (fare or cancellation fee), per-km rate, surge, breakdown check. Evidence only
 - [ ] Pair with Alpha to connect frontend and backend
 
 **Alpha**
-- [ ] Swap mock data for the real API
-- [ ] Handle loading and error states (LLM slow, API fails)
+- [x] Swap mock data for the real API (live hearing streams `/api/disputes/resolve`; demo mode still replays mocks)
+- [x] Handle loading and error states (LLM slow, API fails): error banner instead of falling back to mocks
 
 **Marcus**
 - [x] ~~Remove test-case references from the policy doc~~ No longer needed: the backend strips them before the agents see the policy
 - [ ] Run every test case through the integrated system: `python3 scripts/run_case.py TC-05` from `backend/` (add `--driver-first` for the order-swap fairness test). Run live (`USE_MOCK_LLM=false`); prompts changed on 11 Oct, so old cached runs no longer replay
 - [ ] Log each result: expected vs actual ruling, time taken, any bugs → shared bug list for Damien & Alpha
+  - 12 Oct: `docs/integration-test-results.md` added, but it covers the **unit tests only** (LLM replaced with canned replies). Its confidence values are copied from `expected_results.json`, not measured. Live runs still needed
 
 **API contract (agreed with Alpha 10 Oct)**
 - `POST /api/disputes/resolve` with `{"dispute_ticket": {"dispute_id": "..."}}`. The backend loads the full case from `data/` by `dispute_id` (e.g. `DISP-001`, `DISP-002-T5`) or test-case prefix (`TC-05`). Unknown ID → 404; bad body → 422.
@@ -301,13 +302,13 @@ Each day lists what each person does, what they hand to someone else, and a **"d
 
 **Damien**
 - [x] Escalation: confidence below 0.70 or any safety hit → `escalate` and the graph's `human_review` branch (done 11 Oct)
-- [ ] Human review queue backend: store escalated rulings and expose them (list, approve/override) for Alpha's page
-- [ ] SLA routing: safety and high-value disputes prioritised
-- [ ] Fix bugs from Marcus's list
+- [x] Human review queue backend (`backend/app/review_queue.py`), built to Alpha's contract in `frontend/review_queue.py`: `GET /api/review-queue`, `POST /api/review-queue/{id}/decision`, plus `POST /api/review-queue/{id}/appeal`. Escalated rulings join automatically; saved to `backend/.review_queue.json`
+- [x] SLA routing: safety incidents and disputes with a charged fare ≥ S$30 are `high` (4 h SLA), others `normal` (24 h, vs Ryde's 24–72 h). Items carry `priority_reason`, `sla_hours`, `due_at`. Constants in `policy_constants.py` (PROPOSED)
+- [x] Fix bugs from Marcus's list: UTF-8 on every file read/write (Windows), `tests/conftest.py` so pytest runs from any folder and ignores `.env` mode flags
 
 **Alpha**
-- [ ] Human review queue page: list of escalated cases, approve / override buttons
-- [ ] GPS map (planned vs actual route, driver position at pickup) if time allows
+- [x] Human review queue page: list of escalated cases, approve / override buttons (switches to the backend queue when `GET /api/review-queue` responds; appeals should call the new `/appeal` endpoint)
+- [x] GPS map (planned vs actual route, driver position at pickup) if time allows
 
 **Marcus**
 - [ ] Precedent KB in ADP: upload policy doc + 15–20 mock past rulings (if Damien has time to connect it)
@@ -322,14 +323,16 @@ Each day lists what each person does, what they hand to someone else, and a **"d
 
 **Damien**
 - [ ] Fix remaining bugs; freeze features by evening
-- [ ] Make sure keys are environment variables, not in code
+  - [x] First live route-deviation runs found two bugs that failed whole disputes (advocate cited a raw app event; position over 200 chars twice). Fixed: case-data citations allowed, bad citations dropped and over-long text trimmed after the retry. Live: TC-05 → refund $1.07 (28 s), TC-06 → no_action RD-2.3 (27 s)
+- [x] Make sure keys are environment variables, not in code: audited tracked files and full git history, no keys anywhere; `.env` never committed
+- [x] Deploy readiness: `Dockerfile.backend`, `Dockerfile.frontend` (build from repo root), `.dockerignore`, README "Deploy" section. Frontend reads `BACKEND_URL` / `DEMO_MODE` env vars; stream sends no-buffering headers. Backend checked in an image-like layout without `.env`; images not yet built (Docker not running locally)
 
 **Alpha**
-- [ ] **Deploy via CodeBuddy** (CloudBase / EdgeOne / Lighthouse). Screenshot the deploy process for proof.
+- [ ] **Deploy via CodeBuddy** (CloudBase Run or Lighthouse; EdgeOne Pages can't run the Python servers). Screenshot the deploy process for proof. See README "Deploy": backend needs `ADP_APP_KEY`, `USE_MOCK_LLM=false`, no `USE_STUB_AGENTS`; frontend needs `BACKEND_URL`, `DEMO_MODE=false`; request timeout ≥ 120 s
 - [ ] Test the live link on a phone and a different laptop
 
 **Marcus**
-- [ ] Consistency test: same case 5 times → same ruling? Record the result.
+- [ ] Consistency test: same case 5 times → same ruling? Record the result. Run live each time (`USE_MOCK_LLM=false`); cached replays would trivially match
 - [ ] Fairness tests: swap advocate order; swap rider/driver histories. Record results.
 - [ ] Calculate business metrics: average resolution time, consistency %, % auto-resolved vs escalated
 
