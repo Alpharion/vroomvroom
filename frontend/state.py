@@ -47,14 +47,19 @@ class BackendError(Exception):
 
 
 def _mock_stream():
+    """Replay the mock case in the same event order as the real backend:
+    evidence first, then the agents, then the ruling."""
     import random
     import time
 
+    for ev in load_mock_evidence():
+        time.sleep(0.5)
+        yield {"type": "evidence_data", "data": ev}
     for msg in load_mock_agent_log():
+        if msg.get("agent") == "system" and msg.get("type") == "evidence":
+            continue  # shown as readable evidence lines built from evidence_data
         time.sleep(random.uniform(0.6, 1.2))
         yield msg
-    for ev in load_mock_evidence():
-        yield {"type": "evidence_data", "data": ev}
     yield {"type": "ruling_data", "data": load_mock_ruling()}
 
 

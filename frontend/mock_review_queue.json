@@ -1,0 +1,66 @@
+[
+  {
+    "dispute_id": "DISP-002-T8",
+    "dispute_type": "no_show_charge",
+    "filed_by": "rider",
+    "description": "The driver was aggressive when I came down. He yelled at me and threatened me when I said I wanted to dispute the charge. He said 'I know where you live' and made me feel unsafe. I want the charge reversed and this driver reported for safety.",
+    "priority": "high",
+    "status": "pending",
+    "escalation_reason": "Safety incident reported (S-1.1): safety cases are never auto-resolved.",
+    "suggested_outcome": null,
+    "suggested_amount_sgd": null,
+    "ruling": {
+      "dispute_id": "DISP-002-T8",
+      "outcome": "escalate",
+      "amount_sgd": 0.0,
+      "confidence": 0.5,
+      "clauses_cited": ["S-1.1", "S-1.2"],
+      "explanation_rider": "Your report mentions a threat. We do not decide safety cases automatically, so a member of our team will review it and contact you.",
+      "explanation_driver": "A safety concern was raised about this trip. A member of our team will review it before any decision is made.",
+      "conduct_flag": false,
+      "escalated": true,
+      "escalation_reason": "Safety incident reported (S-1.1): safety cases are never auto-resolved."
+    },
+    "evidence": [
+      {
+        "dispute_id": "DISP-002-T8",
+        "tool": "safety_check",
+        "facts": {"safety_incident": true, "categories": ["threat"], "keyword_hits": ["know where you live"], "max_speed_kmh": 42.0},
+        "flags": ["SAFETY_INCIDENT"]
+      }
+    ],
+    "decision": null
+  },
+  {
+    "dispute_id": "DISP-001-T11",
+    "dispute_type": "route_deviation",
+    "filed_by": "rider",
+    "description": "The driver took a much longer route to VivoCity. I've taken this trip many times and it's never been this long.",
+    "priority": "normal",
+    "status": "pending",
+    "escalation_reason": "Missing evidence: fewer than 2 in-trip GPS points (RD-2.7).",
+    "suggested_outcome": null,
+    "suggested_amount_sgd": null,
+    "ruling": {
+      "dispute_id": "DISP-001-T11",
+      "outcome": "escalate",
+      "amount_sgd": 0.0,
+      "confidence": 0.4,
+      "clauses_cited": ["RD-2.7"],
+      "explanation_rider": "We could not check your route because the trip's GPS record is incomplete, so a team member will review your case.",
+      "explanation_driver": "The trip's GPS record is incomplete, so a team member will review the case before any decision.",
+      "conduct_flag": false,
+      "escalated": true,
+      "escalation_reason": "Missing evidence: fewer than 2 in-trip GPS points (RD-2.7)."
+    },
+    "evidence": [
+      {
+        "dispute_id": "DISP-001-T11",
+        "tool": "route_deviation",
+        "facts": {"missing_evidence": ["in_trip_gps_points"], "deviation_pct": null},
+        "flags": []
+      }
+    ],
+    "decision": null
+  }
+]
