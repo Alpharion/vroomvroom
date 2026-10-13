@@ -72,11 +72,23 @@ def _read_case(path: Path) -> dict[str, Any] | None:
     }
 
 
+_SUPPORTED_TYPES = {"no_show_charge", "route_deviation"}
+
+
 @st.cache_data(show_spinner=False)
 def list_cases() -> list[dict[str, Any]]:
-    """The trips a filer can pick: the real data files, one per dispute ID."""
-    cases = [c for p in sorted(DATA_DIR.glob("*.json"))
-             if not p.name.endswith(".expected.json") and (c := _read_case(p))]
+    """The trips a filer can pick: the real data files, one per dispute ID.
+
+    Only files whose dispute_type is supported by the backend are shown, so
+    reference fixtures for unsupported types (e.g. fare_dispute) don't appear
+    in the filing form.
+    """
+    cases = [
+        c for p in sorted(DATA_DIR.glob("*.json"))
+        if not p.name.endswith(".expected.json")
+        and (c := _read_case(p))
+        and c["dispute_type"] in _SUPPORTED_TYPES
+    ]
     return sorted(cases, key=lambda c: c["dispute_id"]) or _FALLBACK
 
 

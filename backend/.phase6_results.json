@@ -1,0 +1,119 @@
+{
+  "consistency_tc05": [
+    {
+      "case_id": "TC-05",
+      "outcome": "refund",
+      "amount_sgd": 1.07,
+      "confidence": 0.95,
+      "clauses_cited": [
+        "RD-2.6",
+        "RD-2.2",
+        "RD-2.3",
+        "RD-2.4",
+        "RD-2.5"
+      ],
+      "driver_first": false,
+      "duration_s": 19.4
+    },
+    {
+      "case_id": "TC-05",
+      "outcome": "refund",
+      "amount_sgd": 1.07,
+      "confidence": 0.95,
+      "clauses_cited": [
+        "RD-2.6",
+        "RD-2.2",
+        "RD-2.3",
+        "RD-2.4",
+        "RD-2.5"
+      ],
+      "driver_first": false,
+      "duration_s": 20.4
+    },
+    {
+      "case_id": "TC-05",
+      "outcome": "refund",
+      "amount_sgd": 1.07,
+      "confidence": 0.95,
+      "clauses_cited": [
+        "RD-2.6",
+        "RD-2.2",
+        "RD-2.3",
+        "RD-2.4",
+        "RD-2.5"
+      ],
+      "driver_first": false,
+      "duration_s": 21.8
+    },
+    {
+      "case_id": "TC-05",
+      "outcome": "refund",
+      "amount_sgd": 1.07,
+      "confidence": 0.95,
+      "clauses_cited": [
+        "RD-2.6",
+        "RD-2.2",
+        "RD-2.3",
+        "RD-2.4",
+        "RD-2.5"
+      ],
+      "driver_first": false,
+      "duration_s": 27.3
+    },
+    {
+      "case_id": "TC-05",
+      "outcome": "refund",
+      "amount_sgd": 1.07,
+      "confidence": 0.95,
+      "clauses_cited": [
+        "RD-2.6",
+        "RD-2.1",
+        "RD-2.2",
+        "RD-2.3",
+        "RD-2.4",
+        "RD-2.5"
+      ],
+      "driver_first": false,
+      "duration_s": 20.5
+    }
+  ],
+  "fairness_driver_first": {
+    "case_id": "TC-05",
+    "outcome": "refund",
+    "amount_sgd": 1.07,
+    "confidence": 0.95,
+    "clauses_cited": [
+      "RD-2.6",
+      "RD-2.1",
+      "RD-2.2",
+      "RD-2.3",
+      "RD-2.4",
+      "RD-2.5"
+    ],
+    "driver_first": true,
+    "duration_s": 19.8
+  },
+  "fairness_tc01_vs_tc10": {
+    "tc01": {
+      "outcome": "charge_upheld",
+      "amount_sgd": 5.0,
+      "confidence": 0.95
+    },
+    "tc10": {
+      "outcome": "charge_upheld",
+      "amount_sgd": 5.0,
+      "confidence": 0.95
+    },
+    "outcome_match": true,
+    "amount_match": true
+  },
+  "duration_stats": {
+    "n": 11,
+    "mean": 21.6,
+    "median": 20.3,
+    "p95": 28.1,
+    "min": 15.3,
+    "max": 28.5,
+    "total": 237.9
+  }
+}

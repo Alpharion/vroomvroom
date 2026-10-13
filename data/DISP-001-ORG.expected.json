@@ -1,0 +1,62 @@
+{
+  "data_label": "ORGANISER_DATASET_v1",
+  "dispute_id": "DISP-001-ORG",
+  "original_dispute_id": "DISP-001",
+  "note": "TEST FIXTURE — not agent input. The expected outcome and reasoning below must NEVER be passed to the AI agents. Only data/DISP-001-ORG.json (which contains no expected verdict) is sent to the agents.",
+  "source": "Organiser-provided 'RydeResolve Route Deviation Dataset — DISP-001'",
+  "expected_outcome": {
+    "outcome": "refund",
+    "amount_sgd": 3.44,
+    "clauses_cited": ["ORG-RD-1.2", "ORG-RD-1.3"],
+    "conduct_flag": false,
+    "confidence": 0.91,
+    "escalated": false,
+    "escalation_reason": null
+  },
+  "organiser_ruling_rationale": "Driver had a legitimate traffic reason to reroute (PIE vehicle fire + heavy congestion at trip start), but failed to inform the rider of the route change per ride-hailing policy. The rider is partially compensated for the excess distance fare ($3.44) attributable to the non-notified deviation. The driver is not fully penalised as the reroute was necessary for safety and efficiency.",
+  "fare_breakdown_verification": {
+    "excess_distance_fare_refunded": 3.44,
+    "excess_toll_fare": 2.22,
+    "excess_time_fare": 0.33,
+    "excess_surge_amount": 0.51,
+    "sum": 6.50,
+    "matches_fare_delta": true,
+    "fare_delta": "35.00 - 28.50 = 6.50",
+    "per_km_rate": 0.80,
+    "excess_km": 4.3,
+    "excess_distance_fare_calculation": "4.3 km * $0.80/km = $3.44"
+  },
+  "policy_conflict_note": "Organiser policy v2.1 Section 6.2 states route deviation auto-ruling requires confidence >= 80% AND deviation <= 2km. This deviation is 4.3 km, exceeding the 2km boundary. Per the organiser's own policy, this case should be escalated to human review, not auto-resolved. The organiser dataset's expected_ruling of partial_refund conflicts with the organiser policy's escalation rule. This conflict requires a human decision (Decision Gate A, Question 2).",
+  "expected_evidence_facts": {
+    "route_deviation": {
+      "baseline_distance_km": 20.5,
+      "actual_distance_km": 24.8,
+      "deviation_pct": 20.98,
+      "review_triggered": true,
+      "rider_route_messages": [],
+      "rider_requested_detour": false,
+      "trip_duration_min": 37.0,
+      "estimated_duration_min": 35,
+      "traffic_justified": true,
+      "fare_type": "fixed",
+      "per_km_rate_sgd": 0.80,
+      "actual_fare_sgd": 35.00,
+      "excess_distance_km": 4.3,
+      "excess_distance_fare_sgd": 3.44
+    },
+    "fare_validate": {
+      "fare_type": "fixed",
+      "actual_fare_sgd": 35.00,
+      "estimated_fare_sgd": 28.50,
+      "excess_fare_sgd": 6.50,
+      "surge_applied": false
+    }
+  },
+  "organiser_metadata": {
+    "reroute_justified": true,
+    "reroute_reason": "Vehicle fire on PIE eastbound at 13:05, 10 min before pickup. Reroute via Nicoll Hwy → Geylang → ECP was reasonable.",
+    "notification_failure": true,
+    "notification_gap": "Driver did not proactively inform rider of route change. When rider asked at 13:24, driver's response was dismissive.",
+    "policy_reference": "Organiser Policy v2.1 Section 1.2: Drivers must inform rider of route deviation before or at point of deviation."
+  }
+}

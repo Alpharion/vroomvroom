@@ -29,6 +29,7 @@ clauses or quotations have been fabricated.
 | `OFFICIAL (primary)` | A direct Ryde help article or official Ryde publication, accessed and verified. |
 | `OFFICIAL (secondary)` | An official Ryde document (e.g., the Driver-Partner Handbook) that supplements primary sources. |
 | `DATASET` | The supplied hackathon dataset (DISP-002). These are the rules the prototype uses, which may differ from real Ryde policy. |
+| `ORGANISER` | Documents provided by the hackathon organisers (Ryde/ChinaBUddy). Not verified as current public Ryde policy. Kept separate from `OFFICIAL`, `DATASET`, and `PROPOSED`. |
 | `INTERNAL` | Our team's own documents (team brief, schemas). |
 | `PROPOSED` | A design assumption created by Marcus for the hackathon. Not from any external source. |
 | `UNVERIFIED` | A source that could not be accessed or did not contain the expected content. |
@@ -145,7 +146,7 @@ summary to the agents").
 
 **Discrepancy with SRC-02:** SRC-02 (rider-facing) states the cancellation
 fee as S$6.61; SRC-03 (driver-facing) states S$4.50. The difference
-(S$2.11) likely represents platform fees and GST retained by Ryde. See §5.
+(S$2.11) likely represents platform fees and GST retained by Ryde. See §6.
 
 ---
 
@@ -385,7 +386,77 @@ validation) and the principle that deviation ≠ automatic refund.
 
 ---
 
-## 4. Unverified Sources
+## 4. Organiser-Provided Sources
+
+Sources provided by the hackathon organisers on 2026-10-13. These are **not**
+verified as current public Ryde policy. They are kept separate from
+`OFFICIAL`, `DATASET`, and `PROPOSED` classifications.
+
+### SRC-ORG-1 — Ryde Dispute Resolution Policy v2.1
+
+| Field | Value |
+|---|---|
+| **Path** | `docs/organiser_policy_v2.1.md` (original in `incoming/`) |
+| **Classification** | `ORGANISER` |
+| **Verified** | Received 2026-10-13 |
+| **Description** | Organiser-provided dispute resolution policy with different thresholds, refund matrix, and 3 precedent rulings. Effective date 2026-01-01. |
+
+**Key differences from HACKATHON_2026 profile (used by the prototype):**
+
+| Rule | HACKATHON_2026 | Organiser v2.1 |
+|---|---|---|
+| No-show wait | 5-min free + 8-min threshold | 5-min free, then cancel |
+| Contact attempts | Minimum 2 | 1 message AND 1 call |
+| Route deviation | 20% threshold | 1 km refund matrix, 2 km human-review boundary |
+| Fare/surge | Not covered | Upfront quote binding, surge notification required |
+| Confidence | <0.70 escalate | <$10 final, $10-$50 need 80%, >$50 human; fraud ≥1 → 95% |
+| Property damage | Not covered | Cleaning $50, repair needs quote |
+
+**Status:** Reference only. Not merged into the active policy. Switching
+profiles requires a decision from Marcus and Damien (Decision Gate A).
+
+---
+
+### SRC-ORG-2 — Route Deviation Dataset DISP-001 (Organiser)
+
+| Field | Value |
+|---|---|
+| **Path** | `data/DISP-001-ORG.json` (transformed from `incoming/`) |
+| **Classification** | `ORGANISER` |
+| **Verified** | Received 2026-10-13 |
+| **Description** | Organiser route-deviation case: Orchard Central → Changi T3. 4.3 km excess distance, expected S$3.44 partial refund. |
+
+**Transform applied:** Fields renamed for Pydantic compatibility (`message`→`content`,
+GPS `status` inferred). All expected-ruling, evidence_summary, recommended_ruling,
+traffic_conditions, traffic_analysis, chat_log_analysis, and optimal_route fields
+stripped from agent input — stored in `data/DISP-001-ORG.expected.json` only.
+
+**Internal ID:** `DISP-001-ORG` (original `DISP-001` remapped to avoid collision
+with repo's existing Tiong Bahru → VivoCity case).
+
+**Policy conflict:** Organiser v2.1 §6.2 requires escalation for deviations >2 km;
+this case has 4.3 km deviation but expects auto-refund. Requires Decision Gate A.
+
+---
+
+### SRC-ORG-3 — Fare Dispute Dataset DISP-003
+
+| Field | Value |
+|---|---|
+| **Path** | `data/DISP-003.json` (transformed from `incoming/`) |
+| **Classification** | `ORGANISER` |
+| **Verified** | Received 2026-10-13 |
+| **Description** | Organiser fare-dispute case: S$12 quote, S$16.50 charged, unnotified surge, expected S$4.50 refund. |
+
+**Status:** Reference fixture only. `dispute_type: "fare_dispute"` is not
+supported by the backend (`DisputeType` Literal only allows
+`no_show_charge` and `route_deviation`). The case loader skips this file
+with a warning. Implementing fare_dispute is a stretch goal requiring
+schema, evidence tool, outcome formula, and tests — pending Decision Gate A.
+
+---
+
+## 5. Unverified Sources
 
 None. All five provided Ryde help article URLs were successfully accessed
 and verified on 2026-10-08. The driver handbook PDF was also successfully
@@ -395,13 +466,13 @@ No source was marked as `UNVERIFIED`.
 
 ---
 
-## 5. Discrepancies Between HACKATHON_2026 and RYDE_PUBLIC_REFERENCE
+## 6. Discrepancies Between HACKATHON_2026 and RYDE_PUBLIC_REFERENCE
 
 These discrepancies are between the supplied hackathon dataset (DISP-002)
 and the verified Ryde public help articles. The prototype uses
 HACKATHON_2026 values; the discrepancies are documented for reference only.
 
-### 5.1 Free waiting period
+### 6.1 Free waiting period
 
 | Profile | Value | Source |
 |---|---|---|
@@ -413,7 +484,7 @@ compared to the public policy. This is a significant difference — under the
 dataset's rules, a rider has more time to appear before a fee can be
 charged.
 
-### 5.2 No-show threshold
+### 6.2 No-show threshold
 
 | Profile | Value | Source |
 |---|---|---|
@@ -427,7 +498,7 @@ minutes. This is the largest discrepancy and directly affects the DISP-002
 test case (driver waited 8 minutes — valid under the dataset, but the
 public policy would have allowed a fee at 3 minutes).
 
-### 5.3 Cancellation fee amount
+### 6.3 Cancellation fee amount
 
 | Profile | Value | Source |
 |---|---|---|
@@ -442,7 +513,7 @@ mentions "platform fee changes effective 17 Feb 2026"). The S$4.50 is the
 amount the driver receives. The S$5.00 dataset value appears to be a
 simplified round number for the hackathon.
 
-### 5.4 Waiting time fee (for completed trips)
+### 6.4 Waiting time fee (for completed trips)
 
 | Profile | Value | Source |
 |---|---|---|
@@ -453,7 +524,7 @@ simplified round number for the hackathon.
 completed trips. The public policy includes one. This is not relevant to
 the no-show dispute type but is noted for completeness.
 
-### 5.5 Cancellation window for advanced/scheduled trips
+### 6.5 Cancellation window for advanced/scheduled trips
 
 | Profile | Value | Source |
 |---|---|---|
@@ -465,7 +536,7 @@ cancellation windows. The public policy does. DISP-002 involves a scheduled
 pickup time (08:45) but the cancellation occurs after driver arrival, so
 this window is not directly relevant to the test case.
 
-### 5.6 Waiver request window
+### 6.6 Waiver request window
 
 | Profile | Value | Source |
 |---|---|---|
@@ -477,7 +548,7 @@ dispute/waiver. The public policy allows 30 days. Marcus could propose
 implementing a 30-day check as a pre-condition (PROPOSED, not yet in
 clauses — flagged for Damien approval in §6).
 
-### 5.7 Arrival radius / GPS verification
+### 6.7 Arrival radius / GPS verification
 
 | Profile | Value | Source |
 |---|---|---|
@@ -492,7 +563,7 @@ RYDE_PUBLIC_REFERENCE profile.
 
 ---
 
-## 6. Open Items Requiring Damien Approval
+## 7. Open Items Requiring Damien Approval
 
 These are design decisions in the policy that Damien (Backend & Agents)
 must review and approve before implementation:
@@ -545,7 +616,7 @@ must review and approve before implementation:
 
 ---
 
-## 7. Verification Method
+## 8. Verification Method
 
 All five Ryde help article URLs were accessed on 2026-10-08 using an
 automated web fetch tool. The full text of each article was extracted and

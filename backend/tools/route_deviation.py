@@ -14,6 +14,7 @@ import math
 import re
 
 from app.policy_constants import (
+    DEVIATION_AUTO_RULE_KM,
     DEVIATION_REVIEW_THRESHOLD_PCT,
     ROAD_NETWORK_FACTOR,
 )
@@ -179,9 +180,16 @@ def route_deviation(case: DisputeCase) -> EvidenceOutput:
         missing.append("fare_breakdown")
 
     # --- Assemble output ------------------------------------------------
+    excess_distance_km = (
+        round(actual_distance_km - baseline_distance_km, 4)
+        if actual_distance_km is not None and baseline_distance_km is not None
+        else None
+    )
+
     facts: dict[str, object] = {
         "baseline_distance_km": baseline_distance_km,
         "actual_distance_km": actual_distance_km,
+        "excess_distance_km": excess_distance_km,
         "deviation_pct": deviation_pct,
         "review_triggered": review_triggered,
         "rider_route_messages": rider_route_messages,
@@ -231,6 +239,12 @@ def compute_route_deviation_outcome(
     # Gate 1: Deviation below review threshold?
     if not facts["review_triggered"]:
         return ("no_action", 0.00, ["RD-2.2"], False)
+
+    # Gate 1b: Deviation exceeds 2km auto-rule boundary (organiser v2.1 §6.2).
+    # AI agent may only rule if deviation <= 2km; otherwise escalate.
+    excess_km = facts.get("excess_distance_km")
+    if excess_km is not None and excess_km > DEVIATION_AUTO_RULE_KM:
+        return ("escalate", 0.00, ["RD-2.8", "E-1.5"], False)
 
     # Gate 2: Rider requested detour?
     if facts["rider_requested_detour"]:

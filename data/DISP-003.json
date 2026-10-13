@@ -1,0 +1,181 @@
+{
+  "data_label": "ORGANISER_DATASET_v1",
+  "source_note": "Transformed from organiser 'Document 1 — Fare Dispute Sample Data (JSON)'. This is a REFERENCE FIXTURE ONLY — dispute_type 'fare_dispute' is NOT supported by the backend (DisputeType Literal only allows 'no_show_charge' and 'route_deviation'). Fields renamed for compatibility: chat 'message'→'content', GPS 'status' inferred. All expected/analysis fields stripped from this file.",
+  "dispute_ticket": {
+    "dispute_id": "DISP-003",
+    "trip_id": "TRIP-2026-10023",
+    "filed_by": "rider",
+    "dispute_type": "fare_dispute",
+    "description": "Final fare of $16.50 was charged, but the upfront quote shown at booking was only $12.00. The rider was not informed of any fare change, surge pricing, or price adjustment before or during the trip. The rider requests a refund of the $4.50 difference.",
+    "filed_at": "2026-09-14T21:30:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9001",
+    "name": "James Ford",
+    "account_age_days": 45,
+    "total_trips": 7,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 0,
+      "upheld": 0,
+      "rejected": 0
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-3456",
+    "name": "Tan Ah Beng",
+    "account_age_days": 450,
+    "total_trips": 1567,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 2,
+      "upheld_against": 0,
+      "rejected": 2
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "vehicle": "Hyundai Elantra (SLM 8890 P)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-10023",
+    "rider_id": "R-9001",
+    "driver_id": "D-3456",
+    "pickup_location": {
+      "name": "Bugis Junction",
+      "lat": 1.3000,
+      "lng": 103.8556
+    },
+    "dropoff_location": {
+      "name": "Marina Bay Sands",
+      "lat": 1.2834,
+      "lng": 103.8607
+    },
+    "scheduled_time": "2026-09-14T21:05:00+08:00",
+    "driver_arrival_time": "2026-09-14T21:05:00+08:00",
+    "driver_wait_start": "2026-09-14T21:05:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": null,
+    "fare_breakdown": {
+      "fare_type": "fixed",
+      "actual_fare_sgd": 16.50,
+      "upfront_quote_sgd": 12.00,
+      "fare_difference_sgd": 4.50,
+      "surge_applied": true,
+      "quote_surge_multiplier": 1.0,
+      "actual_surge_multiplier": 1.5,
+      "surge_amount_difference_sgd": 4.50,
+      "surgeable_subtotal_sgd": 9.00,
+      "booking_fee_surge_exempt": true,
+      "root_cause": "surge_multiplier_increase",
+      "rider_notified_of_surge_change": false
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-09-14T21:05:00+08:00",
+      "lat": 1.3000,
+      "lng": 103.8556,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-09-14T21:07:00+08:00",
+      "lat": 1.2972,
+      "lng": 103.8561,
+      "speed_kmh": 25,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-14T21:09:00+08:00",
+      "lat": 1.2935,
+      "lng": 103.8568,
+      "speed_kmh": 30,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-14T21:11:00+08:00",
+      "lat": 1.2901,
+      "lng": 103.8582,
+      "speed_kmh": 22,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-14T21:13:00+08:00",
+      "lat": 1.2868,
+      "lng": 103.8595,
+      "speed_kmh": 28,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-14T21:16:00+08:00",
+      "lat": 1.2845,
+      "lng": 103.8604,
+      "speed_kmh": 15,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-14T21:18:00+08:00",
+      "lat": 1.2834,
+      "lng": 103.8607,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-09-14T21:02:15+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Hi, I'm at the taxi stand outside Bugis Junction near the fountain."
+    },
+    {
+      "timestamp": "2026-09-14T21:03:40+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "OK, I see you. Pulling up now, white Elantra."
+    },
+    {
+      "timestamp": "2026-09-14T21:18:30+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Thanks for the ride! Just noticed the fare is $16.50 — I thought it was $12?"
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-09-14T21:04:30+08:00",
+      "event_type": "surge_activated",
+      "details": "Surge multiplier increased from 1.0x to 1.5x between quote and pickup. Rider not notified."
+    },
+    {
+      "timestamp": "2026-09-14T21:05:00+08:00",
+      "event_type": "trip_started",
+      "details": "Trip started from Bugis Junction to Marina Bay Sands."
+    },
+    {
+      "timestamp": "2026-09-14T21:18:00+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed. Fare charged: $16.50 (upfront quote was $12.00)."
+    },
+    {
+      "timestamp": "2026-09-14T21:30:00+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed fare_dispute. Alleges unnotified surge pricing increase."
+    }
+  ],
+  "surge_pricing_log": {
+    "quote_time_surge": 1.0,
+    "trip_start_surge": 1.5,
+    "surge_activated_at": "2026-09-14T21:04:30+08:00",
+    "rider_notified": false,
+    "notification_method": null,
+    "notification_timestamp": null,
+    "reason": "surge_window_activated_between_quote_and_pickup"
+  }
+}

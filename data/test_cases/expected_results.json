@@ -1,7 +1,7 @@
 {
   "note": "This file is a TEST FIXTURE, not agent input. The expected outcomes and reasoning below must NEVER be passed to the AI agents. Only the TC-*.json input files (which contain no expected verdicts) are sent to the agents.",
   "suite_description": "11-case evaluation suite for RydeResolve multi-agent dispute resolution system. Each case maps to a scenario specified in docs/team-brief.md under 'Test cases to write (Marcus)'.",
-  "profile": "HACKATHON_2026",
+  "profile": "ORGANISER_V2_1",
   "test_cases": [
     {
       "case_id": "TC-01",

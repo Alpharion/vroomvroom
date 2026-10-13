@@ -1,0 +1,37 @@
+{
+  "data_label": "ORGANISER_DATASET_v1",
+  "dispute_id": "DISP-003",
+  "note": "TEST FIXTURE — not agent input. Reference fixture for a fare_dispute case that is NOT currently supported by the backend. dispute_type 'fare_dispute' fails Pydantic validation (DisputeType Literal only allows 'no_show_charge' and 'route_deviation').",
+  "source": "Organiser-provided 'Document 1 — Fare Dispute Sample Data (JSON)'",
+  "expected_outcome": {
+    "outcome": "refund",
+    "amount_sgd": 4.50,
+    "clauses_cited": ["ORG-FD-3.2", "ORG-FD-3.3", "ORG-FD-3.4"],
+    "conduct_flag": false,
+    "confidence": 0.96,
+    "escalated": false,
+    "escalation_reason": null
+  },
+  "organiser_ruling_rationale": "Per organiser policy v2.1 Section 3.3: if surge increases between quote and trip start and rider is not notified, rider is eligible for full refund of the surge differential. The $4.50 difference was solely attributable to surge multiplier change (1.0x to 1.5x). Surgeable subtotal $9.00 * (1.5 - 1.0) = $4.50. Booking fee is surge-exempt.",
+  "fare_breakdown_verification": {
+    "upfront_quote": 12.00,
+    "actual_fare": 16.50,
+    "difference": 4.50,
+    "quote_surge_multiplier": 1.0,
+    "actual_surge_multiplier": 1.5,
+    "surgeable_subtotal": 9.00,
+    "surge_amount_difference": 4.50,
+    "calculation": "9.00 * (1.5 - 1.0) = 4.50",
+    "booking_fee_surge_exempt": true,
+    "root_cause": "surge_multiplier_increase",
+    "rider_notified": false,
+    "matches_expected_refund": true
+  },
+  "policy_threshold_check": {
+    "dispute_value": 4.50,
+    "organiser_threshold": "Under $10 — AI agent ruling is final (Section 6.1)",
+    "fraud_flags": 0,
+    "confidence_requirement": "Any confidence level (under $10)",
+    "expected_confidence": 0.96
+  }
+}
