@@ -1,0 +1,349 @@
+{
+  "data_label": "ORGANISER_DATASET_v1",
+  "source_note": "Transformed from organiser 'RydeResolve Route Deviation Dataset — DISP-001'. Original dispute_id DISP-001 remapped to DISP-001-ORG to avoid collision with repo's existing DISP-001 (Tiong Bahru → VivoCity). Fields renamed for Pydantic compatibility: chat 'message'→'content', GPS 'status' inferred, fare_breakdown flattened. All expected-ruling, evidence_summary, recommended_ruling, traffic_conditions, traffic_analysis, chat_log_analysis, and optimal_route fields STRIPPED from this file — they live in DISP-001-ORG.expected.json only.",
+  "dispute_ticket": {
+    "dispute_id": "DISP-001-ORG",
+    "original_dispute_id": "DISP-001",
+    "trip_id": "TRIP-2026-09871",
+    "filed_by": "rider",
+    "filed_by_id": "R-4521",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a significantly longer route from Orchard Central to Changi Airport T3. I normally take the PIE which takes about 35 minutes and costs around $28. On this trip the driver went through Geylang and East Coast area, taking 37 minutes and the fare was $35. The driver did not inform me about any route change or traffic. The extra distance was 4.3 km and I was overcharged. I am requesting a refund of the excess fare.",
+    "filed_at": "2026-09-12T14:35:00+08:00",
+    "status": "open",
+    "priority": "medium",
+    "assigned_to": "RydeResolve_Auto_Resolution",
+    "evidence_provided": [
+      "trip_screenshot",
+      "gps_route_screenshot",
+      "receipt"
+    ]
+  },
+  "rider_profile": {
+    "rider_id": "R-4521",
+    "name": "Sarah Tan",
+    "account_age_days": 540,
+    "account_created_at": "2025-03-22T00:00:00+08:00",
+    "total_trips": 187,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 2,
+      "upheld": 1,
+      "rejected": 1,
+      "last_dispute_date": "2026-07-10"
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card",
+    "payment_provider": "Visa ending 4521",
+    "loyalty_tier": "silver",
+    "frequent_corridors": [
+      "Orchard → Changi Airport",
+      "CBD → Orchard"
+    ]
+  },
+  "driver_profile": {
+    "driver_id": "D-1187",
+    "name": "Rajesh Kumar",
+    "account_age_days": 720,
+    "account_created_at": "2024-09-23T00:00:00+08:00",
+    "total_trips": 2143,
+    "avg_rating": 4.7,
+    "dispute_history": {
+      "total_disputes": 3,
+      "upheld_against": 1,
+      "rejected": 2,
+      "last_dispute_date": "2026-08-29"
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "vehicle": "Toyota Vios (SHA 7823 K)",
+    "vehicle_color": "Silver",
+    "license_class": "Class 3",
+    "partner_since": "2024-09-23",
+    "recent_compliments": [
+      "Safe driver",
+      "Punctual pickup"
+    ],
+    "completion_rate": 0.97,
+    "cancellation_rate": 0.03
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-09871",
+    "rider_id": "R-4521",
+    "driver_id": "D-1187",
+    "pickup_location": {
+      "name": "Orchard Central",
+      "address": "181 Orchard Rd, Singapore 238896",
+      "lat": 1.3048,
+      "lng": 103.8318
+    },
+    "dropoff_location": {
+      "name": "Changi Airport T3",
+      "address": "65 Airport Blvd, Singapore 819663",
+      "lat": 1.3644,
+      "lng": 103.9915
+    },
+    "scheduled_time": "2026-09-12T13:15:00+08:00",
+    "driver_arrival_time": "2026-09-12T13:15:00+08:00",
+    "driver_wait_start": "2026-09-12T13:15:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Orchard Central (pickup)",
+        "lat": 1.3048,
+        "lng": 103.8318
+      },
+      {
+        "name": "Scotts Rd to PIE (Cairnhill) slip road",
+        "lat": 1.3120,
+        "lng": 103.8360
+      },
+      {
+        "name": "PIE entry (near Newton)",
+        "lat": 1.3185,
+        "lng": 103.8410
+      },
+      {
+        "name": "PIE eastbound near Balestier",
+        "lat": 1.3240,
+        "lng": 103.8550
+      },
+      {
+        "name": "PIE near Kallang / Paya Lebar",
+        "lat": 1.3260,
+        "lng": 103.8720
+      },
+      {
+        "name": "PIE near Eunos / Ubi",
+        "lat": 1.3280,
+        "lng": 103.8940
+      },
+      {
+        "name": "PIE near Bedok Reservoir",
+        "lat": 1.3300,
+        "lng": 103.9160
+      },
+      {
+        "name": "PIE near Bedok North",
+        "lat": 1.3340,
+        "lng": 103.9450
+      },
+      {
+        "name": "PIE near Upper Changi",
+        "lat": 1.3420,
+        "lng": 103.9680
+      },
+      {
+        "name": "Changi Airport T3 (dropoff via PIE Exit 2)",
+        "lat": 1.3644,
+        "lng": 103.9915
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "fixed",
+      "actual_fare_sgd": 35.00,
+      "estimated_fare_sgd": 28.50,
+      "excess_distance_fare_sgd": 3.44,
+      "per_km_rate_sgd": 0.80,
+      "surge_applied": false,
+      "service_type": "standard",
+      "estimated_distance_km": 20.5,
+      "actual_distance_km": 24.8,
+      "excess_distance_km": 4.3,
+      "excess_fare_sgd": 6.50
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-09-12T13:15:00+08:00",
+      "lat": 1.3048,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "trip_started",
+      "location_desc": "Orchard Central (pickup)"
+    },
+    {
+      "timestamp": "2026-09-12T13:17:00+08:00",
+      "lat": 1.3065,
+      "lng": 103.8360,
+      "speed_kmh": 35,
+      "status": "in_trip",
+      "location_desc": "Orchard Rd towards Cairnhill"
+    },
+    {
+      "timestamp": "2026-09-12T13:19:30+08:00",
+      "lat": 1.3020,
+      "lng": 103.8440,
+      "speed_kmh": 40,
+      "status": "in_trip",
+      "location_desc": "Stamford Rd / Fort Canning area"
+    },
+    {
+      "timestamp": "2026-09-12T13:22:00+08:00",
+      "lat": 1.2975,
+      "lng": 103.8530,
+      "speed_kmh": 35,
+      "status": "in_trip",
+      "location_desc": "Connaught Dr / Esplanade area"
+    },
+    {
+      "timestamp": "2026-09-12T13:24:30+08:00",
+      "lat": 1.2935,
+      "lng": 103.8620,
+      "speed_kmh": 45,
+      "status": "in_trip",
+      "location_desc": "Marina Blvd / Shenton Way"
+    },
+    {
+      "timestamp": "2026-09-12T13:27:00+08:00",
+      "lat": 1.2900,
+      "lng": 103.8710,
+      "speed_kmh": 50,
+      "status": "in_trip",
+      "location_desc": "Nicoll Hwy toward Beach Rd"
+    },
+    {
+      "timestamp": "2026-09-12T13:29:30+08:00",
+      "lat": 1.3000,
+      "lng": 103.8780,
+      "speed_kmh": 38,
+      "status": "in_trip",
+      "location_desc": "Mountbatten Rd (entering Geylang corridor)"
+    },
+    {
+      "timestamp": "2026-09-12T13:32:00+08:00",
+      "lat": 1.3065,
+      "lng": 103.8850,
+      "speed_kmh": 42,
+      "status": "in_trip",
+      "location_desc": "Geylang Rd / Old Airport Rd"
+    },
+    {
+      "timestamp": "2026-09-12T13:34:00+08:00",
+      "lat": 1.3100,
+      "lng": 103.8905,
+      "speed_kmh": 40,
+      "status": "in_trip",
+      "location_desc": "Dunman Rd / Tanjong Katong Rd"
+    },
+    {
+      "timestamp": "2026-09-12T13:36:00+08:00",
+      "lat": 1.3125,
+      "lng": 103.8960,
+      "speed_kmh": 55,
+      "status": "in_trip",
+      "location_desc": "Tanjong Katong Rd approaching ECP"
+    },
+    {
+      "timestamp": "2026-09-12T13:38:00+08:00",
+      "lat": 1.3160,
+      "lng": 103.9050,
+      "speed_kmh": 70,
+      "status": "in_trip",
+      "location_desc": "ECP (East Coast Parkway) eastbound"
+    },
+    {
+      "timestamp": "2026-09-12T13:41:00+08:00",
+      "lat": 1.3225,
+      "lng": 103.9200,
+      "speed_kmh": 75,
+      "status": "in_trip",
+      "location_desc": "ECP near Marine Parade"
+    },
+    {
+      "timestamp": "2026-09-12T13:44:00+08:00",
+      "lat": 1.3350,
+      "lng": 103.9450,
+      "speed_kmh": 65,
+      "status": "in_trip",
+      "location_desc": "ECP near Bedok / East Coast Park"
+    },
+    {
+      "timestamp": "2026-09-12T13:47:30+08:00",
+      "lat": 1.3500,
+      "lng": 103.9700,
+      "speed_kmh": 60,
+      "status": "in_trip",
+      "location_desc": "ECP approaching Changi"
+    },
+    {
+      "timestamp": "2026-09-12T13:50:00+08:00",
+      "lat": 1.3580,
+      "lng": 103.9830,
+      "speed_kmh": 40,
+      "status": "in_trip",
+      "location_desc": "Changi Village Rd / Airport Blvd"
+    },
+    {
+      "timestamp": "2026-09-12T13:52:00+08:00",
+      "lat": 1.3644,
+      "lng": 103.9915,
+      "speed_kmh": 0,
+      "status": "trip_completed",
+      "location_desc": "Changi Airport T3 (dropoff)"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-09-12T13:08:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Hi! I'm at the Orchard Central main entrance, wearing a blue dress. White Toyota Vios right?"
+    },
+    {
+      "timestamp": "2026-09-12T13:09:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Yes that's me! I can see you, coming now. 1 min."
+    },
+    {
+      "timestamp": "2026-09-12T13:10:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Great thanks! Heading to Changi T3, my flight is at 3:30pm."
+    },
+    {
+      "timestamp": "2026-09-12T13:10:30+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Sure, no problem. We will get there in time."
+    },
+    {
+      "timestamp": "2026-09-12T13:24:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Hey, are we going the right way? This doesn't look like the usual route to the airport."
+    },
+    {
+      "timestamp": "2026-09-12T13:25:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Don't worry, I know the way. We will reach on time."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-09-12T13:05:00+08:00",
+      "event_type": "traffic_incident",
+      "details": "Vehicle fire on PIE eastbound between Paya Lebar and Hougang. Lanes 1 and 2 blocked. Heavy congestion reported from 13:05."
+    },
+    {
+      "timestamp": "2026-09-12T13:15:00+08:00",
+      "event_type": "trip_started",
+      "details": "Trip started from Orchard Central to Changi Airport T3. Estimated distance: 20.5 km. Estimated fare: $28.50."
+    },
+    {
+      "timestamp": "2026-09-12T13:52:00+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Changi Airport T3. Actual distance: 24.8 km. Actual fare: $35.00."
+    },
+    {
+      "timestamp": "2026-09-12T14:35:00+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute. Alleges driver took longer route via Geylang and ECP instead of PIE."
+    }
+  ]
+}

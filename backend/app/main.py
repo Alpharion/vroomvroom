@@ -75,6 +75,11 @@ class ResolveRequest(BaseModel):
 # ---------- Case lookup ----------
 
 
+import logging
+
+_logger = logging.getLogger("app.main")
+
+
 def _load_case_index() -> dict[str, DisputeCase]:
     """Build a lookup index at startup: dispute_id -> DisputeCase.
 
@@ -85,6 +90,9 @@ def _load_case_index() -> dict[str, DisputeCase]:
 
     When a test case shares a dispute_id with a real data file
     (e.g. TC-01 has DISP-002), the real data file wins.
+
+    Files that fail validation (e.g. reference fixtures for unsupported
+    dispute types) are skipped with a warning so they don't crash startup.
     """
     index: dict[str, DisputeCase] = {}
 
@@ -95,7 +103,11 @@ def _load_case_index() -> dict[str, DisputeCase]:
             if m is None:
                 continue
             tc_key = m.group(1)  # e.g. "TC-01"
-            case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
+            try:
+                case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
+            except Exception as exc:
+                _logger.warning("Skipping %s: %s", path.name, exc)
+                continue
             index[tc_key] = case
             dispute_id = case.dispute_ticket.dispute_id
             if dispute_id not in index:
@@ -105,7 +117,11 @@ def _load_case_index() -> dict[str, DisputeCase]:
     for path in sorted(_DATA_DIR.glob("*.json")):
         if path.name.endswith(".expected.json"):
             continue
-        case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
+        try:
+            case = DisputeCase.model_validate_json(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            _logger.warning("Skipping %s: %s", path.name, exc)
+            continue
         index[case.dispute_ticket.dispute_id] = case
 
     return index
