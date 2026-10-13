@@ -817,6 +817,39 @@ warrant a conduct flag or partial refund in specific cases) from a
 
 ---
 
+### RD-2.8 — Deviation Exceeding 2km Auto-Rule Boundary
+
+- **Rule:** When the excess distance (actual route distance minus baseline
+  route distance) exceeds 2 km, the AI agent may not issue an automatic
+  ruling. The case must be escalated to human review regardless of
+  confidence level. This implements organiser policy v2.1 §6.2:
+  "Route deviation: AI agent ruling if confidence ≥80% AND deviation ≤2km,
+  else escalate."
+
+- **Classification:** `OFFICIAL` (organiser policy v2.1 §6.2).
+
+- **Evidence required:**
+  - `excess_distance_km` = `actual_distance_km - baseline_distance_km`
+    (computed by RD-2.1).
+
+- **Expected outcome:**
+  - Outcome: `escalate`.
+  - `amount_sgd`: 0.00.
+  - `cited_policy_clauses`: `["RD-2.8", "E-1.5"]`.
+  - `escalated`: true.
+  - `escalation_reason`: "deviation exceeds 2km auto-rule boundary".
+
+- **Source:** `SRC-ORG-1` (organiser policy v2.1 §6.2).
+
+- **Python computation:**
+  ```python
+  excess_km = actual_distance_km - baseline_distance_km
+  if excess_km > DEVIATION_AUTO_RULE_KM:  # 2.0
+      return ("escalate", 0.00, ["RD-2.8", "E-1.5"], False)
+  ```
+
+---
+
 ## 4. Safety Escalation (S-1.1 onward)
 
 Safety clauses apply to **both** dispute types and may be triggered by

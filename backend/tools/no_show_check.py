@@ -52,6 +52,9 @@ def no_show_check(case: DisputeCase) -> EvidenceOutput:
       - free_wait_expired (NS-1.3)
       - no_show_threshold_reached (NS-1.4)
       - contact_attempts (NS-1.5)
+      - driver_messages (NS-1.5)
+      - driver_calls (NS-1.5)
+      - contact_requirement_met (NS-1.5)
       - rider_replies (NS-1.5)
       - missing_evidence (NS-1.8)
     """
@@ -115,9 +118,9 @@ def no_show_check(case: DisputeCase) -> EvidenceOutput:
         total_wait_min is not None and total_wait_min >= no_show_threshold_min
     )
 
-    # --- NS-1.5: Contact attempts -----------------------------------------
-    # Only count attempts made during the waiting period. Messages sent while
-    # the driver was still driving, or after cancellation, do not count.
+    # --- NS-1.5: Contact attempts (organiser v2.1 §2.3) -----------------
+    # Organiser policy requires at least 1 in-app chat message AND 1 phone call.
+    # We count each type separately and check both are present.
     wait_end = trip.cancellation_time
 
     def _in_wait_period(t: datetime) -> bool:
@@ -125,11 +128,18 @@ def no_show_check(case: DisputeCase) -> EvidenceOutput:
             return False
         return _is_between(t, wait_start, wait_end)
 
-    contact_attempts = sum(
+    driver_messages = sum(
         1
         for c in case.chat_logs
         if c.sender == "driver"
-        and c.type in ("message", "call")
+        and c.type == "message"
+        and _in_wait_period(c.timestamp)
+    )
+    driver_calls = sum(
+        1
+        for c in case.chat_logs
+        if c.sender == "driver"
+        and c.type == "call"
         and _in_wait_period(c.timestamp)
     )
     # Also count app_events: driver_called_rider, but only when there is no
@@ -139,13 +149,18 @@ def no_show_check(case: DisputeCase) -> EvidenceOutput:
         for c in case.chat_logs
         if c.sender == "driver" and c.type == "call" and _in_wait_period(c.timestamp)
     }
-    contact_attempts += sum(
+    app_calls = sum(
         1
         for e in case.app_events
         if e.event_type == "driver_called_rider"
         and e.timestamp not in call_timestamps
         and _in_wait_period(e.timestamp)
     )
+    driver_calls += app_calls
+
+    contact_attempts = driver_messages + driver_calls
+    # Organiser v2.1 §2.3: must have at least 1 message AND 1 call.
+    contact_requirement_met = driver_messages >= 1 and driver_calls >= 1
 
     rider_replies = sum(
         1
@@ -179,6 +194,9 @@ def no_show_check(case: DisputeCase) -> EvidenceOutput:
         "free_wait_expired": free_wait_expired,
         "no_show_threshold_reached": no_show_threshold_reached,
         "contact_attempts": contact_attempts,
+        "driver_messages": driver_messages,
+        "driver_calls": driver_calls,
+        "contact_requirement_met": contact_requirement_met,
         "rider_replies": rider_replies,
         "minimum_contact_attempts": MINIMUM_CONTACT_ATTEMPTS,
         "missing_evidence": missing,
@@ -227,8 +245,8 @@ def compute_no_show_outcome(
     if not facts["no_show_threshold_reached"]:
         return ("charge_reversed", CANCELLATION_FEE_SGD, ["NS-1.4", "NS-1.7"], False)
 
-    # Gate 4: Contact attempts?
-    if facts["contact_attempts"] < MINIMUM_CONTACT_ATTEMPTS:
+    # Gate 4: Contact requirement (organiser v2.1 §2.3: 1 message AND 1 call)?
+    if not facts["contact_requirement_met"]:
         return ("charge_reversed", CANCELLATION_FEE_SGD, ["NS-1.5", "NS-1.7"], False)
 
     # All gates passed
