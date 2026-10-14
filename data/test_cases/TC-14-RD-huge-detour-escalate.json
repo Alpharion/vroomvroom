@@ -81,10 +81,10 @@
     ],
     "fare_breakdown": {
       "fare_type": "metered",
-      "actual_fare_sgd": 18.4,
+      "actual_fare_sgd": 10.4,
       "per_km_rate_sgd": 0.7,
       "flag_down_fare_sgd": 3.5,
-      "distance_charge_sgd": 14.9,
+      "distance_charge_sgd": 6.9,
       "surge_applied": false,
       "service_type": "RydeTAXI"
     }
@@ -106,8 +106,8 @@
     },
     {
       "timestamp": "2026-09-20T14:01:30+08:00",
-      "lat": 1.34,
-      "lng": 103.87,
+      "lat": 1.296,
+      "lng": 103.856,
       "speed_kmh": 48,
       "status": "in_trip"
     },

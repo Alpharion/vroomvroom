@@ -53,21 +53,54 @@ class BackendError(Exception):
     """Raised when the backend is unreachable or returns an invalid response."""
 
 
-def _mock_stream():
-    """Replay the mock case in the same event order as the real backend:
-    evidence first, then the agents, then the ruling."""
+DEMO_DIR = MOCK_DIR / "demo_cases"
+
+
+def _demo_case(dispute_id: str | None) -> dict[str, Any] | None:
+    """The simulated hearing for a case ID, built by scripts/build_demo_cases.py, or None."""
+    if not dispute_id:
+        return None
+    path = DEMO_DIR / f"{dispute_id}.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def _mock_stream(payload: dict[str, Any] | None = None):
+    """Replay a simulated hearing in the same event order as the real backend: evidence
+    first, then each advocate and its brief, then the Judge and the ruling.
+
+    The case comes from demo_cases/<dispute_id>.json (evidence and outcome from the real
+    tools). DISP-002 and unknown IDs use the hand-written mock case."""
     import random
     import time
 
-    for ev in load_mock_evidence():
+    dispute_id = ((payload or {}).get("dispute_ticket") or {}).get("dispute_id")
+    case = _demo_case(dispute_id)
+    if case is None or dispute_id == "DISP-002":
+        for ev in load_mock_evidence():
+            time.sleep(0.5)
+            yield {"type": "evidence_data", "data": ev}
+        for msg in load_mock_agent_log():
+            if msg.get("agent") == "system" and msg.get("type") == "evidence":
+                continue  # shown as readable evidence lines built from evidence_data
+            time.sleep(random.uniform(0.6, 1.2))
+            yield msg
+        yield {"type": "ruling_data", "data": load_mock_ruling()}
+        return
+
+    for ev in case["evidence"]:
         time.sleep(0.5)
         yield {"type": "evidence_data", "data": ev}
-    for msg in load_mock_agent_log():
-        if msg.get("agent") == "system" and msg.get("type") == "evidence":
-            continue  # shown as readable evidence lines built from evidence_data
+    briefs = {b["side"]: b for b in case["briefs"]}
+    for msg in case["log"]:
         time.sleep(random.uniform(0.6, 1.2))
-        yield msg
-    yield {"type": "ruling_data", "data": load_mock_ruling()}
+        if msg.get("agent") == "_brief":
+            yield {"type": "brief_data", "data": briefs[msg["side"]]}
+        else:
+            yield msg
+    yield {"type": "ruling_data", "data": case["ruling"]}
 
 
 def stream_events(dispute_payload: dict[str, Any], demo_mode: bool = True):
@@ -82,7 +115,7 @@ def stream_events(dispute_payload: dict[str, Any], demo_mode: bool = True):
     ``error`` event), so the UI never passes off mock data as a real ruling.
     """
     if demo_mode:
-        yield from _mock_stream()
+        yield from _mock_stream(dispute_payload)
         return
 
     timeout = httpx.Timeout(connect=5.0, read=180.0, write=10.0, pool=5.0)
