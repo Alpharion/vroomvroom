@@ -37,8 +37,6 @@ def _selected_case() -> dict | None:
 
 def render_dispute_form() -> dict | None:
     """Render the dispute filing form. Returns a dispute payload dict on submit."""
-    st.subheader("Tell us what happened")
-
     types = [d["value"] for d in load_dispute_types()]
     if "form_dispute_type" not in st.session_state:
         st.session_state.form_dispute_type = types[0]

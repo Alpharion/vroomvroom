@@ -1,4 +1,4 @@
-"""Ryde Track — Dispute Resolution Frontend (Streamlit)
+"""Vroomplain — Dispute Resolution Frontend (Streamlit)
 
 Run:
     cd frontend
@@ -37,7 +37,7 @@ from review_queue import record_appeal, record_escalation
 from theme import MODES, brand_html, hero_html, inject_theme, section_head
 
 st.set_page_config(
-    page_title="Ryde Track — Dispute Resolution",
+    page_title="Vroomplain — Dispute Resolution",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="collapsed",
