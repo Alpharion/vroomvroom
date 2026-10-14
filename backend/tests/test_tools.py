@@ -712,7 +712,7 @@ def test_safety_no_false_positive_on_white_toyota():
     assert safety_override(result.facts) is None
 
 
-def test_safety_only_tc08_flagged_across_dataset():
+def test_safety_only_tc08_and_tc15_flagged_across_dataset():
     paths = sorted(DATA.glob("DISP-00?.json")) + sorted(TC.glob("TC-*.json"))
     flagged = []
     for p in paths:
@@ -722,7 +722,8 @@ def test_safety_only_tc08_flagged_across_dataset():
             continue  # skip unsupported reference fixtures (e.g. fare_dispute)
         if safety_check(case).facts["safety_incident"]:
             flagged.append(p.name)
-    assert flagged == ["TC-08-SAFETY-escalate.json"]
+    # TC-08 and TC-15 are the deliberate safety cases; nothing else may trip the keywords.
+    assert flagged == ["TC-08-SAFETY-escalate.json", "TC-15-RD-safety-escalate.json"]
 
 
 def test_safety_tc08_threat_keywords():

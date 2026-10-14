@@ -1,0 +1,13 @@
+Skipping DISP-003.json: 1 validation error for DisputeCase
+dispute_ticket.dispute_type
+  Input should be 'no_show_charge' or 'route_deviation' [type=literal_error, input_value='fare_dispute', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.14/v/literal_error
+INFO:     Started server process [100673]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:35534 - "POST /api/disputes/resolve HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [100673]

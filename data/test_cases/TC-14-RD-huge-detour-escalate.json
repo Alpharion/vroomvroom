@@ -1,0 +1,249 @@
+{
+  "data_label": "TEST_CASE",
+  "test_case_id": "TC-14",
+  "test_case_description": "Route far longer than planned (more than 2 km extra): too large for an automatic ruling, escalate (policy 6.2).",
+  "dispute_ticket": {
+    "dispute_id": "DISP-001-T14",
+    "trip_id": "TRIP-2026-10012-T14",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a huge detour on the way to VivoCity and the metered fare was far more than usual. I want a refund for the extra distance.",
+    "filed_at": "2026-09-20T14:35:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-4521",
+    "name": "Sarah Tan",
+    "account_age_days": 540,
+    "total_trips": 87,
+    "avg_rating": 4.2,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-3107",
+    "name": "Raj Kumar",
+    "account_age_days": 365,
+    "total_trips": 250,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 1,
+      "rejected": 0
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "vehicle": "Toyota Prius (SGP 8821 K)",
+    "service_type": "RydeTAXI"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-10012-T14",
+    "rider_id": "R-4521",
+    "driver_id": "D-3107",
+    "pickup_location": {
+      "name": "Tiong Bahru Plaza",
+      "lat": 1.2847,
+      "lng": 103.8382
+    },
+    "dropoff_location": {
+      "name": "VivoCity",
+      "lat": 1.2648,
+      "lng": 103.8223
+    },
+    "scheduled_time": "2026-09-20T14:00:00+08:00",
+    "driver_arrival_time": "2026-09-20T13:58:00+08:00",
+    "driver_wait_start": "2026-09-20T13:58:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Tiong Bahru Plaza",
+        "lat": 1.2847,
+        "lng": 103.8382
+      },
+      {
+        "name": "Tiong Bahru Road",
+        "lat": 1.275,
+        "lng": 103.825
+      },
+      {
+        "name": "VivoCity",
+        "lat": 1.2648,
+        "lng": 103.8223
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 10.4,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 6.9,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-09-20T14:00:00+08:00",
+      "lat": 1.2847,
+      "lng": 103.8382,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-09-20T14:01:30+08:00",
+      "lat": 1.2875,
+      "lng": 103.8335,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:01:30+08:00",
+      "lat": 1.296,
+      "lng": 103.856,
+      "speed_kmh": 48,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:03:00+08:00",
+      "lat": 1.2915,
+      "lng": 103.8275,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:04:30+08:00",
+      "lat": 1.2885,
+      "lng": 103.8225,
+      "speed_kmh": 38,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:06:00+08:00",
+      "lat": 1.2835,
+      "lng": 103.8175,
+      "speed_kmh": 45,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:07:30+08:00",
+      "lat": 1.2785,
+      "lng": 103.815,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:09:00+08:00",
+      "lat": 1.273,
+      "lng": 103.817,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:11:00+08:00",
+      "lat": 1.269,
+      "lng": 103.82,
+      "speed_kmh": 30,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-09-20T14:12:00+08:00",
+      "lat": 1.2648,
+      "lng": 103.8223,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-09-20T13:58:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Tiong Bahru Plaza. White Toyota Prius, plate SGP 8821 K."
+    },
+    {
+      "timestamp": "2026-09-20T13:59:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-09-20T14:00:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "No problem, take your time."
+    },
+    {
+      "timestamp": "2026-09-20T14:05:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-09-20T14:05:30+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Yeah, I know a good route through Alexandra Road, it's fine."
+    },
+    {
+      "timestamp": "2026-09-20T14:12:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $7.14 (metered, RydeTAXI). Distance: 5.21 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-09-20T13:50:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-4521 booked trip TRIP-2026-10012-T5 from Tiong Bahru Plaza to VivoCity. Scheduled pickup 14:00. Service type: RydeTAXI (metered)."
+    },
+    {
+      "timestamp": "2026-09-20T13:50:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-3107 (Raj Kumar, Toyota Prius SGP 8821 K) assigned. ETA 8 min. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-09-20T13:50:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-09-20T13:58:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-09-20T13:58:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-09-20T14:00:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-09-20T14:12:00+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at VivoCity. Total distance: 5.21 km. Total fare: $7.14 ($3.50 flag-down + $3.64 distance)."
+    },
+    {
+      "timestamp": "2026-09-20T14:12:05+08:00",
+      "event_type": "fare_charged",
+      "details": "Metered fare of $7.14 charged to rider payment method (credit_card). No surge applied."
+    },
+    {
+      "timestamp": "2026-09-20T14:35:00+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute. Alleges driver took longer route via Alexandra Road instead of direct Tiong Bahru Road route."
+    }
+  ]
+}

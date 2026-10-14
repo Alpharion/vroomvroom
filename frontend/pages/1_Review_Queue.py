@@ -1,7 +1,9 @@
 """Human review queue page: escalated cases, approve / override."""
 from __future__ import annotations
 
+import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -15,6 +17,18 @@ from theme import section_head
 
 DECISION_OUTCOMES = ["charge_reversed", "charge_upheld", "refund", "compensation", "no_action"]
 TYPE_LABELS = {"no_show_charge": "No-Show Charge", "route_deviation": "Route Deviation"}
+
+
+def _due_label(item: dict) -> str:
+    """"due in 3h" / "overdue by 2h" from the backend's due_at, or "" when there is none."""
+    try:
+        due = datetime.fromisoformat(item["due_at"])
+    except (KeyError, TypeError, ValueError):
+        return ""
+    hours = (due - datetime.now(timezone.utc)).total_seconds() / 3600
+    if abs(hours) < 1:
+        return "due in under 1h" if hours >= 0 else "overdue"
+    return f"due in {hours:.0f}h" if hours > 0 else f"overdue by {-hours:.0f}h"
 
 
 def _decision_form(item: dict, source: str) -> None:
@@ -69,11 +83,15 @@ def _render_item(item: dict, source: str) -> None:
         f"{badge} · {item['dispute_id']} · "
         f"{TYPE_LABELS.get(item.get('dispute_type'), item.get('dispute_type') or '—')} · {status}"
     )
+    if item["status"] == "pending" and (due := _due_label(item)):
+        title += f" · {due}"
     with st.expander(title, expanded=item["status"] == "pending" and item.get("priority") == "high"):
         st.markdown(f"**Filed by:** {item.get('filed_by') or '—'}")
         if item.get("description"):
             st.markdown(f"> {item['description']}")
         st.warning(f"Why escalated: {item.get('escalation_reason') or ruling.get('escalation_reason') or '—'}")
+        if item.get("priority_reason"):
+            st.caption(f"Priority: {item['priority_reason']}")
         clauses = ruling.get("clauses_cited") or []
         st.markdown("**Clauses cited:** " + (" ".join(f"`{c}`" for c in clauses) if clauses else "—"))
         st.caption(f"AI confidence: {(ruling.get('confidence') or 0):.0%}")
@@ -83,8 +101,9 @@ def _render_item(item: dict, source: str) -> None:
 
         if item.get("evidence"):
             with st.expander("Evidence"):
-                for ev in item["evidence"]:
-                    render_evidence_card(ev)
+                scope = re.sub(r"\W", "_", item["dispute_id"]) + "_"
+                for i, ev in enumerate(item["evidence"]):
+                    render_evidence_card(ev, index=i, scope=scope)
 
         if item["status"] == "resolved" and decision:
             label = OUTCOME_LABELS.get(decision["outcome"], decision["outcome"])
@@ -109,7 +128,7 @@ if st.session_state.demo_mode:
 items, source = list_queue()
 if source == "local":
     st.info(
-        "Backend review queue not available yet. Showing escalated cases from this browser session"
+        "Backend review queue not reachable. Showing escalated cases from this browser session"
         + (" plus sample cases (demo mode)." if st.session_state.demo_mode else ".")
     )
 
