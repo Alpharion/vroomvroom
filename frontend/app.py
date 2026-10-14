@@ -77,7 +77,15 @@ def _init_state() -> None:
 
 def _developer_tools() -> None:
     with st.sidebar.expander("Developer tools"):
-        st.toggle("Demo mode (simulated data)", key="demo_mode")
+        # The toggle has its own key: Streamlit deletes a widget's value on any
+        # run where the widget isn't drawn (e.g. while on the review queue page),
+        # which would silently reset demo_mode to its default.
+        st.toggle(
+            "Demo mode (simulated data)",
+            value=st.session_state.demo_mode,
+            key="_demo_mode_toggle",
+            on_change=lambda: st.session_state.update(demo_mode=st.session_state._demo_mode_toggle),
+        )
         if st.button("Load mock result", disabled=st.session_state.resolving):
             _reset_result()
             st.session_state.agent_log = load_mock_agent_log()

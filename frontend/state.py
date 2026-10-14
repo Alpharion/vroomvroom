@@ -11,12 +11,14 @@ import httpx
 
 MOCK_DIR = Path(__file__).resolve().parent
 
+# Demo mode replays recorded hearings and never reads what the filer types,
+# so it is off unless secrets.toml or DEMO_MODE turns it on.
 try:
     BACKEND_URL = st.secrets.get("backend_url", "http://localhost:8000")
-    DEFAULT_DEMO_MODE = bool(st.secrets.get("demo_mode", True))
+    DEFAULT_DEMO_MODE = bool(st.secrets.get("demo_mode", False))
 except Exception:
     BACKEND_URL = "http://localhost:8000"
-    DEFAULT_DEMO_MODE = True
+    DEFAULT_DEMO_MODE = False
 
 # Environment variables win over secrets.toml, so a deployed container can be
 # configured without a secrets file (see Dockerfile.frontend).
