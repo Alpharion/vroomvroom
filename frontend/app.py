@@ -32,7 +32,13 @@ from components.courtroom_log import LOG_HEIGHT, chat_html, render_courtroom_log
 from components.flow import STAGES, render_stepper
 from components.friendly import friendly_error, friendly_evidence_line
 from components.route_map import load_trip_geo, render_route_map
-from components.ruling_cards import evidence_tiles_html, render_evidence_card, render_ruling_card, verdict_banner_html
+from components.ruling_cards import (
+    claim_checks_html,
+    evidence_tiles_html,
+    render_evidence_card,
+    render_ruling_card,
+    verdict_banner_html,
+)
 from review_queue import record_appeal, record_escalation
 from theme import MODES, brand_html, hero_html, inject_theme, section_head
 
@@ -203,6 +209,10 @@ def _render_ruling_section() -> None:
     for col, audience, align in zip(st.columns(2), order, ("left", "right")):
         with col:
             render_ruling_card(ruling, audience=audience, highlight=audience == filer, popup_align=align)
+
+    claims = claim_checks_html(ruling)
+    if claims:
+        st.markdown(claims, unsafe_allow_html=True)
 
     if not ruling.get("escalated"):
         st.write("")

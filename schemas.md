@@ -70,11 +70,21 @@ Same schema and length cap for both sides.
   "explanation_driver": "plain language",
   "conduct_flag": false,
   "escalated": false,
-  "escalation_reason": null
+  "escalation_reason": null,
+  "claim_checks": [
+    {
+      "claim": "I paid $50 for this trip",
+      "record": "Charged S$5.00 (cancellation fee)",
+      "evidence_refs": ["fare_validate.actual_fare_sgd"],
+      "verdict": "consistent | contradicted | unverifiable"
+    }
+  ]
 }
 ```
 
 `amount_sgd` is computed in code from the policy formula, never by the Judge.
+
+`claim_checks`: each factual claim in the filer's description, checked by the Judge against the records. Reported to both parties; claims never change the outcome or amount.
 
 ## Agent log message (UI stream)
 

@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import streamlit as st
 
-from components.ruling_cards import OUTCOME_LABELS, render_evidence_card
+from components.ruling_cards import OUTCOME_LABELS, claim_checks_html, render_evidence_card
 from review_queue import list_queue, seed_samples, submit_decision
 from state import DEFAULT_DEMO_MODE
 from theme import section_head
@@ -77,6 +77,9 @@ def _render_item(item: dict, source: str) -> None:
         clauses = ruling.get("clauses_cited") or []
         st.markdown("**Clauses cited:** " + (" ".join(f"`{c}`" for c in clauses) if clauses else "—"))
         st.caption(f"AI confidence: {(ruling.get('confidence') or 0):.0%}")
+        claims = claim_checks_html(ruling, said="Filer said")
+        if claims:
+            st.markdown(claims, unsafe_allow_html=True)
 
         if item.get("evidence"):
             with st.expander("Evidence"):

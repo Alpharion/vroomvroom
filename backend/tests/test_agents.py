@@ -552,3 +552,135 @@ async def test_advocate_trims_overlong_reply_after_retry():
     assert len(brief.position) <= 200
     assert brief.position.endswith("…")
     assert len(brief.arguments) == 5
+
+
+# ---------- 10. The Judge checks the filer's claims against the records ----------
+
+
+def _judge_reply_with_claims(claim_checks: list[dict]) -> str:
+    reply = json.loads(_make_judge_json(None, None, 0.95, ["NS-1.6"]))
+    reply["claim_checks"] = claim_checks
+    return json.dumps(reply)
+
+
+_PAID_50 = {
+    "claim": "Paid $50 for the trip",
+    "record": "Charged S$5.00 (cancellation fee)",
+    "evidence_refs": ["fare_validate.actual_fare_sgd"],
+    "verdict": "contradicted",
+}
+
+
+async def _judge_disp002(replies: list[str]):
+    case = _load_tc("DISP-002")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    rider_brief, driver_brief = _briefs(case, "no_show_check.total_wait_min", "NS-1.4")
+    seen: list[str] = []
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        seen.append(system_prompt)
+        return _llm_result(replies[min(len(seen), len(replies)) - 1])
+
+    with patch("agents.judge.chat", side_effect=_mock_chat):
+        ruling = await run_judge(case, evidence, clauses, rider_brief, driver_brief)
+    return ruling, seen
+
+
+@pytest.mark.asyncio
+async def test_contradicted_claim_reported_but_outcome_from_records():
+    ruling, seen = await _judge_disp002([_judge_reply_with_claims([_PAID_50])])
+    assert "Check the filer's account against the records" in seen[0]
+    assert len(seen) == 1
+    assert ruling.outcome == "charge_upheld"  # the $50 claim moves no money
+    assert ruling.amount_sgd == 5.0
+    [check] = ruling.claim_checks
+    assert check.verdict == "contradicted"
+    assert check.evidence_refs == ["fare_validate.actual_fare_sgd"]
+
+
+@pytest.mark.asyncio
+async def test_claim_check_with_bad_ref_retried():
+    bad = {**_PAID_50, "evidence_refs": ["payments.amount"]}
+    ruling, seen = await _judge_disp002([
+        _judge_reply_with_claims([bad]),
+        _judge_reply_with_claims([_PAID_50]),
+    ])
+    assert len(seen) == 2
+    assert ruling.claim_checks[0].evidence_refs == ["fare_validate.actual_fare_sgd"]
+
+
+@pytest.mark.asyncio
+async def test_uncited_verdict_downgraded_after_retry():
+    """Never report 'contradicted' without a record to point to."""
+    uncited = {**_PAID_50, "evidence_refs": ["payments.amount"]}
+    no_refs = {**_PAID_50, "claim": "Waited 10 minutes", "evidence_refs": [], "verdict": "consistent"}
+    ruling, seen = await _judge_disp002([_judge_reply_with_claims([uncited, no_refs])])
+    assert len(seen) == 2
+    assert [(c.verdict, c.evidence_refs) for c in ruling.claim_checks] == [
+        ("unverifiable", []), ("unverifiable", []),
+    ]
+
+
+@pytest.mark.asyncio
+async def test_claim_checks_optional_in_judge_reply():
+    ruling, _ = await _judge_disp002([_make_judge_json(None, None, 0.95, ["NS-1.6"])])
+    assert ruling.claim_checks == []
+
+
+# ---------- 11. Organiser v2.1 route thresholds (§6.2) ----------
+
+
+async def _judge_case(case, confidence: float, evidence_ref: str, clause: str, detour=False):
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    rider_brief, driver_brief = _briefs(case, evidence_ref, clause)
+    is_route = case.dispute_ticket.dispute_type == "route_deviation"
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(_make_judge_json(
+            detour if is_route else None, False if is_route else None, confidence, [clause],
+        ))
+
+    with patch("agents.judge.chat", side_effect=_mock_chat):
+        return await run_judge(case, evidence, clauses, rider_brief, driver_brief)
+
+
+@pytest.mark.asyncio
+async def test_route_ruling_below_80_percent_escalates():
+    ruling = await _judge_case(_load_tc("TC-05"), 0.75, "route_deviation.deviation_pct", "RD-2.6")
+    assert ruling.outcome == "escalate"
+    assert ruling.amount_sgd == 0.0
+    assert ruling.escalation_reason == "Low confidence (75%, needs 80%)"
+
+
+@pytest.mark.asyncio
+async def test_route_ruling_at_80_percent_issued():
+    ruling = await _judge_case(_load_tc("TC-05"), 0.80, "route_deviation.deviation_pct", "RD-2.6")
+    assert (ruling.outcome, ruling.amount_sgd) == ("refund", 1.07)
+
+
+@pytest.mark.asyncio
+async def test_no_show_keeps_70_percent_threshold():
+    ruling = await _judge_case(_load_tc("DISP-002"), 0.75, "no_show_check.total_wait_min", "NS-1.4")
+    assert ruling.outcome == "charge_upheld"
+
+
+@pytest.mark.asyncio
+async def test_route_over_2km_escalation_reason_names_the_rule():
+    d = _load_tc("TC-05").model_dump(mode="json")
+    pickup, dropoff = d["trip_data"]["pickup_location"], d["trip_data"]["dropoff_location"]
+    dlat, dlng = dropoff["lat"] - pickup["lat"], dropoff["lng"] - pickup["lng"]
+    gps = d["gps_telemetry"]
+    # Overshoot to 2x the straight line and back: ~3x the direct distance.
+    gps[1:-1] = [
+        {**gps[1], "lat": pickup["lat"] + dlat * k, "lng": pickup["lng"] + dlng * k, "status": "in_trip"}
+        for k in (1.0, 2.0)
+    ]
+    case = DisputeCase.model_validate(d)
+
+    ruling = await _judge_case(case, 0.95, "route_deviation.excess_distance_km", "RD-2.8")
+    assert ruling.outcome == "escalate"
+    assert "RD-2.8" in ruling.clauses_cited
+    assert ruling.escalation_reason.startswith("Route was ")
+    assert ruling.escalation_reason.endswith("over the 2 km limit for automatic rulings (RD-2.8)")
