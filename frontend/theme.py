@@ -30,13 +30,13 @@ _DARK = """
 """
 
 _FONTS = (
-    "@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700"
-    "&family=Nunito+Sans:wght@400;600;700;800&display=swap');"
+    "@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800"
+    "&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');"
 )
 
 _CSS = """
 :root{--z-popup:1000010;--font-display:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
-      --font-body:'Nunito Sans',system-ui,-apple-system,'Segoe UI',sans-serif;}
+      --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;}
 
 /* ---- Streamlit surfaces ---- */
 .stApp,[data-testid="stAppViewContainer"],[data-testid="stMain"]{background:var(--bg)!important;color:var(--fg);
@@ -44,9 +44,9 @@ _CSS = """
 [data-testid="stHeader"]{background:transparent!important;}
 [data-testid="stSidebar"],[data-testid="stSidebar"]>div{background:var(--surface)!important;}
 .stApp .block-container{max-width:1040px;padding-top:1.2rem;padding-bottom:4rem;}
-.stApp :is(p,li,label,small,button,input,textarea,summary){font-family:var(--font-body);}
+.stApp :is(p,li,label,small,button,input,textarea,summary,[data-testid="stMarkdownContainer"],.vp-msg,.vp-sys,.vp-pop){font-family:var(--font-body);}
 .stApp :is([data-testid="stIconMaterial"],[data-testid="stIconMaterial"] *){font-family:'Material Symbols Rounded'!important;}
-.stApp :is(h1,h2,h3,h4,h5,h6){font-family:var(--font-display)!important;color:var(--fg)!important;letter-spacing:0;}
+.stApp :is(h1,h2,h3,h4,h5,h6){font-family:var(--font-display)!important;color:var(--fg)!important;letter-spacing:0;word-spacing:.08em;font-weight:700!important;}
 .stApp :is(p,li,label,.stMarkdown,[data-testid="stMarkdownContainer"],[data-testid="stWidgetLabel"] p){color:var(--fg);}
 .stApp [data-testid="stCaptionContainer"],.stApp [data-testid="stCaptionContainer"] *{color:var(--muted)!important;}
 .stApp a{color:var(--accent);}
@@ -165,7 +165,7 @@ _CSS = """
 /* ---- Hero ---- */
 .vp-eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--accent);}
 .vp-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding:28px 0 8px;}
-.vp-hero h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.12;margin:10px 0 14px;font-weight:700;}
+.vp-hero h1{font-size:clamp(1.9rem,4.4vw,3rem);line-height:1.14;letter-spacing:-.01em;word-spacing:.08em;margin:10px 0 14px;font-weight:700;}
 .vp-hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--plum));-webkit-background-clip:text;
   background-clip:text;color:transparent;}
 .vp-lead{color:var(--muted)!important;font-size:1.1rem;max-width:46ch;}
