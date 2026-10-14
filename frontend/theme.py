@@ -1,4 +1,4 @@
-"""Vroomplain look and feel: colour tokens, light/dark switching and small HTML pieces.
+"""RydeResolve look and feel: colour tokens, light/dark switching and small HTML pieces.
 
 Streamlit's own theme cannot change at runtime, so the palette lives in CSS variables
 that we inject on every run. The mode is "auto" (follow the OS), "light" or "dark".
@@ -361,7 +361,7 @@ def brand_html() -> str:
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" '
         'stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l2-5a2 2 0 0 1 2-1.4h10a2 2 0 0 1 2 1.4l2 5v3H3z"/>'
         '<circle cx="7.5" cy="18" r="1.6" fill="#fff"/><circle cx="16.5" cy="18" r="1.6" fill="#fff"/></svg></span>'
-        "Vroomplain</div>"
+        "RydeResolve</div>"
     )
 
 
