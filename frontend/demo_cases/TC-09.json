@@ -1,0 +1,183 @@
+{
+  "case_id": "TC-09",
+  "dispute_type": "no_show_charge",
+  "filed_by": "rider",
+  "evidence": [
+    {
+      "dispute_id": "DISP-002-T9",
+      "tool": "history_lookup",
+      "facts": {
+        "rider": {
+          "avg_rating": 3.9,
+          "total_trips": 34,
+          "account_age_days": 210,
+          "dispute_history": {
+            "total_disputes": 4,
+            "upheld": 1,
+            "rejected": 3
+          },
+          "fraud_flags": 1,
+          "fraud_flag_details": "flagged_for_frequent_late_cancellations"
+        },
+        "driver": {
+          "avg_rating": 4.9,
+          "total_trips": 3201,
+          "account_age_days": 900,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld_against": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        }
+      },
+      "flags": [
+        "RIDER_FRAUD_FLAG"
+      ]
+    },
+    {
+      "dispute_id": "DISP-002-T9",
+      "tool": "safety_check",
+      "facts": {
+        "safety_incident": false,
+        "categories": [],
+        "keyword_hits": [],
+        "flagged_messages": [],
+        "max_speed_kmh": 42.0,
+        "speeding": false,
+        "speeding_threshold_kmh": 90
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-002-T9",
+      "tool": "no_show_check",
+      "facts": {
+        "driver_distance_from_pickup_m": null,
+        "driver_within_arrival_radius": false,
+        "arrived_minutes_vs_scheduled": -2.0,
+        "total_wait_min": 8.0,
+        "free_wait_expired": true,
+        "no_show_threshold_reached": true,
+        "contact_attempts": 5,
+        "driver_messages": 4,
+        "driver_calls": 1,
+        "contact_requirement_met": true,
+        "rider_replies": 0,
+        "minimum_contact_attempts": 2,
+        "missing_evidence": [
+          "gps_telemetry (no arrived/waiting points)"
+        ]
+      },
+      "flags": [
+        "NS-1.8_MISSING_EVIDENCE"
+      ]
+    },
+    {
+      "dispute_id": "DISP-002-T9",
+      "tool": "fare_validate",
+      "facts": {
+        "fare_type": null,
+        "actual_fare_sgd": 5.0,
+        "fare_source": "cancellation_fee",
+        "per_km_rate_sgd": null,
+        "surge_applied": null,
+        "components_sum_sgd": null,
+        "breakdown_consistent": null
+      },
+      "flags": []
+    }
+  ],
+  "log": [
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The fee should be reversed: the rider says they were ready and the driver did not meet the rules for a no-show."
+    },
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "Key trip evidence is missing."
+    },
+    {
+      "agent": "_brief",
+      "side": "rider"
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The fee stands: the driver followed every step required before cancelling."
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "Key trip evidence is missing."
+    },
+    {
+      "agent": "_brief",
+      "side": "driver"
+    },
+    {
+      "agent": "judge",
+      "type": "ruling",
+      "content": "Ruling: escalate, S$0.00 (confidence 0.50). Clauses: NS-1.8, E-1.5. Escalated: Missing evidence: gps_telemetry (no arrived/waiting points)"
+    }
+  ],
+  "briefs": [
+    {
+      "dispute_id": "DISP-002-T9",
+      "side": "rider",
+      "position": "The fee should be reversed: the rider says they were ready and the driver did not meet the rules for a no-show.",
+      "arguments": [
+        {
+          "point": "Key trip evidence is missing.",
+          "evidence_refs": [
+            "no_show_check.driver_distance_from_pickup_m"
+          ],
+          "clauses": [
+            "NS-1.7"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The rider has no evidence that contradicts the driver's GPS or chat record."
+      ]
+    },
+    {
+      "dispute_id": "DISP-002-T9",
+      "side": "driver",
+      "position": "The fee stands: the driver followed every step required before cancelling.",
+      "arguments": [
+        {
+          "point": "Key trip evidence is missing.",
+          "evidence_refs": [
+            "no_show_check.total_wait_min",
+            "no_show_check.contact_attempts"
+          ],
+          "clauses": [
+            "NS-1.6"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "Some gates may not be met."
+      ]
+    }
+  ],
+  "ruling": {
+    "dispute_id": "DISP-002-T9",
+    "outcome": "escalate",
+    "amount_sgd": 0.0,
+    "confidence": 0.5,
+    "clauses_cited": [
+      "NS-1.8",
+      "E-1.5"
+    ],
+    "explanation_rider": "Important trip evidence is missing, so the system will not decide this alone. A person will review it. Nothing changes on your account until then.",
+    "explanation_driver": "Important trip evidence is missing, so the system will not decide this alone. A person will review it. Nothing changes on your account until then.",
+    "conduct_flag": false,
+    "escalated": true,
+    "escalation_reason": "Missing evidence: gps_telemetry (no arrived/waiting points)"
+  }
+}

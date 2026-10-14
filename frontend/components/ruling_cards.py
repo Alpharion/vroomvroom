@@ -282,7 +282,9 @@ def _card_html(evidence: dict[str, Any], technical: bool) -> str:
     )
 
 
-def render_evidence_card(evidence: dict[str, Any], technical: bool = False, index: int = 0) -> None:
+def render_evidence_card(
+    evidence: dict[str, Any], technical: bool = False, index: int = 0, scope: str = ""
+) -> None:
     """Render an evidence tool output card.
 
     Expected schema (see schemas.md §2 Evidence output):
@@ -290,11 +292,11 @@ def render_evidence_card(evidence: dict[str, Any], technical: bool = False, inde
 
     Every card has the same height. The title, flags and footer are a click target (an invisible
     button laid under the facts area) that opens the full facts in a dialog; the facts area
-    scrolls on its own.
+    scrolls on its own. ``scope`` keeps widget keys unique when several sets of cards share a page.
     """
     tool = evidence.get("tool", "unknown")
     label = TOOL_LABELS.get(tool, tool)
-    with st.container(key=f"evcard_{index}_{tool}"):
-        if st.button(f"Open {label} details", key=f"evbtn_{index}_{tool}"):
+    with st.container(key=f"evcard_{scope}{index}_{tool}"):
+        if st.button(f"Open {label} details", key=f"evbtn_{scope}{index}_{tool}"):
             _open_evidence_dialog(evidence, technical)
         st.markdown(_card_html(evidence, technical), unsafe_allow_html=True)

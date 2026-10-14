@@ -1,0 +1,29 @@
+Skipping DISP-003.json: 1 validation error for DisputeCase
+dispute_ticket.dispute_type
+  Input should be 'no_show_charge' or 'route_deviation' [type=literal_error, input_value='fare_dispute', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.14/v/literal_error
+INFO:     Started server process [101375]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:41154 - "POST /api/disputes/resolve HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47302 - "POST /api/disputes/resolve HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40184 - "POST /api/disputes/resolve HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40186 - "POST /api/review-queue/DISP-002-T2/appeal HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53658 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43756 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40440 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38218 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38222 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46010 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46016 - "POST /api/review-queue/DISP-002-T2/decision HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46018 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46026 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46040 - "POST /api/review-queue/DISP-001-T11/decision HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46042 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46050 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46056 - "GET /api/review-queue HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [101375]

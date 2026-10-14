@@ -1,8 +1,9 @@
 """Human review queue: escalated cases waiting for a person to decide.
 
-Proposed backend contract (not built yet; this module falls back to a
-session-local queue until it exists):
+Backend contract (this module falls back to a session-local queue if the
+backend queue is unreachable or in demo mode):
     GET  /api/review-queue                       -> list[QueueItem]
+    POST /api/review-queue/{dispute_id}/appeal   -> QueueItem (no body)
     POST /api/review-queue/{dispute_id}/decision -> QueueItem
          body: {"decision": "approve" | "override", "outcome": str,
                 "amount_sgd": float, "note": str}
@@ -79,9 +80,19 @@ def record_escalation(payload: dict[str, Any], ruling: dict[str, Any], evidence:
 
 def record_appeal(payload: dict[str, Any], ruling: dict[str, Any], evidence: list[dict[str, Any]]) -> None:
     """A filer asks for a person to look at an AI ruling. The AI outcome becomes the
-    suggestion, so the reviewer can approve it or override it."""
+    suggestion, so the reviewer can approve it or override it.
+
+    The backend queue is the source of truth; the browser-local queue is only the fallback
+    when the backend has no queue (demo mode, or it is unreachable)."""
     ticket = (payload or {}).get("dispute_ticket", {})
     dispute_id = ruling.get("dispute_id") or ticket.get("dispute_id")
+    if not st.session_state.get("demo_mode"):
+        try:
+            resp = httpx.post(f"{BACKEND_URL}/api/review-queue/{dispute_id}/appeal", timeout=_TIMEOUT)
+            if resp.status_code == 200:
+                return
+        except httpx.HTTPError:
+            pass
     if any(i["dispute_id"] == dispute_id and i["status"] == "pending" for i in _local()):
         return
     _local().append(
