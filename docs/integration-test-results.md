@@ -3,9 +3,9 @@
 **Project:** RydeResolve — Multi-Agent Autonomous Dispute Resolution System
 **Track:** Tencent Cloud AI CAN DO IT Hackathon Singapore 2026, Digital Native Track (Ryde)
 **Profile:** HACKATHON_2026
-**Date:** 2026-10-11
-**Test runner:** pytest 9.1.1, Python 3.14.2, pytest-asyncio 1.4.0
-**Policy doc:** `docs/ryde_dispute_policy.md` v1.0
+**Date:** 2026-10-11, updated 2026-10-14 (test cases extended from TC-01–TC-11 to TC-01–TC-15)
+**Test runner:** pytest 9.1.1, Python 3.14.6, pytest-asyncio 1.4.0
+**Policy doc:** `docs/ryde_dispute_policy.md` (organiser v2.1 thresholds)
 
 ---
 
@@ -13,37 +13,49 @@
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 101 |
-| Passed | 101 |
+| Total tests | 135 |
+| Passed | 135 |
 | Failed | 0 |
 | Errors | 0 |
-| Total execution time | 0.81s |
-| Test files | 7 |
-| Test cases (TC-01 to TC-11) | 11 |
+| Total execution time | 2.04s |
+| Test files | 8 |
+| Test cases (TC-01 to TC-15) | 15 |
 
-All 101 tests pass. Outcomes, amounts, clauses, and confidence values are computed by deterministic Python code (evidence tools + outcome formulas) and validated by the test suite. LLM calls are mocked in tests via `unittest.mock.patch`; no real network calls are made.
+All 135 tests pass. Outcomes, amounts, clauses, and confidence values are computed by deterministic Python code (evidence tools + outcome formulas) and validated by the test suite. LLM calls are mocked in tests via `unittest.mock.patch`; no real network calls are made.
+
+> **Update, 14 Oct:** Section 2 now covers TC-01 to TC-15 and reflects the organiser v2.1 policy thresholds. Sections 3 to 5 still describe the suite as of 11 Oct; since then the suite grew from 101 to 135 tests (`test_tools.py` 66, `test_agents.py` 23, `test_api_agents.py` 11, `test_llm.py` 11, `test_review_queue.py` 12 (new), `test_api.py` 7, `test_schemas.py` 4, `test_load_data.py` 1).
 
 ---
 
-## 2. Test Case Results — TC-01 through TC-11
+## 2. Test Case Results — TC-01 through TC-15
 
-Each row maps a test case from `data/test_cases/expected_results.json` to its actual outcome as verified by the test suite.
+Each row maps a test case from `data/test_cases/expected_results.json` to its actual outcome from the real evidence tools and outcome formulas, plus the safety override (the same code path the Judge is checked against). **Pass** means the outcome and the amount match the expected values.
 
-| Case ID | Dispute Type | Expected Outcome | Actual Outcome | Expected Amount (SGD) | Actual Amount (SGD) | Policy Clauses | Confidence | Exec Time (s) | Pass/Fail | Notes |
-|---------|-------------|-----------------|----------------|----------------------|---------------------|----------------|------------|--------------|-----------|-------|
-| TC-01 | no_show_charge | charge_upheld | charge_upheld | 5.00 (retained) | 5.00 (retained) | NS-1.1, NS-1.3, NS-1.4, NS-1.5, NS-1.6 | 0.92 | <0.01 | PASS | All 5 no-show gates pass. Driver arrived 2 min early, waited 8 min, 5 contact attempts. |
-| TC-02 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.3, NS-1.7 | 0.88 | <0.01 | PASS | Driver cancelled at 3 min — under 5 min free wait (NS-1.3 fails). |
-| TC-03 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.1, NS-1.7 | 0.90 | <0.01 | PASS | Driver GPS 400m from pickup — NS-1.1 fails (arrival radius 10m). |
-| TC-04 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.5, NS-1.7 | 0.89 | <0.01 | PASS | 0 contact attempts — NS-1.5 fails (minimum 2 required). |
-| TC-05 | route_deviation | refund | refund | 1.07 | 1.07 | RD-2.2, RD-2.3, RD-2.4, RD-2.5, RD-2.6 | 0.90 | 0.02 | PASS | 41.4% deviation, metered fare, no rider detour, no traffic. Refund = 1.5233 km x $0.70/km = $1.07. |
-| TC-06 | route_deviation | no_action | no_action | 0.00 | 0.00 | RD-2.2, RD-2.3 | 0.93 | 0.01 | PASS | Rider explicitly requested detour via Alexandra Road — RD-2.3 fires, no refund. |
-| TC-07 | route_deviation | no_action | no_action | 0.00 | 0.00 | RD-2.2 | 0.91 | <0.01 | PASS | 12.2% deviation — below 20% threshold (RD-2.2 does not trigger). Fixed fare. |
-| TC-08 | no_show_charge | escalate | escalate | 0.00 | 0.00 | S-1.1, S-1.2 | 0.95 | 0.01 | PASS | Safety keywords ("threat", "unsafe") in chat logs. Safety overrides no-show formula. NS-1.6 dropped. |
-| TC-09 | no_show_charge | escalate | escalate | 0.00 | 0.00 | NS-1.8, E-1.5 | 0.55 | <0.01 | PASS | GPS telemetry missing "arrived" and "waiting" status points. Cannot verify driver presence. |
-| TC-10 | no_show_charge | charge_upheld | charge_upheld | 5.00 (retained) | 5.00 (retained) | NS-1.1, NS-1.3, NS-1.4, NS-1.5, NS-1.6, E-1.5 | 0.89 | <0.01 | PASS | Fairness test: rider/driver profiles swapped — same outcome as TC-01. Profiles don't override trip evidence (E-1.4). |
-| TC-11 | route_deviation | escalate | escalate | 0.00 | 0.00 | RD-2.7, E-1.5 | 0.55 | 0.01 | PASS | Only 1 in-trip GPS point (needs >= 2). Cannot compute actual distance or deviation. |
+| Case ID | Dispute Type | Expected Outcome | Actual Outcome | Expected Amount (SGD) | Actual Amount (SGD) | Actual Clauses (formula) | Expected Confidence | Live ADP run (13 Oct) | Pass/Fail | Notes |
+|---------|-------------|-----------------|----------------|----------------------|---------------------|--------------------------|--------------------|-----------------------|-----------|-------|
+| TC-01 | no_show_charge | charge_upheld | charge_upheld | 5.00 (retained) | 5.00 (retained) | NS-1.6 | 0.92 | charge_upheld, conf 0.95, 20.3 s | PASS | All gates pass. Driver arrived 2 min early, waited 8 min (threshold 8), 4 messages and 1 call, 0 rider replies. |
+| TC-02 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.3, NS-1.7 | 0.88 | charge_reversed, conf 0.95, 19.3 s | PASS | Driver cancelled after 3 min, under the 5 min free wait (NS-1.3 fails). |
+| TC-03 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.1, NS-1.7 | 0.90 | charge_reversed, conf 0.95, 27.8 s | PASS | Driver GPS arrival point 401.1 m from pickup. NS-1.1 fails (arrival radius 10 m). |
+| TC-04 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.5, NS-1.7 | 0.89 | charge_reversed, conf 0.95, 24.1 s | PASS | 0 driver messages and 0 calls. NS-1.5 fails (needs at least 1 message AND 1 call). |
+| TC-05 | route_deviation | refund | refund | 1.07 | 1.07 | RD-2.6 | 0.90 | refund, conf 0.95, 28.5 s | PASS | 41.4% deviation, metered fare, no rider detour request, no traffic evidence. Refund = 1.5233 km x $0.70/km = $1.07. |
+| TC-06 | route_deviation | no_action | no_action | 0.00 | 0.00 | RD-2.3 | 0.93 | no_action, conf 0.95, 18.4 s | PASS | Same 41.4% deviation, but the rider asked for the detour in chat. RD-2.3 fires, no refund. |
+| TC-07 | route_deviation | no_action | no_action | 0.00 | 0.00 | RD-2.2 | 0.91 | no_action, conf 0.95, 18.0 s | PASS | 11.9% deviation, below the 20% review threshold. Fixed fare ($12.00). |
+| TC-08 | no_show_charge | escalate | escalate | 0.00 | 0.00 | S-1.1, S-1.2 | 0.95 | escalate, conf 0.95, 17.7 s | PASS | Safety keywords ("threat", "threaten", "unsafe") in chat. Safety overrides the no-show formula (which would uphold the charge). |
+| TC-09 | no_show_charge | escalate | escalate | 0.00 | 0.00 | NS-1.8, E-1.5 | 0.55 | escalate, conf 0.65, 28.1 s | PASS | GPS has no "arrived" or "waiting" points, so driver presence cannot be verified. Missing evidence escalates. |
+| TC-10 | no_show_charge | charge_upheld | charge_upheld | 5.00 (retained) | 5.00 (retained) | NS-1.6 | 0.89 | charge_upheld, conf 0.95, 20.4 s | PASS | Fairness test: rider and driver profiles swapped. Same outcome as TC-01. Profiles do not override trip evidence (E-1.4). |
+| TC-11 | route_deviation | escalate | escalate | 0.00 | 0.00 | RD-2.7, E-1.5 | 0.55 | escalate, conf 0.65, 15.3 s | PASS | Only 1 in-trip GPS point (needs at least 2). Actual distance and deviation cannot be computed. |
+| TC-12 | no_show_charge | charge_reversed | charge_reversed | 5.00 (refund) | 5.00 (refund) | NS-1.5, NS-1.7 | 0.88 | not run | PASS | New 14 Oct. Driver sent 4 messages but made 0 calls. NS-1.5 fails (needs a message AND a call). |
+| TC-13 | route_deviation | no_action | no_action | 0.00 | 0.00 | RD-2.5 | 0.85 | not run | PASS | New 14 Oct. 41.4% deviation on a fixed (up-front) fare: no refund, conduct flag recorded against the driver. |
+| TC-14 | route_deviation | escalate | escalate | 0.00 | 0.00 | RD-2.8, E-1.5 | 0.60 | not run | PASS | New 14 Oct. 179% deviation, 6.6 km extra, over the 2 km automatic-ruling limit (organiser v2.1 section 6.2). |
+| TC-15 | route_deviation | escalate | escalate | 0.00 | 0.00 | S-1.1, S-1.2 | 0.50 | not run | PASS | New 14 Oct. Route facts alone give a $1.07 refund, but the rider's chat contains "reckless" and "unsafe". The safety override escalates. |
 
-**Totals:** 11/11 PASS. All expected outcomes match actual outcomes. All expected amounts match actual amounts.
+**Totals:** 15/15 PASS. All expected outcomes match actual outcomes. All expected amounts match actual amounts.
+
+**Notes on this table**
+- **Clauses:** the "Actual Clauses" column is what the outcome formula cites: the deciding gate only. The expected clause lists in `expected_results.json` are longer for TC-01, TC-05, TC-06, TC-08, TC-09 and TC-10, and the live Judge cites more still (see `docs/live-integration-results.md`). Clause lists are not part of the pass criterion.
+- **Confidence:** the column is the fixture's expected value, not a computed one. The live Judge returned 0.95 for resolved cases and 0.65 for TC-09 and TC-11.
+- **TC-12 to TC-15:** added on 14 Oct. Their expected outcomes were derived from the formulas and the safety check, not from a live agent run, so they have not been verified live. In stub mode (`USE_STUB_AGENTS=true`) TC-08 and TC-15 do not escalate, because the stub skips the safety check; the real agent graph does.
+- **Live ADP run:** the 13 Oct live results come from `docs/live-integration-results.md`. A key issue found on 14 Oct (two keys concatenated in a local `.env`) was fixed and TC-03, TC-08 and TC-11 were re-run live that day: TC-03 charge_reversed (23 s), TC-11 and TC-08 escalated (20 s and 16 s).
 
 ---
 
@@ -148,7 +160,7 @@ Each row maps a test case from `data/test_cases/expected_results.json` to its ac
 | test_both_advocates_receive_identical_user_messages | E-1.2 | PASS | Both advocates receive byte-identical user messages (same case summary, evidence, clause texts). |
 | test_judge_driver_first_swaps_brief_order | E-1.2 | PASS | driver_first=True reorders briefs in Judge's JSON payload — driver_brief before rider_brief. |
 | test_driver_first_reaches_the_judge | E-1.2 | PASS | End-to-end: API request with driver_first=True reaches the Judge's user message. |
-| TC-10 (swapped profiles) | E-1.4 | PASS | Rider/driver profiles swapped — same outcome as TC-01 (charge_upheld). Profiles inform confidence (0.89 vs 0.92) but do not override trip evidence. |
+| TC-10 (swapped profiles) | E-1.4 | PASS | Rider/driver profiles swapped — same outcome as TC-01 (charge_upheld, $5.00, NS-1.6). The fixture's expected confidence differs slightly (0.89 vs 0.92), but the profiles do not override trip evidence. |
 
 **Result:** The system treats both advocates identically and does not let ratings, histories, or fraud flags override trip evidence in the outcome determination.
 
@@ -162,7 +174,7 @@ Each row maps a test case from `data/test_cases/expected_results.json` to its ac
 | test_no_safety_incident_keeps_formula_outcome | PASS | DISP-002 mentions "White Toyota" — no safety keyword hit. safety_override returns None. Formula outcome stands: charge_upheld, $5.00. |
 | test_tc08_safety_routed_to_human_review | PASS | End-to-end API test: TC-08 escalates, final stream line: "Routed to the human review queue." |
 | test_safety_no_false_positive_on_white_toyota | PASS | Word-boundary matching: "hit" does not match "White" in "White Toyota Prius". |
-| test_safety_only_tc08_flagged_across_dataset | PASS | Across all DISP-00*.json and TC-*.json files, only TC-08 triggers a safety incident. |
+| test_safety_only_tc08_and_tc15_flagged_across_dataset | PASS | Across all DISP-00*.json and TC-*.json files, only TC-08 and TC-15 (the two deliberate safety cases) trigger a safety incident. |
 | test_safety_tc08_threat_keywords | PASS | TC-08: "threat" in keyword_hits, flags=["S-1.1_SAFETY_INCIDENT"], safety_override returns exact 4-tuple. |
 | test_safety_speeding_boundary | PASS | Speeding threshold is strictly > 90 km/h. 90 km/h = not speeding, 91 km/h = speeding. |
 | test_safety_keyword_in_description | PASS | Safety keywords in dispute_ticket.description are caught, with sender="dispute_description". |
@@ -215,11 +227,11 @@ Python's bytecode cache (`__pycache__/*.pyc`) is not invalidated when the source
 
 2. **Add `pytest.ini`** with `asyncio_mode = auto` to remove the need for `@pytest.mark.asyncio` decorators on every async test.
 
-3. **Pre-cache LLM responses** for all 11 test cases by running `run_case.py` once with `USE_MOCK_LLM=false` and a valid `ADP_APP_KEY`. This populates `backend/.cache/` so `run_case.py` can run end-to-end without API calls.
+3. **Pre-cache LLM responses** for all 15 test cases by running `run_case.py` once with `USE_MOCK_LLM=false` and a valid `ADP_APP_KEY`. This populates `backend/.cache/` so `run_case.py` can run end-to-end without API calls.
 
 4. **Add a CI pipeline** (GitHub Actions) to run `pytest` on every push and pull request, preventing regressions.
 
-5. **Add an end-to-end integration test** that runs `resolve_case()` against all 11 TCs and compares the resulting `Ruling` to `data/test_cases/expected_results.json` — outcome, amount, clauses, confidence, and escalation status.
+5. **Add an end-to-end integration test** that runs `resolve_case()` against all 15 TCs and compares the resulting `Ruling` to `data/test_cases/expected_results.json` — outcome, amount, clauses, confidence, and escalation status.
 
 6. **Add `.gitattributes`** with `*.md text eol=lf` to prevent OneDrive and Windows from flipping line endings between CRLF and LF, which causes spurious git diffs and can interfere with file parsing.
 
