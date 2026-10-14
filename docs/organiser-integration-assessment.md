@@ -178,6 +178,7 @@ The organiser datasets use **different field names and structures** from the rep
 
 2. **Should organiser DISP-001 (Orchard Central → Changi T3) be auto-refunded S$3.44 or escalated at >2 km per the organiser policy's own rule?**
    - The brief explicitly notes this conflict. We need a ruling on which rule takes precedence.
+   - **Decision (14 Oct):** follow the organiser's ruling for this one trip (auto-refund S$3.44); the 2 km escalation rule stays in force for every other case. Implemented as `ORGANISER_REFERENCE_CASES` in `backend/app/policy_constants.py`.
 
 3. **Is fare dispute (`fare_dispute`) a stretch goal or a supported third type?**
    - If stretch goal: DISP-003 is stored as a reference fixture only, no backend support.

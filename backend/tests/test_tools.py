@@ -807,3 +807,44 @@ def test_fare_validate_no_fare_data_flagged():
     result = fare_validate(DisputeCase.model_validate(d))
     assert result.facts["actual_fare_sgd"] is None
     assert result.flags == ["FARE_DATA_MISSING"]
+
+
+# ---------- Organiser reference case: DISP-001-ORG follows the organiser's ruling ----------
+
+
+def test_disp001_org_follows_the_organiser_ruling():
+    """The organiser's key rules a $3.44 partial refund (4.3 km x $0.80, ORG-RD-1.2 and ORG-RD-1.3),
+    although the excess is over the 2 km limit. The route tool uses the platform's recorded
+    distances for this one case."""
+    facts = route_deviation(_load_case(DATA / "DISP-001-ORG.json")).facts
+    assert facts["baseline_distance_km"] == 20.5
+    assert facts["actual_distance_km"] == 24.8
+    assert facts["excess_distance_km"] == 4.3
+    assert facts["review_triggered"] is True
+    assert facts["missing_evidence"] == []
+    assert compute_route_deviation_outcome(facts) == ("refund", 3.44, ["ORG-RD-1.2", "ORG-RD-1.3"], False)
+
+
+def test_organiser_special_case_touches_no_other_case():
+    """Only DISP-001-ORG carries the organiser facts; every other route case still escalates
+    over 2 km extra, so the special case does not leak into the general formula."""
+    for path in sorted(DATA.glob("DISP-*.json")) + sorted(TC.glob("TC-*.json")):
+        if path.name.endswith(".expected.json"):
+            continue
+        try:
+            case = _load_case(path)
+        except Exception:
+            continue  # unsupported reference fixtures (e.g. fare_dispute)
+        if case.dispute_ticket.dispute_type != "route_deviation":
+            continue
+        facts = route_deviation(case).facts
+        if case.dispute_ticket.dispute_id == "DISP-001-ORG":
+            assert "organiser_reference_refund_sgd" in facts
+        else:
+            assert "organiser_reference_refund_sgd" not in facts, path.name
+    far = {
+        "missing_evidence": [], "review_triggered": True, "excess_distance_km": 4.3,
+        "rider_requested_detour": False, "traffic_justified": False, "fare_type": "metered",
+        "actual_distance_km": 24.8, "baseline_distance_km": 20.5, "per_km_rate_sgd": 0.8, "actual_fare_sgd": 35.0,
+    }
+    assert compute_route_deviation_outcome(far)[0] == "escalate"

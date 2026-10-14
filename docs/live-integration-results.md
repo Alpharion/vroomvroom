@@ -9,7 +9,7 @@
 
 ## Summary
 
-All 15 test cases (TC-01 to TC-15) passed against live Tencent Cloud ADP: every outcome, refund amount and escalation status matched the expected values. TC-01 to TC-10 were run on 13 Oct; TC-11 was re-run and TC-12 to TC-15 (new cases) were run on 14 Oct, after the ADP AppKey issue in the local `.env` was fixed. Clause lists are not part of the pass criterion: the Judge often cites more clauses than the fixture lists (see Observations). The 22 sample trips in the app were also run live on 14 Oct and are reported in their own section below: 21 of 22 match, DISP-001-ORG disagrees with the organiser's key, and DISP-103 failed before a fix and passes after it.
+All 15 test cases (TC-01 to TC-15) passed against live Tencent Cloud ADP: every outcome, refund amount and escalation status matched the expected values. TC-01 to TC-10 were run on 13 Oct; TC-11 was re-run and TC-12 to TC-15 (new cases) were run on 14 Oct, after the ADP AppKey issue in the local `.env` was fixed. Clause lists are not part of the pass criterion: the Judge often cites more clauses than the fixture lists (see Observations). The 22 sample trips in the app were also run live on 14 Oct and are reported in their own section below: 22 of 22 match: DISP-103 failed before a fix and passes after it, and DISP-001-ORG matches the organiser's key after a one-trip change.
 
 | Metric | Value |
 |---|---|
@@ -21,7 +21,7 @@ All 15 test cases (TC-01 to TC-15) passed against live Tencent Cloud ADP: every 
 | Min duration | 17.7 s (TC-08) |
 | Max duration | 30.1 s (TC-13) |
 
-These results are distinct from the 137 mocked unit tests (which use `USE_MOCK_LLM=true` and read from the LLM cache). The live suite exercises the full pipeline: evidence extraction → Rider Advocate → Driver Advocate → Judge → escalation branch, all via real ADP API calls with SSE streaming.
+These results are distinct from the 139 mocked unit tests (which use `USE_MOCK_LLM=true` and read from the LLM cache). The live suite exercises the full pipeline: evidence extraction → Rider Advocate → Driver Advocate → Judge → escalation branch, all via real ADP API calls with SSE streaming.
 
 ## Results Table
 
@@ -85,12 +85,12 @@ These results are distinct from the 137 mocked unit tests (which use `USE_MOCK_L
 
 The 22 trips in the app's trip dropdown (other than DISP-002, which is the same case as TC-01) were run through live ADP on 14 Oct with the same pipeline and settings as the test cases. "Expected" is the designed outcome in `data/sample_trips.expected.json` for DISP-101 to DISP-120, and the answer keys in `data/DISP-001.expected.json` and `data/DISP-001-ORG.expected.json` for the two older trips. Pass means the outcome and amount match.
 
-**Result: 21 of 22 match. DISP-001-ORG disagrees with the organiser's expected answer. DISP-103 errored on its first three attempts and passes after a fix (see below).**
+**Result: 22 of 22 match. DISP-103 errored on its first three attempts and passes after a fix, and DISP-001-ORG matches the organiser's ruling after a one-trip change (both described below).**
 
 | Case | Type | Expected | Actual | Amount (Exp / Act) | Conf | Escalated | Clauses Cited | Duration | Result |
 |------|------|----------|--------|---------------------|------|-----------|---------------|----------|--------|
 | DISP-001 | route_deviation | refund | refund | $1.07 / $1.07 | 0.95 | No | RD-2.6, RD-2.2, RD-2.3, RD-2.4, RD-2.5 | 26.1 s | PASS |
-| DISP-001-ORG | route_deviation | refund | no_action | $3.44 / $0.00 | 0.85 | No | RD-2.2, RD-2.4, RD-2.5 | 37.9 s | **FAIL** |
+| DISP-001-ORG | route_deviation | refund | refund | $3.44 / $3.44 | 0.95 | No | ORG-RD-1.2, ORG-RD-1.3, RD-2.2, RD-2.3, RD-2.4, RD-2.5, RD-2.6 | 25.5 s | PASS (after change) |
 | DISP-101 | no_show_charge | charge_upheld | charge_upheld | $5.00 / $5.00 | 0.95 | No | NS-1.6, NS-1.1, NS-1.3, NS-1.4, NS-1.5 | 31.3 s | PASS |
 | DISP-102 | no_show_charge | charge_upheld | charge_upheld | $5.00 / $5.00 | 0.95 | No | NS-1.6, NS-1.1, NS-1.2, NS-1.3, NS-1.4, NS-1.5 | 28.2 s | PASS |
 | DISP-103 | no_show_charge | charge_reversed | charge_reversed | $5.00 / $5.00 | 0.95 | No | NS-1.3, NS-1.7 | 19.6 s | PASS (after fix) |
@@ -112,12 +112,12 @@ The 22 trips in the app's trip dropdown (other than DISP-002, which is the same 
 | DISP-119 | route_deviation | refund | refund | $1.14 / $1.14 | 0.95 | No | RD-2.6, RD-2.1, RD-2.2, RD-2.3, RD-2.4, RD-2.5 | 22.2 s | PASS |
 | DISP-120 | route_deviation | refund | refund | $0.78 / $0.78 | 0.95 | No | RD-2.6, RD-2.2, RD-2.3, RD-2.4, RD-2.5 | 21.0 s | PASS |
 
-Durations for the 22 trips (DISP-103 as run after the fix): mean 23.9 s, median 22.15 s, min 17.9 s, max 37.9 s. Total wall-clock for the main run of all 22: about 8 min 41 s (DISP-103 failed fast in that run, 14.0 s).
+Durations for the 22 trips (DISP-103 and DISP-001-ORG as run after their fixes): mean 23.4 s, median 22.15 s, min 17.9 s, max 31.3 s. Total wall-clock for the main run of all 22: about 8 min 41 s (DISP-103 failed fast in that run, 14.0 s).
 
 ### Sample-trip observations
 
 - **DISP-103 failed live on its first three attempts, and was fixed.** The backend streamed an `error` line and no ruling. The Rider Advocate's third argument was a point made from the rider's own words ("the rider states they were walking from the car park") with an empty `evidence_refs` list, because the prompt tells advocates not to cite a tool fact for a claim. The `AdvocateBrief` schema rejects empty refs, the retry sometimes did the same, and the dispute failed. The case: driver waited 3 min and cancelled, with 2 messages and 1 call (expected: charge reversed under NS-1.3). **Fix (14 Oct, `agents/advocates.py`):** `_drop_uncited_arguments` removes arguments with no evidence ref or no clause when at least one cited argument remains, as `_drop_invalid` already does for invalid refs; if none would remain, the normal error and retry apply. Two tests cover both paths (137 tests pass). After the fix DISP-103 passed 4 of 4 live runs (charge_reversed, $5.00, NS-1.3 and NS-1.7, confidence 0.95, 18 to 23 s). The row above is the first post-fix run.
-- **DISP-001-ORG disagrees with the organiser's expected answer.** Live result: no_action, $0.00 (RD-2.2, RD-2.4, RD-2.5, confidence 0.85). The organiser's key says refund $3.44 (ORG-RD-1.2, ORG-RD-1.3). The formula gives the same answer as the live Judge: the GPS route is 20.7 km against a baseline of 24.6 km (straight-line distance x 1.3), so it is about 16% shorter than the baseline, not longer. The baseline method does not reproduce the organiser's reference route for this trip. This needs a decision from Damien or Marcus (use a per-trip reference route, or accept the difference).
+- **DISP-001-ORG now follows the organiser's ruling (one-trip special case, decided 14 Oct).** The first live run gave no_action, $0.00 (RD-2.2, RD-2.4, RD-2.5, confidence 0.85), the same as the formulas, because the tools measured the route from GPS against a straight-line x 1.3 baseline (20.7 km vs 24.6 km, so about 16% *shorter*). The organiser's key rules a $3.44 partial refund (ORG-RD-1.2, ORG-RD-1.3), computed from the distances the platform recorded (estimated 20.5 km, actual 24.8 km, 4.3 km x $0.80). That ruling conflicts with the organiser's own policy section 6.2 (more than 2 km extra should go to a person); the key itself notes the conflict. The team chose to follow the organiser's ruling for this trip only. `ORGANISER_REFERENCE_CASES` in `app/policy_constants.py` lists the case IDs; for them `route_deviation` uses the recorded distances and `compute_route_deviation_outcome` returns the refund ahead of the 2 km gate. Every other case is unchanged: the extra facts exist only for DISP-001-ORG, all 15 test cases and all other trips give the same outcomes, and two new tests cover this. Live re-run: refund $3.44, confidence 0.95, clauses ORG-RD-1.2, ORG-RD-1.3 plus RD-2.2 to RD-2.6, 25.5 s. The ORG-RD clause IDs are not in `docs/ryde_dispute_policy.md`, so the app shows them as chips without a hover popup.
 - **Every other trip matched**, including all six escalations among DISP-101 to DISP-120: DISP-109 (no GPS arrival record, confidence 0.45), DISP-110 and DISP-118 (safety, S-1.1 and S-1.2), DISP-116 (over the 2 km limit, high fare, RD-2.8), and DISP-117 (incomplete GPS, RD-2.7). The refunds matched to the cent (S$1.08, 1.25, 1.14, 0.78).
 - **Clause citations:** the deciding clause was cited every time. The Judge often also lists clauses it checked that did not decide the case, for example RD-2.3 (rider-requested detour) on refunds where the rider made no such request, and RD-2.1 to RD-2.4 on DISP-115. This is the same over-citing seen in TC-13. It is harmless where the extra clause is a gate that passed, but misleading when it points the other way (TC-13 cited RD-2.8, the 2 km escalation rule, although the extra distance was under 2 km).
 - **Confidence on rule-based escalations** is high where a rule decides (0.90 for the safety cases and DISP-110, 0.85 for DISP-116) and low where evidence is missing (0.45 for DISP-109, 0.65 for DISP-117), which matches how the escalation thresholds are meant to work.

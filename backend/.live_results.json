@@ -277,18 +277,23 @@
     "case_id": "DISP-001-ORG",
     "dispute_id": "DISP-001-ORG",
     "dispute_type": "route_deviation",
-    "outcome": "no_action",
-    "amount_sgd": 0.0,
-    "confidence": 0.85,
+    "outcome": "refund",
+    "amount_sgd": 3.44,
+    "confidence": 0.95,
     "escalated": false,
     "clauses_cited": [
+      "ORG-RD-1.2",
+      "ORG-RD-1.3",
       "RD-2.2",
+      "RD-2.3",
       "RD-2.4",
-      "RD-2.5"
+      "RD-2.5",
+      "RD-2.6"
     ],
     "escalation_reason": null,
-    "duration_s": 37.9,
-    "error": null
+    "duration_s": 25.5,
+    "error": null,
+    "note": "Re-run on 14 Oct after DISP-001-ORG was made to follow the organiser's ruling (refund $3.44). Before that change the formulas and the live Judge gave no_action ($0.00, RD-2.2, confidence 0.85)."
   },
   {
     "case_id": "DISP-101",

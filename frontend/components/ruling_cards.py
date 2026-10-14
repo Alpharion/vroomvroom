@@ -211,6 +211,8 @@ FACT_LABELS = {
     "baseline_distance_km": ("Direct route", "km"),
     "actual_distance_km": ("Route taken", "km"),
     "deviation_pct": ("Extra distance", "%"),
+    "distance_source": ("Distance source", ""),
+    "organiser_reference_refund_sgd": ("Organiser reference refund", "S$"),
     "review_triggered": ("Over the deviation limit", ""),
     "rider_requested_detour": ("Rider asked for a detour", ""),
     "traffic_justified": ("Traffic explains the detour", ""),

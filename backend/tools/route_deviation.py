@@ -16,6 +16,7 @@ import re
 from app.policy_constants import (
     DEVIATION_AUTO_RULE_KM,
     DEVIATION_REVIEW_THRESHOLD_PCT,
+    ORGANISER_REFERENCE_CASES,
     ROAD_NETWORK_FACTOR,
 )
 from schemas import DisputeCase, EvidenceOutput
@@ -179,6 +180,26 @@ def route_deviation(case: DisputeCase) -> EvidenceOutput:
         actual_fare_sgd = None
         missing.append("fare_breakdown")
 
+    # --- Organiser reference case (see policy_constants.ORGANISER_REFERENCE_CASES) ---
+    # Use the distances the platform recorded, and surface the organiser's partial refund.
+    # These facts are only added for those case IDs, so every other case is unchanged.
+    organiser_facts: dict[str, object] = {}
+    if case.dispute_ticket.dispute_id in ORGANISER_REFERENCE_CASES and fare_breakdown is not None:
+        est_km = fare_breakdown.get("estimated_distance_km")
+        act_km = fare_breakdown.get("actual_distance_km")
+        if est_km and act_km is not None and per_km_rate_sgd is not None:
+            baseline_distance_km = float(est_km)
+            actual_distance_km = float(act_km)
+            deviation_pct = round((actual_distance_km - baseline_distance_km) / baseline_distance_km * 100, 1)
+            review_triggered = deviation_pct >= DEVIATION_REVIEW_THRESHOLD_PCT
+            missing[:] = [m for m in missing if m != "gps_telemetry"]
+            organiser_facts = {
+                "distance_source": "recorded by the platform (organiser reference case)",
+                "organiser_reference_refund_sgd": round(
+                    (actual_distance_km - baseline_distance_km) * float(per_km_rate_sgd), 2
+                ),
+            }
+
     # --- Assemble output ------------------------------------------------
     excess_distance_km = (
         round(actual_distance_km - baseline_distance_km, 4)
@@ -201,6 +222,7 @@ def route_deviation(case: DisputeCase) -> EvidenceOutput:
         "per_km_rate_sgd": per_km_rate_sgd,
         "actual_fare_sgd": actual_fare_sgd,
         "missing_evidence": missing,
+        **organiser_facts,
     }
 
     flags: list[str] = []
@@ -235,6 +257,12 @@ def compute_route_deviation_outcome(
     # Gate 0: Missing evidence → escalate (RD-2.7; E-1.5: no adverse inference).
     if facts["missing_evidence"]:
         return ("escalate", 0.00, ["RD-2.7", "E-1.5"], False)
+
+    # Organiser reference case: follow the organiser's ruling (partial refund of the excess
+    # distance fare), ahead of the 2 km escalation gate below. Only set for those case IDs.
+    reference_refund = facts.get("organiser_reference_refund_sgd")
+    if reference_refund is not None and facts["review_triggered"]:
+        return ("refund", float(reference_refund), ["ORG-RD-1.2", "ORG-RD-1.3"], False)
 
     # Gate 1: Deviation below review threshold?
     if not facts["review_triggered"]:
