@@ -99,6 +99,33 @@ def _fit_to_caps(text: str) -> str:
     return json.dumps(data, ensure_ascii=False)
 
 
+def _drop_uncited_arguments(text: str) -> str:
+    """Drop arguments that name no evidence ref or no clause, when others remain.
+
+    An advocate sometimes makes a point from the filer's own words ("the rider states ...")
+    and, as the prompt tells it not to cite a tool fact for a claim, leaves ``evidence_refs``
+    empty. The schema rejects that, and one uncited point should not fail the whole dispute.
+    Returns the reply unchanged if it is not a JSON object or if no argument would be left, so
+    the normal validation error and retry still apply.
+    """
+    start, end = text.find("{"), text.rfind("}")
+    try:
+        data = json.loads(text[start:end + 1])
+    except ValueError:
+        return text
+    args = data.get("arguments") if isinstance(data, dict) else None
+    if not isinstance(args, list):
+        return text
+    cited = [
+        a for a in args
+        if isinstance(a, dict) and a.get("evidence_refs") and a.get("clauses")
+    ]
+    if not cited or len(cited) == len(args):
+        return text
+    data["arguments"] = cited
+    return json.dumps(data, ensure_ascii=False)
+
+
 def _ref_is_valid(
     ref: str, evidence: list[EvidenceOutput], summary: dict[str, Any],
 ) -> bool:
@@ -202,6 +229,7 @@ async def run_advocate(
 
         result = await chat(agent, system_prompt, msg)
         text = _fit_to_caps(result.text) if attempt == 1 else result.text
+        text = _drop_uncited_arguments(text)
         try:
             brief = parse_model_reply(text, AdvocateBrief)
             # Override side and dispute_id to ensure consistency.

@@ -183,6 +183,53 @@ async def test_advocate_retry_on_unknown_clause():
     assert brief.arguments[0].clauses == ["RD-2.6"]
 
 
+@pytest.mark.asyncio
+async def test_advocate_drops_an_uncited_argument_instead_of_failing():
+    """A point with no evidence ref (e.g. made from the filer's own words) is dropped; the
+    cited points stay and the dispute does not fail or retry."""
+    case = _load_tc("TC-05")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    reply = json.loads(_make_advocate_json(
+        side="rider", dispute_id=case.dispute_ticket.dispute_id,
+        evidence_refs=["route_deviation.deviation_pct"], clauses=["RD-2.6"],
+    ))
+    reply["arguments"].append(
+        {"point": "The rider states they were walking over.", "evidence_refs": [], "clauses": ["RD-2.6"]}
+    )
+    calls = 0
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        nonlocal calls
+        calls += 1
+        return _llm_result(json.dumps(reply))
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat):
+        brief = await run_advocate("rider", case, evidence, clauses)
+
+    assert calls == 1
+    assert len(brief.arguments) == 1
+    assert brief.arguments[0].evidence_refs == ["route_deviation.deviation_pct"]
+
+
+@pytest.mark.asyncio
+async def test_advocate_still_fails_when_no_argument_is_cited():
+    """If every argument is uncited there is nothing to keep, so the usual error and retry apply."""
+    case = _load_tc("TC-05")
+    evidence = gather_evidence(case)
+    clauses = relevant_clauses(case.dispute_ticket.dispute_type)
+    reply = _make_advocate_json(
+        side="rider", dispute_id=case.dispute_ticket.dispute_id, evidence_refs=[], clauses=["RD-2.6"],
+    )
+
+    async def _mock_chat(agent, system_prompt, user_message, **kwargs):
+        return _llm_result(reply)
+
+    with patch("agents.advocates.chat", side_effect=_mock_chat):
+        with pytest.raises(LLMError):
+            await run_advocate("rider", case, evidence, clauses)
+
+
 # ---------- 4a. TC-06: rider_requested_detour=True → no_action / RD-2.3 ----------
 
 
