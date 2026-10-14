@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-114",
+    "trip_id": "TRIP-2026-11014",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The trip was much longer and more expensive than I expected.",
+    "filed_at": "2026-10-10T18:28:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9113",
+    "name": "Farhan Yusof",
+    "account_age_days": 601,
+    "total_trips": 137,
+    "avg_rating": 4.2,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8113",
+    "name": "Hassan Ali",
+    "account_age_days": 1015,
+    "total_trips": 2610,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Alphard (SJX 9280 A)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11014",
+    "rider_id": "R-9113",
+    "driver_id": "D-8113",
+    "pickup_location": {
+      "name": "Toa Payoh HDB Hub",
+      "lat": 1.3326,
+      "lng": 103.8474
+    },
+    "dropoff_location": {
+      "name": "Junction 8 Bishan",
+      "lat": 1.3507,
+      "lng": 103.8485
+    },
+    "scheduled_time": "2026-10-10T17:50:00+08:00",
+    "driver_arrival_time": "2026-10-10T17:48:00+08:00",
+    "driver_wait_start": "2026-10-10T17:48:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Toa Payoh HDB Hub",
+        "lat": 1.3326,
+        "lng": 103.8474
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3417,
+        "lng": 103.8479
+      },
+      {
+        "name": "Junction 8 Bishan",
+        "lat": 1.3507,
+        "lng": 103.8485
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 5.98,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 2.48,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-10T17:50:00+08:00",
+      "lat": 1.3326,
+      "lng": 103.8474,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-10T17:51:00+08:00",
+      "lat": 1.335061,
+      "lng": 103.844274,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:52:00+08:00",
+      "lat": 1.337521,
+      "lng": 103.841147,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:53:00+08:00",
+      "lat": 1.339982,
+      "lng": 103.838021,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:54:00+08:00",
+      "lat": 1.342443,
+      "lng": 103.834894,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:55:00+08:00",
+      "lat": 1.344507,
+      "lng": 103.838296,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:56:00+08:00",
+      "lat": 1.346571,
+      "lng": 103.841697,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:57:00+08:00",
+      "lat": 1.348636,
+      "lng": 103.845099,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T17:58:00+08:00",
+      "lat": 1.3507,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-10T17:48:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Toa Payoh HDB Hub. Toyota Alphard (SJX 9280 A)."
+    },
+    {
+      "timestamp": "2026-10-10T17:49:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-10T17:51:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Can we go via the expressway? I heard the main road is jammed."
+    },
+    {
+      "timestamp": "2026-10-10T17:51:20+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Sure, I'll take the expressway."
+    },
+    {
+      "timestamp": "2026-10-10T17:58:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $5.98 (metered, RydeTAXI). Distance: 3.54 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-10T17:38:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9113 booked trip TRIP-2026-11014 from Toa Payoh HDB Hub to Junction 8 Bishan. Scheduled pickup 17:50. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-10T17:38:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8113 (Hassan Ali, Toyota Alphard (SJX 9280 A)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-10T17:48:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-10T17:50:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-10T17:58:00+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Junction 8 Bishan. Total distance: 3.54 km. Total fare: $5.98."
+    },
+    {
+      "timestamp": "2026-10-10T17:58:05+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $5.98 charged to rider payment method (credit_card). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-10T18:28:00+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

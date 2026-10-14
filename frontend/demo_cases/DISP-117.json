@@ -1,0 +1,182 @@
+{
+  "case_id": "DISP-117",
+  "dispute_type": "route_deviation",
+  "filed_by": "rider",
+  "evidence": [
+    {
+      "dispute_id": "DISP-117",
+      "tool": "history_lookup",
+      "facts": {
+        "rider": {
+          "avg_rating": 4.6,
+          "total_trips": 164,
+          "account_age_days": 712,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        },
+        "driver": {
+          "avg_rating": 4.6,
+          "total_trips": 3120,
+          "account_age_days": 1180,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld_against": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        }
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-117",
+      "tool": "safety_check",
+      "facts": {
+        "safety_incident": false,
+        "categories": [],
+        "keyword_hits": [],
+        "flagged_messages": [],
+        "max_speed_kmh": 37.0,
+        "speeding": false,
+        "speeding_threshold_kmh": 90
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-117",
+      "tool": "route_deviation",
+      "facts": {
+        "baseline_distance_km": 15.359,
+        "actual_distance_km": null,
+        "excess_distance_km": null,
+        "deviation_pct": null,
+        "review_triggered": false,
+        "rider_route_messages": [],
+        "rider_requested_detour": false,
+        "trip_duration_min": null,
+        "avg_speed_kmh": null,
+        "traffic_justified": false,
+        "fare_type": "metered",
+        "per_km_rate_sgd": 0.7,
+        "actual_fare_sgd": 11.82,
+        "missing_evidence": [
+          "gps_telemetry"
+        ]
+      },
+      "flags": [
+        "RD_MISSING_EVIDENCE"
+      ]
+    },
+    {
+      "dispute_id": "DISP-117",
+      "tool": "fare_validate",
+      "facts": {
+        "fare_type": "metered",
+        "actual_fare_sgd": 11.82,
+        "fare_source": "fare_breakdown",
+        "per_km_rate_sgd": 0.7,
+        "surge_applied": false,
+        "components_sum_sgd": 11.82,
+        "breakdown_consistent": true
+      },
+      "flags": []
+    }
+  ],
+  "log": [
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The rider paid for a longer route than necessary and should be refunded the extra distance."
+    },
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The route could not be rebuilt from the GPS record."
+    },
+    {
+      "agent": "_brief",
+      "side": "rider"
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The driver took a route they considered reasonable and the fare should stand."
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The rider did not ask for a different route and no traffic report is on file."
+    },
+    {
+      "agent": "_brief",
+      "side": "driver"
+    },
+    {
+      "agent": "judge",
+      "type": "ruling",
+      "content": "Ruling: escalate, S$0.00 (confidence 0.50). Clauses: RD-2.7, E-1.5. Escalated: Missing evidence: gps_telemetry"
+    }
+  ],
+  "briefs": [
+    {
+      "dispute_id": "DISP-117",
+      "side": "rider",
+      "position": "The rider paid for a longer route than necessary and should be refunded the extra distance.",
+      "arguments": [
+        {
+          "point": "The route could not be rebuilt from the GPS record.",
+          "evidence_refs": [
+            "route_deviation.deviation_pct",
+            "route_deviation.excess_distance_km"
+          ],
+          "clauses": [
+            "RD-2.2"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "A longer route alone is not enough if the rider asked for it or the fare was fixed."
+      ]
+    },
+    {
+      "dispute_id": "DISP-117",
+      "side": "driver",
+      "position": "The driver took a route they considered reasonable and the fare should stand.",
+      "arguments": [
+        {
+          "point": "The rider did not ask for a different route and no traffic report is on file.",
+          "evidence_refs": [
+            "route_deviation.rider_requested_detour"
+          ],
+          "clauses": [
+            "RD-2.3"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The driver has no traffic or road-closure evidence to explain the extra distance."
+      ]
+    }
+  ],
+  "ruling": {
+    "dispute_id": "DISP-117",
+    "outcome": "escalate",
+    "amount_sgd": 0.0,
+    "confidence": 0.5,
+    "clauses_cited": [
+      "RD-2.7",
+      "E-1.5"
+    ],
+    "explanation_rider": "The GPS record is incomplete, so the route cannot be checked fairly. A person will review it. Nothing is decided against either side.",
+    "explanation_driver": "The GPS record is incomplete, so the route cannot be checked fairly. A person will review it. Nothing is decided against either side.",
+    "conduct_flag": false,
+    "escalated": true,
+    "escalation_reason": "Missing evidence: gps_telemetry"
+  }
+}

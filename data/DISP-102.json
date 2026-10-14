@@ -1,0 +1,205 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-102",
+    "trip_id": "TRIP-2026-11002",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver was late and then cancelled on me. I should not be charged when they turned up after the scheduled time.",
+    "filed_at": "2026-10-02T18:47:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9101",
+    "name": "Daniel Ong",
+    "account_age_days": 157,
+    "total_trips": 29,
+    "avg_rating": 4.2,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8101",
+    "name": "Mohd Faizal",
+    "account_age_days": 355,
+    "total_trips": 570,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Honda Vezel (SMA 9042 L)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11002",
+    "rider_id": "R-9101",
+    "driver_id": "D-8101",
+    "pickup_location": {
+      "name": "Jurong East MRT",
+      "lat": 1.333,
+      "lng": 103.7436
+    },
+    "dropoff_location": {
+      "name": "NUS Kent Ridge",
+      "lat": 1.2966,
+      "lng": 103.7764
+    },
+    "scheduled_time": "2026-10-02T18:10:00+08:00",
+    "driver_arrival_time": "2026-10-02T18:13:00+08:00",
+    "driver_wait_start": "2026-10-02T18:13:00+08:00",
+    "cancellation_time": "2026-10-02T18:22:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-02T18:01:00+08:00",
+      "lat": 1.351,
+      "lng": 103.7544,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-02T18:04:00+08:00",
+      "lat": 1.344,
+      "lng": 103.7502,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-02T18:07:00+08:00",
+      "lat": 1.338,
+      "lng": 103.7466,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-02T18:10:00+08:00",
+      "lat": 1.3346,
+      "lng": 103.74456,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-02T18:13:00+08:00",
+      "lat": 1.333,
+      "lng": 103.7436,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-02T18:16:00+08:00",
+      "lat": 1.333,
+      "lng": 103.7436,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-02T18:19:00+08:00",
+      "lat": 1.333,
+      "lng": 103.7436,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-02T18:22:00+08:00",
+      "lat": 1.333,
+      "lng": 103.7436,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-02T18:13:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Jurong East MRT. Honda Vezel (SMA 9042 L)."
+    },
+    {
+      "timestamp": "2026-10-02T18:16:20+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-02T18:17:57+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-02T18:22:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-02T17:55:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9101 booked trip TRIP-2026-11002 from Jurong East MRT to NUS Kent Ridge. Scheduled pickup 18:10."
+    },
+    {
+      "timestamp": "2026-10-02T17:55:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8101 (Mohd Faizal, Honda Vezel (SMA 9042 L)) assigned."
+    },
+    {
+      "timestamp": "2026-10-02T17:55:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-02T18:13:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-02T18:13:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-02T18:13:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 18:18."
+    },
+    {
+      "timestamp": "2026-10-02T18:17:57+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-02T18:18:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-02T18:22:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (credit_card)."
+    },
+    {
+      "timestamp": "2026-10-02T18:22:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8101 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

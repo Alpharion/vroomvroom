@@ -1,0 +1,211 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-104",
+    "trip_id": "TRIP-2026-11004",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "I was standing at the pickup point and never saw the car. The driver says they were there but I think they were somewhere else.",
+    "filed_at": "2026-10-03T19:53:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9103",
+    "name": "Jason Lim",
+    "account_age_days": 231,
+    "total_trips": 47,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8103",
+    "name": "Ramesh Kumar",
+    "account_age_days": 465,
+    "total_trips": 910,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Hyundai Ioniq (SNP 1207 T)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11004",
+    "rider_id": "R-9103",
+    "driver_id": "D-8103",
+    "pickup_location": {
+      "name": "Junction 8 Bishan",
+      "lat": 1.3507,
+      "lng": 103.8485
+    },
+    "dropoff_location": {
+      "name": "Toa Payoh HDB Hub",
+      "lat": 1.3326,
+      "lng": 103.8474
+    },
+    "scheduled_time": "2026-10-03T19:20:00+08:00",
+    "driver_arrival_time": "2026-10-03T19:19:00+08:00",
+    "driver_wait_start": "2026-10-03T19:19:00+08:00",
+    "cancellation_time": "2026-10-03T19:28:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-03T19:07:00+08:00",
+      "lat": 1.3687,
+      "lng": 103.8593,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T19:10:00+08:00",
+      "lat": 1.3617,
+      "lng": 103.8551,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T19:13:00+08:00",
+      "lat": 1.3557,
+      "lng": 103.8515,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T19:16:00+08:00",
+      "lat": 1.3523,
+      "lng": 103.84946,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T19:19:00+08:00",
+      "lat": 1.352047,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-03T19:22:00+08:00",
+      "lat": 1.352047,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-03T19:25:00+08:00",
+      "lat": 1.352047,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-03T19:28:00+08:00",
+      "lat": 1.352047,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-03T19:19:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Junction 8 Bishan. Hyundai Ioniq (SNP 1207 T)."
+    },
+    {
+      "timestamp": "2026-10-03T19:21:35+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-03T19:23:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-03T19:23:57+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-03T19:28:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-03T19:05:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9103 booked trip TRIP-2026-11004 from Junction 8 Bishan to Toa Payoh HDB Hub. Scheduled pickup 19:20."
+    },
+    {
+      "timestamp": "2026-10-03T19:05:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8103 (Ramesh Kumar, Hyundai Ioniq (SNP 1207 T)) assigned."
+    },
+    {
+      "timestamp": "2026-10-03T19:05:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-03T19:19:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-03T19:19:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-03T19:19:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 19:24."
+    },
+    {
+      "timestamp": "2026-10-03T19:23:57+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-03T19:24:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-03T19:28:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (credit_card)."
+    },
+    {
+      "timestamp": "2026-10-03T19:28:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8103 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

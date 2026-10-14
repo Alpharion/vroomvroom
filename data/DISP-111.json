@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-111",
+    "trip_id": "TRIP-2026-11011",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a longer way to Marina Bay Sands and the fare was higher than the app estimate.",
+    "filed_at": "2026-10-09T09:42:30+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9110",
+    "name": "Grace Lee",
+    "account_age_days": 490,
+    "total_trips": 110,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8110",
+    "name": "Lim Ah Beng",
+    "account_age_days": 850,
+    "total_trips": 2100,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Vios (SNC 7712 R)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11011",
+    "rider_id": "R-9110",
+    "driver_id": "D-8110",
+    "pickup_location": {
+      "name": "ION Orchard",
+      "lat": 1.304,
+      "lng": 103.8318
+    },
+    "dropoff_location": {
+      "name": "Marina Bay Sands",
+      "lat": 1.2834,
+      "lng": 103.8607
+    },
+    "scheduled_time": "2026-10-09T09:00:00+08:00",
+    "driver_arrival_time": "2026-10-09T08:58:00+08:00",
+    "driver_wait_start": "2026-10-09T08:58:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "ION Orchard",
+        "lat": 1.304,
+        "lng": 103.8318
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.2937,
+        "lng": 103.8462
+      },
+      {
+        "name": "Marina Bay Sands",
+        "lat": 1.2834,
+        "lng": 103.8607
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 8.17,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 4.67,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-09T09:00:00+08:00",
+      "lat": 1.304,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-09T09:01:33+08:00",
+      "lat": 1.306345,
+      "lng": 103.838922,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:03:07+08:00",
+      "lat": 1.308691,
+      "lng": 103.846043,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:04:41+08:00",
+      "lat": 1.311036,
+      "lng": 103.853165,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:06:15+08:00",
+      "lat": 1.313381,
+      "lng": 103.860286,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:07:48+08:00",
+      "lat": 1.305886,
+      "lng": 103.86039,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:09:22+08:00",
+      "lat": 1.298391,
+      "lng": 103.860493,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:10:56+08:00",
+      "lat": 1.290895,
+      "lng": 103.860597,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T09:12:30+08:00",
+      "lat": 1.2834,
+      "lng": 103.8607,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-09T08:58:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at ION Orchard. Toyota Vios (SNC 7712 R)."
+    },
+    {
+      "timestamp": "2026-10-09T08:59:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-09T09:06:15+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-09T09:06:45+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-09T09:12:30+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $8.17 (metered, RydeTAXI). Distance: 6.67 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-09T08:48:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9110 booked trip TRIP-2026-11011 from ION Orchard to Marina Bay Sands. Scheduled pickup 09:00. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-09T08:48:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8110 (Lim Ah Beng, Toyota Vios (SNC 7712 R)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-09T08:58:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-09T09:00:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-09T09:12:30+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Marina Bay Sands. Total distance: 6.67 km. Total fare: $8.17."
+    },
+    {
+      "timestamp": "2026-10-09T09:12:35+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $8.17 charged to rider payment method (e-wallet). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-09T09:42:30+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

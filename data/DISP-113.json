@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-113",
+    "trip_id": "TRIP-2026-11013",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The trip felt slightly longer than usual and the fare was a bit higher.",
+    "filed_at": "2026-10-10T11:54:46+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9112",
+    "name": "Natalie Tan",
+    "account_age_days": 564,
+    "total_trips": 128,
+    "avg_rating": 4.0,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8112",
+    "name": "Teo Wee Kiat",
+    "account_age_days": 960,
+    "total_trips": 2440,
+    "avg_rating": 4.7,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Honda Jazz (SLP 1649 E)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11013",
+    "rider_id": "R-9112",
+    "driver_id": "D-8112",
+    "pickup_location": {
+      "name": "Novena Square",
+      "lat": 1.3203,
+      "lng": 103.8438
+    },
+    "dropoff_location": {
+      "name": "Leisure Park Kallang",
+      "lat": 1.3026,
+      "lng": 103.8714
+    },
+    "scheduled_time": "2026-10-10T11:15:00+08:00",
+    "driver_arrival_time": "2026-10-10T11:13:00+08:00",
+    "driver_wait_start": "2026-10-10T11:13:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Novena Square",
+        "lat": 1.3203,
+        "lng": 103.8438
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3115,
+        "lng": 103.8576
+      },
+      {
+        "name": "Leisure Park Kallang",
+        "lat": 1.3026,
+        "lng": 103.8714
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 7.15,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 3.65,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-10T11:15:00+08:00",
+      "lat": 1.3203,
+      "lng": 103.8438,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-10T11:16:13+08:00",
+      "lat": 1.321613,
+      "lng": 103.849512,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:17:26+08:00",
+      "lat": 1.322926,
+      "lng": 103.855224,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:18:39+08:00",
+      "lat": 1.32424,
+      "lng": 103.860937,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:19:53+08:00",
+      "lat": 1.325553,
+      "lng": 103.866649,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:21:06+08:00",
+      "lat": 1.319815,
+      "lng": 103.867837,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:22:19+08:00",
+      "lat": 1.314076,
+      "lng": 103.869024,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:23:33+08:00",
+      "lat": 1.308338,
+      "lng": 103.870212,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-10T11:24:46+08:00",
+      "lat": 1.3026,
+      "lng": 103.8714,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-10T11:13:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Novena Square. Honda Jazz (SLP 1649 E)."
+    },
+    {
+      "timestamp": "2026-10-10T11:14:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-10T11:19:53+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-10T11:20:23+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-10T11:24:46+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $7.15 (metered, RydeTAXI). Distance: 5.21 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-10T11:03:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9112 booked trip TRIP-2026-11013 from Novena Square to Leisure Park Kallang. Scheduled pickup 11:15. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-10T11:03:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8112 (Teo Wee Kiat, Honda Jazz (SLP 1649 E)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-10T11:13:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-10T11:15:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-10T11:24:46+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Leisure Park Kallang. Total distance: 5.21 km. Total fare: $7.15."
+    },
+    {
+      "timestamp": "2026-10-10T11:24:51+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $7.15 charged to rider payment method (e-wallet). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-10T11:54:46+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

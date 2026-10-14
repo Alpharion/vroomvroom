@@ -1,0 +1,192 @@
+{
+  "DISP-101": {
+    "scenario": "Standard no-show: early driver, long wait, message and call, no reply",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_upheld",
+    "expected_clauses": [
+      "NS-1.6"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-102": {
+    "scenario": "No-show upheld although the driver arrived 3 min late (flag only)",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_upheld",
+    "expected_clauses": [
+      "NS-1.6"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-103": {
+    "scenario": "Reversed: cancelled before the 5-minute free wait ended",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_reversed",
+    "expected_clauses": [
+      "NS-1.3",
+      "NS-1.7"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-104": {
+    "scenario": "Reversed: driver GPS 150 m from the pickup point",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_reversed",
+    "expected_clauses": [
+      "NS-1.1",
+      "NS-1.7"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-105": {
+    "scenario": "Reversed: messages but no call",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_reversed",
+    "expected_clauses": [
+      "NS-1.5",
+      "NS-1.7"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-106": {
+    "scenario": "Reversed: a call but no message",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_reversed",
+    "expected_clauses": [
+      "NS-1.5",
+      "NS-1.7"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-107": {
+    "scenario": "Upheld although the rider replied twice (replies do not gate the fee)",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_upheld",
+    "expected_clauses": [
+      "NS-1.6"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-108": {
+    "scenario": "Reversed: waited 6 min, past the free wait but under the 8-minute no-show threshold",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "charge_reversed",
+    "expected_clauses": [
+      "NS-1.4",
+      "NS-1.7"
+    ],
+    "computed_amount_sgd": 5.0
+  },
+  "DISP-109": {
+    "scenario": "Escalate: no GPS arrival record",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "escalate",
+    "expected_clauses": [
+      "NS-1.8",
+      "E-1.5"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-110": {
+    "scenario": "Escalate: rider reports a threat (safety)",
+    "dispute_type": "no_show_charge",
+    "expected_outcome": "escalate",
+    "expected_clauses": [
+      "S-1.1",
+      "S-1.2"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-111": {
+    "scenario": "Metered, 30% longer, no rider request: refund of the extra distance",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "refund",
+    "expected_clauses": [
+      "RD-2.6"
+    ],
+    "computed_amount_sgd": 1.08
+  },
+  "DISP-112": {
+    "scenario": "Metered, 25% longer: refund",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "refund",
+    "expected_clauses": [
+      "RD-2.6"
+    ],
+    "computed_amount_sgd": 1.25
+  },
+  "DISP-113": {
+    "scenario": "Only 10% longer: under the 20% review threshold",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "no_action",
+    "expected_clauses": [
+      "RD-2.2"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-114": {
+    "scenario": "35% longer, but the rider asked for the expressway in chat",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "no_action",
+    "expected_clauses": [
+      "RD-2.3"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-115": {
+    "scenario": "45% longer on a fixed (up-front) fare: no refund, conduct flag",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "no_action",
+    "expected_clauses": [
+      "RD-2.5"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-116": {
+    "scenario": "Huge detour over 2 km, high fare (S$30 or more): escalate, high priority",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "escalate",
+    "expected_clauses": [
+      "RD-2.8",
+      "E-1.5"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-117": {
+    "scenario": "Incomplete GPS (one in-trip point): escalate",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "escalate",
+    "expected_clauses": [
+      "RD-2.7",
+      "E-1.5"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-118": {
+    "scenario": "Escalate: safety complaint during a route dispute",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "escalate",
+    "expected_clauses": [
+      "S-1.1",
+      "S-1.2"
+    ],
+    "computed_amount_sgd": 0.0
+  },
+  "DISP-119": {
+    "scenario": "Metered, 40% longer on a short trip: refund",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "refund",
+    "expected_clauses": [
+      "RD-2.6"
+    ],
+    "computed_amount_sgd": 1.14
+  },
+  "DISP-120": {
+    "scenario": "Metered, 60% longer on a very short trip: small refund",
+    "dispute_type": "route_deviation",
+    "expected_outcome": "refund",
+    "expected_clauses": [
+      "RD-2.6"
+    ],
+    "computed_amount_sgd": 0.78
+  }
+}

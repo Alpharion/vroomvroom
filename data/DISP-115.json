@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-115",
+    "trip_id": "TRIP-2026-11015",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a long way round on a trip I booked at a fixed price. I think I overpaid.",
+    "filed_at": "2026-10-11T09:18:28+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9114",
+    "name": "Chloe Lau",
+    "account_age_days": 638,
+    "total_trips": 146,
+    "avg_rating": 4.3,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8114",
+    "name": "Ng Soon Huat",
+    "account_age_days": 1070,
+    "total_trips": 2780,
+    "avg_rating": 4.9,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Nissan Sylphy (SKM 4367 G)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11015",
+    "rider_id": "R-9114",
+    "driver_id": "D-8114",
+    "pickup_location": {
+      "name": "Clementi Mall",
+      "lat": 1.3151,
+      "lng": 103.7653
+    },
+    "dropoff_location": {
+      "name": "NUS Kent Ridge",
+      "lat": 1.2966,
+      "lng": 103.7764
+    },
+    "scheduled_time": "2026-10-11T08:40:00+08:00",
+    "driver_arrival_time": "2026-10-11T08:38:00+08:00",
+    "driver_wait_start": "2026-10-11T08:38:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Clementi Mall",
+        "lat": 1.3151,
+        "lng": 103.7653
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3058,
+        "lng": 103.7708
+      },
+      {
+        "name": "NUS Kent Ridge",
+        "lat": 1.2966,
+        "lng": 103.7764
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "fixed",
+      "actual_fare_sgd": 5.68,
+      "per_km_rate_sgd": null,
+      "flag_down_fare_sgd": null,
+      "distance_charge_sgd": null,
+      "surge_applied": false,
+      "service_type": "RydeX"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-11T08:40:00+08:00",
+      "lat": 1.3151,
+      "lng": 103.7653,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-11T08:41:03+08:00",
+      "lat": 1.315004,
+      "lng": 103.770384,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:42:07+08:00",
+      "lat": 1.314908,
+      "lng": 103.775467,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:43:10+08:00",
+      "lat": 1.314812,
+      "lng": 103.780551,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:44:14+08:00",
+      "lat": 1.314716,
+      "lng": 103.785634,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:45:17+08:00",
+      "lat": 1.310187,
+      "lng": 103.783326,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:46:21+08:00",
+      "lat": 1.305658,
+      "lng": 103.781017,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:47:25+08:00",
+      "lat": 1.301129,
+      "lng": 103.778709,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T08:48:28+08:00",
+      "lat": 1.2966,
+      "lng": 103.7764,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-11T08:38:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Clementi Mall. Nissan Sylphy (SKM 4367 G)."
+    },
+    {
+      "timestamp": "2026-10-11T08:39:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-11T08:44:14+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-11T08:44:44+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-11T08:48:28+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $5.68 (fixed, RydeX). Distance: 4.52 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-11T08:28:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9114 booked trip TRIP-2026-11015 from Clementi Mall to NUS Kent Ridge. Scheduled pickup 08:40. Service type: RydeX."
+    },
+    {
+      "timestamp": "2026-10-11T08:28:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8114 (Ng Soon Huat, Nissan Sylphy (SKM 4367 G)) assigned. Service type: RydeX."
+    },
+    {
+      "timestamp": "2026-10-11T08:38:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-11T08:40:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Fixed fare agreed: $5.68."
+    },
+    {
+      "timestamp": "2026-10-11T08:48:28+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at NUS Kent Ridge. Total distance: 4.52 km. Total fare: $5.68."
+    },
+    {
+      "timestamp": "2026-10-11T08:48:33+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $5.68 charged to rider payment method (e-wallet). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-11T09:18:28+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

@@ -26,7 +26,7 @@ from tools.route_deviation import compute_route_deviation_outcome, route_deviati
 from tools.safety_check import safety_check, safety_override  # noqa: E402
 
 OUT = ROOT / "frontend" / "demo_cases"
-CASE_IDS = ["DISP-001"] + [f"TC-{n:02d}" for n in range(1, 16)]
+CASE_IDS = ["DISP-001"] + [f"TC-{n:02d}" for n in range(1, 16)] + [f"DISP-{n}" for n in range(101, 121)]
 
 
 def _money(x: float) -> str:

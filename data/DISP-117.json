@@ -1,0 +1,179 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-117",
+    "trip_id": "TRIP-2026-11017",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver did not go the way the app showed, but my phone lost signal so I cannot show it.",
+    "filed_at": "2026-10-12T08:12:16+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9116",
+    "name": "Nurul Huda",
+    "account_age_days": 712,
+    "total_trips": 164,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8116",
+    "name": "Chen Wei Jie",
+    "account_age_days": 1180,
+    "total_trips": 3120,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Corolla Cross (SMT 8023 U)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11017",
+    "rider_id": "R-9116",
+    "driver_id": "D-8116",
+    "pickup_location": {
+      "name": "Woodlands MRT",
+      "lat": 1.437,
+      "lng": 103.7865
+    },
+    "dropoff_location": {
+      "name": "Junction 8 Bishan",
+      "lat": 1.3507,
+      "lng": 103.8485
+    },
+    "scheduled_time": "2026-10-12T07:20:00+08:00",
+    "driver_arrival_time": "2026-10-12T07:18:00+08:00",
+    "driver_wait_start": "2026-10-12T07:18:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Woodlands MRT",
+        "lat": 1.437,
+        "lng": 103.7865
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3939,
+        "lng": 103.8175
+      },
+      {
+        "name": "Junction 8 Bishan",
+        "lat": 1.3507,
+        "lng": 103.8485
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 11.82,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 8.32,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-12T07:20:00+08:00",
+      "lat": 1.437,
+      "lng": 103.7865,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-12T07:31:08+08:00",
+      "lat": 1.39785,
+      "lng": 103.8215,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T07:42:16+08:00",
+      "lat": 1.3507,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-12T07:18:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Woodlands MRT. Toyota Corolla Cross (SMT 8023 U)."
+    },
+    {
+      "timestamp": "2026-10-12T07:19:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-12T07:31:08+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-12T07:31:38+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-12T07:42:16+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $11.82 (metered, RydeTAXI). Distance: 11.88 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-12T07:08:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9116 booked trip TRIP-2026-11017 from Woodlands MRT to Junction 8 Bishan. Scheduled pickup 07:20. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-12T07:08:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8116 (Chen Wei Jie, Toyota Corolla Cross (SMT 8023 U)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-12T07:18:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-12T07:20:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-12T07:42:16+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Junction 8 Bishan. Total distance: 11.88 km. Total fare: $11.82."
+    },
+    {
+      "timestamp": "2026-10-12T07:42:21+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $11.82 charged to rider payment method (e-wallet). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-12T08:12:16+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-110",
+    "trip_id": "TRIP-2026-11010",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver shouted at me and threatened me when I got to the car. I want the fee removed and the driver reported.",
+    "filed_at": "2026-10-08T22:37:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9109",
+    "name": "Kelvin Goh",
+    "account_age_days": 453,
+    "total_trips": 101,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8109",
+    "name": "Yusuf Ibrahim",
+    "account_age_days": 795,
+    "total_trips": 1930,
+    "avg_rating": 4.9,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Honda Fit (SKR 3905 N)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11010",
+    "rider_id": "R-9109",
+    "driver_id": "D-8109",
+    "pickup_location": {
+      "name": "Leisure Park Kallang",
+      "lat": 1.3026,
+      "lng": 103.8714
+    },
+    "dropoff_location": {
+      "name": "ION Orchard",
+      "lat": 1.304,
+      "lng": 103.8318
+    },
+    "scheduled_time": "2026-10-08T22:05:00+08:00",
+    "driver_arrival_time": "2026-10-08T22:03:00+08:00",
+    "driver_wait_start": "2026-10-08T22:03:00+08:00",
+    "cancellation_time": "2026-10-08T22:12:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-08T21:51:00+08:00",
+      "lat": 1.3206,
+      "lng": 103.8822,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-08T21:54:00+08:00",
+      "lat": 1.3136,
+      "lng": 103.878,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-08T21:57:00+08:00",
+      "lat": 1.3076,
+      "lng": 103.8744,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-08T22:00:00+08:00",
+      "lat": 1.3042,
+      "lng": 103.87236,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-08T22:03:00+08:00",
+      "lat": 1.3026,
+      "lng": 103.8714,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-08T22:06:00+08:00",
+      "lat": 1.3026,
+      "lng": 103.8714,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-08T22:09:00+08:00",
+      "lat": 1.3026,
+      "lng": 103.8714,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-08T22:12:00+08:00",
+      "lat": 1.3026,
+      "lng": 103.8714,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-08T22:03:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Leisure Park Kallang. Honda Fit (SKR 3905 N)."
+    },
+    {
+      "timestamp": "2026-10-08T22:05:35+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-08T22:07:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-08T22:07:57+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-08T22:12:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    },
+    {
+      "timestamp": "2026-10-08T22:15:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "The driver was very aggressive and threatened me when I came down. I feel unsafe."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-08T21:50:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9109 booked trip TRIP-2026-11010 from Leisure Park Kallang to ION Orchard. Scheduled pickup 22:05."
+    },
+    {
+      "timestamp": "2026-10-08T21:50:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8109 (Yusuf Ibrahim, Honda Fit (SKR 3905 N)) assigned."
+    },
+    {
+      "timestamp": "2026-10-08T21:50:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-08T22:03:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-08T22:03:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-08T22:03:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 22:08."
+    },
+    {
+      "timestamp": "2026-10-08T22:07:57+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-08T22:08:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-08T22:12:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (credit_card)."
+    },
+    {
+      "timestamp": "2026-10-08T22:12:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8109 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

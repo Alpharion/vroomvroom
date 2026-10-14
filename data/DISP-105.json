@@ -1,0 +1,200 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-105",
+    "trip_id": "TRIP-2026-11005",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver sent me texts but never phoned me. I did not see them in time and was charged a no-show fee.",
+    "filed_at": "2026-10-04T07:17:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9104",
+    "name": "Mei Ling Chua",
+    "account_age_days": 268,
+    "total_trips": 56,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8104",
+    "name": "Wong Kah Seng",
+    "account_age_days": 520,
+    "total_trips": 1080,
+    "avg_rating": 4.9,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Honda Civic (SKD 7764 Y)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11005",
+    "rider_id": "R-9104",
+    "driver_id": "D-8104",
+    "pickup_location": {
+      "name": "Woodlands MRT",
+      "lat": 1.437,
+      "lng": 103.7865
+    },
+    "dropoff_location": {
+      "name": "Junction 8 Bishan",
+      "lat": 1.3507,
+      "lng": 103.8485
+    },
+    "scheduled_time": "2026-10-04T06:45:00+08:00",
+    "driver_arrival_time": "2026-10-04T06:43:00+08:00",
+    "driver_wait_start": "2026-10-04T06:43:00+08:00",
+    "cancellation_time": "2026-10-04T06:52:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-04T06:31:00+08:00",
+      "lat": 1.455,
+      "lng": 103.7973,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-04T06:34:00+08:00",
+      "lat": 1.448,
+      "lng": 103.7931,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-04T06:37:00+08:00",
+      "lat": 1.442,
+      "lng": 103.7895,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-04T06:40:00+08:00",
+      "lat": 1.4386,
+      "lng": 103.78746,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-04T06:43:00+08:00",
+      "lat": 1.437,
+      "lng": 103.7865,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-04T06:46:00+08:00",
+      "lat": 1.437,
+      "lng": 103.7865,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-04T06:49:00+08:00",
+      "lat": 1.437,
+      "lng": 103.7865,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-04T06:52:00+08:00",
+      "lat": 1.437,
+      "lng": 103.7865,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-04T06:43:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Woodlands MRT. Honda Civic (SKD 7764 Y)."
+    },
+    {
+      "timestamp": "2026-10-04T06:45:35+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-04T06:47:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-04T06:52:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-04T06:30:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9104 booked trip TRIP-2026-11005 from Woodlands MRT to Junction 8 Bishan. Scheduled pickup 06:45."
+    },
+    {
+      "timestamp": "2026-10-04T06:30:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8104 (Wong Kah Seng, Honda Civic (SKD 7764 Y)) assigned."
+    },
+    {
+      "timestamp": "2026-10-04T06:30:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-04T06:43:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-04T06:43:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-04T06:43:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 06:48."
+    },
+    {
+      "timestamp": "2026-10-04T06:48:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-04T06:52:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (e-wallet)."
+    },
+    {
+      "timestamp": "2026-10-04T06:52:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8104 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

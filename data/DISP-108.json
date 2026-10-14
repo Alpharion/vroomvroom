@@ -1,0 +1,211 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-108",
+    "trip_id": "TRIP-2026-11008",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver cancelled after six minutes. I thought I had at least eight.",
+    "filed_at": "2026-10-06T08:44:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9107",
+    "name": "Marcus Teo",
+    "account_age_days": 379,
+    "total_trips": 83,
+    "avg_rating": 4.2,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8107",
+    "name": "Subramaniam R",
+    "account_age_days": 685,
+    "total_trips": 1590,
+    "avg_rating": 4.7,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Kia Cerato (SLU 6093 B)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11008",
+    "rider_id": "R-9107",
+    "driver_id": "D-8107",
+    "pickup_location": {
+      "name": "Waterway Point Punggol",
+      "lat": 1.407,
+      "lng": 103.9022
+    },
+    "dropoff_location": {
+      "name": "NEX Serangoon",
+      "lat": 1.3507,
+      "lng": 103.8725
+    },
+    "scheduled_time": "2026-10-06T08:15:00+08:00",
+    "driver_arrival_time": "2026-10-06T08:13:00+08:00",
+    "driver_wait_start": "2026-10-06T08:13:00+08:00",
+    "cancellation_time": "2026-10-06T08:19:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-06T08:01:00+08:00",
+      "lat": 1.425,
+      "lng": 103.913,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-06T08:04:00+08:00",
+      "lat": 1.418,
+      "lng": 103.9088,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-06T08:07:00+08:00",
+      "lat": 1.412,
+      "lng": 103.9052,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-06T08:10:00+08:00",
+      "lat": 1.4086,
+      "lng": 103.90316,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-06T08:13:00+08:00",
+      "lat": 1.407,
+      "lng": 103.9022,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-06T08:15:00+08:00",
+      "lat": 1.407,
+      "lng": 103.9022,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-06T08:17:00+08:00",
+      "lat": 1.407,
+      "lng": 103.9022,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-06T08:19:00+08:00",
+      "lat": 1.407,
+      "lng": 103.9022,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-06T08:13:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Waterway Point Punggol. Kia Cerato (SLU 6093 B)."
+    },
+    {
+      "timestamp": "2026-10-06T08:14:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-06T08:16:18+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-06T08:16:20+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-06T08:19:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-06T08:00:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9107 booked trip TRIP-2026-11008 from Waterway Point Punggol to NEX Serangoon. Scheduled pickup 08:15."
+    },
+    {
+      "timestamp": "2026-10-06T08:00:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8107 (Subramaniam R, Kia Cerato (SLU 6093 B)) assigned."
+    },
+    {
+      "timestamp": "2026-10-06T08:00:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-06T08:13:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-06T08:13:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-06T08:13:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 08:18."
+    },
+    {
+      "timestamp": "2026-10-06T08:16:18+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-06T08:18:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-06T08:19:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (credit_card)."
+    },
+    {
+      "timestamp": "2026-10-06T08:19:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8107 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

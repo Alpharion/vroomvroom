@@ -111,7 +111,6 @@ def cases_for_type(dispute_type: str) -> list[dict[str, Any]]:
 
 
 def case_label(case: dict[str, Any]) -> str:
-    """Trip route and date, plus the start of the filer's own words to tell look-alike trips apart."""
-    snippet = " ".join(case["description"].split())
-    snippet = snippet if len(snippet) <= 60 else snippet[:57].rstrip() + "..."
-    return f"{case['pickup']} → {case['dropoff']} · {case['date']} · “{snippet}”"
+    """Route, date and trip ID: enough to tell trips apart without showing the filer's text."""
+    parts = [f"{case['pickup']} → {case['dropoff']}", case["date"], case["trip_id"]]
+    return " · ".join(part for part in parts if part)

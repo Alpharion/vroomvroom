@@ -1,0 +1,175 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-109",
+    "trip_id": "TRIP-2026-11009",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver says they arrived but I never got an arrival alert. I do not think they were there.",
+    "filed_at": "2026-10-07T14:12:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9108",
+    "name": "Siti Aminah",
+    "account_age_days": 416,
+    "total_trips": 92,
+    "avg_rating": 4.3,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8108",
+    "name": "Goh Teck Leong",
+    "account_age_days": 740,
+    "total_trips": 1760,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Wish (SJT 8851 F)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11009",
+    "rider_id": "R-9108",
+    "driver_id": "D-8108",
+    "pickup_location": {
+      "name": "Novena Square",
+      "lat": 1.3203,
+      "lng": 103.8438
+    },
+    "dropoff_location": {
+      "name": "Chinatown Point",
+      "lat": 1.2848,
+      "lng": 103.8449
+    },
+    "scheduled_time": "2026-10-07T13:40:00+08:00",
+    "driver_arrival_time": null,
+    "driver_wait_start": null,
+    "cancellation_time": "2026-10-07T13:47:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-07T13:26:00+08:00",
+      "lat": 1.3383,
+      "lng": 103.8546,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-07T13:29:00+08:00",
+      "lat": 1.3313,
+      "lng": 103.8504,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-07T13:32:00+08:00",
+      "lat": 1.3253,
+      "lng": 103.8468,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-07T13:35:00+08:00",
+      "lat": 1.3219,
+      "lng": 103.84476,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-07T13:47:00+08:00",
+      "lat": 1.3203,
+      "lng": 103.8438,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-07T13:38:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Novena Square. Toyota Wish (SJT 8851 F)."
+    },
+    {
+      "timestamp": "2026-10-07T13:40:35+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-07T13:42:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-07T13:42:57+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-07T13:47:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-07T13:25:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9108 booked trip TRIP-2026-11009 from Novena Square to Chinatown Point. Scheduled pickup 13:40."
+    },
+    {
+      "timestamp": "2026-10-07T13:25:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8108 (Goh Teck Leong, Toyota Wish (SJT 8851 F)) assigned."
+    },
+    {
+      "timestamp": "2026-10-07T13:25:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-07T13:42:57+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-07T13:43:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-07T13:47:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (e-wallet)."
+    },
+    {
+      "timestamp": "2026-10-07T13:47:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8108 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

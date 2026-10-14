@@ -1,0 +1,194 @@
+{
+  "case_id": "DISP-110",
+  "dispute_type": "no_show_charge",
+  "filed_by": "rider",
+  "evidence": [
+    {
+      "dispute_id": "DISP-110",
+      "tool": "history_lookup",
+      "facts": {
+        "rider": {
+          "avg_rating": 4.5,
+          "total_trips": 101,
+          "account_age_days": 453,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        },
+        "driver": {
+          "avg_rating": 4.9,
+          "total_trips": 1930,
+          "account_age_days": 795,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld_against": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        }
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-110",
+      "tool": "safety_check",
+      "facts": {
+        "safety_incident": true,
+        "categories": [
+          "keyword: threat, threaten, unsafe"
+        ],
+        "keyword_hits": [
+          "threat",
+          "threaten",
+          "unsafe"
+        ],
+        "flagged_messages": [
+          {
+            "sender": "rider",
+            "content": "The driver was very aggressive and threatened me when I came down. I feel unsafe."
+          },
+          {
+            "sender": "dispute_description",
+            "content": "The driver shouted at me and threatened me when I got to the car. I want the fee removed and the driver reported."
+          }
+        ],
+        "max_speed_kmh": 42.0,
+        "speeding": false,
+        "speeding_threshold_kmh": 90
+      },
+      "flags": [
+        "S-1.1_SAFETY_INCIDENT"
+      ]
+    },
+    {
+      "dispute_id": "DISP-110",
+      "tool": "no_show_check",
+      "facts": {
+        "driver_distance_from_pickup_m": 0.0,
+        "driver_within_arrival_radius": true,
+        "arrived_minutes_vs_scheduled": -2.0,
+        "total_wait_min": 9.0,
+        "free_wait_expired": true,
+        "no_show_threshold_reached": true,
+        "contact_attempts": 4,
+        "driver_messages": 3,
+        "driver_calls": 1,
+        "contact_requirement_met": true,
+        "rider_replies": 0,
+        "minimum_contact_attempts": 2,
+        "missing_evidence": []
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-110",
+      "tool": "fare_validate",
+      "facts": {
+        "fare_type": null,
+        "actual_fare_sgd": 5.0,
+        "fare_source": "cancellation_fee",
+        "per_km_rate_sgd": null,
+        "surge_applied": null,
+        "components_sum_sgd": null,
+        "breakdown_consistent": null
+      },
+      "flags": []
+    }
+  ],
+  "log": [
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The fee should be reversed: the rider says they were ready and the driver did not meet the rules for a no-show."
+    },
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The driver was 0 m from the pickup point, waited 9 minutes, sent 3 message(s) and made 1 call(s); the rider replied 0 time(s)."
+    },
+    {
+      "agent": "_brief",
+      "side": "rider"
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The fee stands: the driver followed every step required before cancelling."
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The driver was 0 m from the pickup point, waited 9 minutes, sent 3 message(s) and made 1 call(s); the rider replied 0 time(s)."
+    },
+    {
+      "agent": "_brief",
+      "side": "driver"
+    },
+    {
+      "agent": "judge",
+      "type": "ruling",
+      "content": "Ruling: escalate, S$0.00 (confidence 0.50). Clauses: S-1.1, S-1.2. Escalated: Safety concern reported (keywords: threat, threaten, unsafe). Safety cases are never auto-resolved (S-1.1)."
+    }
+  ],
+  "briefs": [
+    {
+      "dispute_id": "DISP-110",
+      "side": "rider",
+      "position": "The fee should be reversed: the rider says they were ready and the driver did not meet the rules for a no-show.",
+      "arguments": [
+        {
+          "point": "The driver was 0 m from the pickup point, waited 9 minutes, sent 3 message(s) and made 1 call(s); the rider replied 0 time(s).",
+          "evidence_refs": [
+            "no_show_check.driver_distance_from_pickup_m"
+          ],
+          "clauses": [
+            "NS-1.7"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The GPS, wait time and contact record all support the driver, and the rider has nothing that contradicts them."
+      ]
+    },
+    {
+      "dispute_id": "DISP-110",
+      "side": "driver",
+      "position": "The fee stands: the driver followed every step required before cancelling.",
+      "arguments": [
+        {
+          "point": "The driver was 0 m from the pickup point, waited 9 minutes, sent 3 message(s) and made 1 call(s); the rider replied 0 time(s).",
+          "evidence_refs": [
+            "no_show_check.total_wait_min",
+            "no_show_check.contact_attempts"
+          ],
+          "clauses": [
+            "NS-1.6"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The driver's chat only says 'lobby area' without naming which lobby."
+      ]
+    }
+  ],
+  "ruling": {
+    "dispute_id": "DISP-110",
+    "outcome": "escalate",
+    "amount_sgd": 0.0,
+    "confidence": 0.5,
+    "clauses_cited": [
+      "S-1.1",
+      "S-1.2"
+    ],
+    "explanation_rider": "A safety concern was reported in this trip, so the system will not decide it automatically. A person will review it first. No money moves until they do.",
+    "explanation_driver": "A safety concern was reported in this trip, so the system will not decide it automatically. A person will review it first. No money moves until they do.",
+    "conduct_flag": false,
+    "escalated": true,
+    "escalation_reason": "Safety concern reported (keywords: threat, threaten, unsafe). Safety cases are never auto-resolved (S-1.1)."
+  }
+}

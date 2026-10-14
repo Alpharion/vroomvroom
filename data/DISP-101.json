@@ -1,0 +1,211 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-101",
+    "trip_id": "TRIP-2026-11001",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver cancelled and charged me $5 but I was only a couple of minutes away. I do not think I should pay a no-show fee.",
+    "filed_at": "2026-10-01T08:02:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9100",
+    "name": "Aisha Rahman",
+    "account_age_days": 120,
+    "total_trips": 20,
+    "avg_rating": 4.0,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8100",
+    "name": "Tan Boon Kiat",
+    "account_age_days": 300,
+    "total_trips": 400,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Corolla Altis (SJB 3318 P)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11001",
+    "rider_id": "R-9100",
+    "driver_id": "D-8100",
+    "pickup_location": {
+      "name": "ION Orchard",
+      "lat": 1.304,
+      "lng": 103.8318
+    },
+    "dropoff_location": {
+      "name": "Changi Airport T3",
+      "lat": 1.3554,
+      "lng": 103.987
+    },
+    "scheduled_time": "2026-10-01T07:30:00+08:00",
+    "driver_arrival_time": "2026-10-01T07:27:00+08:00",
+    "driver_wait_start": "2026-10-01T07:27:00+08:00",
+    "cancellation_time": "2026-10-01T07:37:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-01T07:15:00+08:00",
+      "lat": 1.322,
+      "lng": 103.8426,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-01T07:18:00+08:00",
+      "lat": 1.315,
+      "lng": 103.8384,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-01T07:21:00+08:00",
+      "lat": 1.309,
+      "lng": 103.8348,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-01T07:24:00+08:00",
+      "lat": 1.3056,
+      "lng": 103.83276,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-01T07:27:00+08:00",
+      "lat": 1.304,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-01T07:30:00+08:00",
+      "lat": 1.304,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-01T07:33:00+08:00",
+      "lat": 1.304,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-01T07:37:00+08:00",
+      "lat": 1.304,
+      "lng": 103.8318,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-01T07:27:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at ION Orchard. Toyota Corolla Altis (SJB 3318 P)."
+    },
+    {
+      "timestamp": "2026-10-01T07:29:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-01T07:32:20+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, are you coming down? I've been waiting a while."
+    },
+    {
+      "timestamp": "2026-10-01T07:32:30+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-01T07:37:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-01T07:15:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9100 booked trip TRIP-2026-11001 from ION Orchard to Changi Airport T3. Scheduled pickup 07:30."
+    },
+    {
+      "timestamp": "2026-10-01T07:15:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8100 (Tan Boon Kiat, Toyota Corolla Altis (SJB 3318 P)) assigned."
+    },
+    {
+      "timestamp": "2026-10-01T07:15:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-01T07:27:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-01T07:27:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-01T07:27:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 07:32."
+    },
+    {
+      "timestamp": "2026-10-01T07:32:10+08:00",
+      "event_type": "wait_timer_expired",
+      "details": "Free 5-min wait period expired. Rider had not boarded. Cancellation fee now applicable per policy."
+    },
+    {
+      "timestamp": "2026-10-01T07:32:30+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-01T07:37:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (e-wallet)."
+    },
+    {
+      "timestamp": "2026-10-01T07:37:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8100 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

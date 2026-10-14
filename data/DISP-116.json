@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-116",
+    "trip_id": "TRIP-2026-11016",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver went miles out of the way on the way from the airport and the fare was far above normal.",
+    "filed_at": "2026-10-11T23:54:51+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9115",
+    "name": "Benedict Ng",
+    "account_age_days": 675,
+    "total_trips": 155,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8115",
+    "name": "Kumar Selvam",
+    "account_age_days": 1125,
+    "total_trips": 2950,
+    "avg_rating": 4.5,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Mazda CX-5 (SNH 2194 J)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11016",
+    "rider_id": "R-9115",
+    "driver_id": "D-8115",
+    "pickup_location": {
+      "name": "Changi Airport T3",
+      "lat": 1.3554,
+      "lng": 103.987
+    },
+    "dropoff_location": {
+      "name": "Marina Bay Sands",
+      "lat": 1.2834,
+      "lng": 103.8607
+    },
+    "scheduled_time": "2026-10-11T22:10:00+08:00",
+    "driver_arrival_time": "2026-10-11T22:08:00+08:00",
+    "driver_wait_start": "2026-10-11T22:08:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Changi Airport T3",
+        "lat": 1.3554,
+        "lng": 103.987
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3194,
+        "lng": 103.9238
+      },
+      {
+        "name": "Marina Bay Sands",
+        "lat": 1.2834,
+        "lng": 103.8607
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 31.44,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 27.94,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-11T22:10:00+08:00",
+      "lat": 1.3554,
+      "lng": 103.987,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-11T22:19:21+08:00",
+      "lat": 1.310753,
+      "lng": 103.991544,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T22:28:42+08:00",
+      "lat": 1.266106,
+      "lng": 103.996089,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T22:38:04+08:00",
+      "lat": 1.221459,
+      "lng": 104.000633,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T22:47:25+08:00",
+      "lat": 1.176816,
+      "lng": 104.005175,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T22:56:46+08:00",
+      "lat": 1.203462,
+      "lng": 103.969057,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T23:06:08+08:00",
+      "lat": 1.230108,
+      "lng": 103.932938,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T23:15:29+08:00",
+      "lat": 1.256754,
+      "lng": 103.896819,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-11T23:24:51+08:00",
+      "lat": 1.2834,
+      "lng": 103.8607,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-11T22:08:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Changi Airport T3. Mazda CX-5 (SNH 2194 J)."
+    },
+    {
+      "timestamp": "2026-10-11T22:09:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-11T22:47:25+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-11T22:47:55+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-11T23:24:51+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $31.44 (metered, RydeTAXI). Distance: 39.92 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-11T21:58:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9115 booked trip TRIP-2026-11016 from Changi Airport T3 to Marina Bay Sands. Scheduled pickup 22:10. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-11T21:58:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8115 (Kumar Selvam, Mazda CX-5 (SNH 2194 J)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-11T22:08:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-11T22:10:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-11T23:24:51+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Marina Bay Sands. Total distance: 39.92 km. Total fare: $31.44."
+    },
+    {
+      "timestamp": "2026-10-11T23:24:56+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $31.44 charged to rider payment method (credit_card). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-11T23:54:51+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

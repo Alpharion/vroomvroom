@@ -1,0 +1,177 @@
+{
+  "case_id": "DISP-106",
+  "dispute_type": "no_show_charge",
+  "filed_by": "rider",
+  "evidence": [
+    {
+      "dispute_id": "DISP-106",
+      "tool": "history_lookup",
+      "facts": {
+        "rider": {
+          "avg_rating": 4.8,
+          "total_trips": 65,
+          "account_age_days": 305,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        },
+        "driver": {
+          "avg_rating": 4.5,
+          "total_trips": 1250,
+          "account_age_days": 575,
+          "dispute_history": {
+            "total_disputes": 1,
+            "upheld_against": 0,
+            "rejected": 1
+          },
+          "fraud_flags": 0,
+          "fraud_flag_details": null
+        }
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-106",
+      "tool": "safety_check",
+      "facts": {
+        "safety_incident": false,
+        "categories": [],
+        "keyword_hits": [],
+        "flagged_messages": [],
+        "max_speed_kmh": 42.0,
+        "speeding": false,
+        "speeding_threshold_kmh": 90
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-106",
+      "tool": "no_show_check",
+      "facts": {
+        "driver_distance_from_pickup_m": 0.0,
+        "driver_within_arrival_radius": true,
+        "arrived_minutes_vs_scheduled": -2.0,
+        "total_wait_min": 9.0,
+        "free_wait_expired": true,
+        "no_show_threshold_reached": true,
+        "contact_attempts": 1,
+        "driver_messages": 0,
+        "driver_calls": 1,
+        "contact_requirement_met": false,
+        "rider_replies": 0,
+        "minimum_contact_attempts": 2,
+        "missing_evidence": []
+      },
+      "flags": []
+    },
+    {
+      "dispute_id": "DISP-106",
+      "tool": "fare_validate",
+      "facts": {
+        "fare_type": null,
+        "actual_fare_sgd": 5.0,
+        "fare_source": "cancellation_fee",
+        "per_km_rate_sgd": null,
+        "surge_applied": null,
+        "components_sum_sgd": null,
+        "breakdown_consistent": null
+      },
+      "flags": []
+    }
+  ],
+  "log": [
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The fee should be reversed: the driver did not both message and call the rider."
+    },
+    {
+      "agent": "rider_advocate",
+      "type": "argument",
+      "content": "The driver sent 0 message(s) and made 1 call(s); the policy requires at least one of each."
+    },
+    {
+      "agent": "_brief",
+      "side": "rider"
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The fee should stand: the driver believes they waited and tried to reach the rider."
+    },
+    {
+      "agent": "driver_advocate",
+      "type": "argument",
+      "content": "The driver was 0 m from the pickup point, waited 9 minutes, sent 0 message(s) and made 1 call(s); the rider replied 0 time(s)."
+    },
+    {
+      "agent": "_brief",
+      "side": "driver"
+    },
+    {
+      "agent": "judge",
+      "type": "ruling",
+      "content": "Ruling: charge_reversed, S$5.00 (confidence 0.90). Clauses: NS-1.5, NS-1.7."
+    }
+  ],
+  "briefs": [
+    {
+      "dispute_id": "DISP-106",
+      "side": "rider",
+      "position": "The fee should be reversed: the driver did not both message and call the rider.",
+      "arguments": [
+        {
+          "point": "The driver sent 0 message(s) and made 1 call(s); the policy requires at least one of each.",
+          "evidence_refs": [
+            "no_show_check.contact_requirement_met"
+          ],
+          "clauses": [
+            "NS-1.5",
+            "NS-1.7"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The rider cannot prove they were at the pickup point themselves."
+      ]
+    },
+    {
+      "dispute_id": "DISP-106",
+      "side": "driver",
+      "position": "The fee should stand: the driver believes they waited and tried to reach the rider.",
+      "arguments": [
+        {
+          "point": "The driver was 0 m from the pickup point, waited 9 minutes, sent 0 message(s) and made 1 call(s); the rider replied 0 time(s).",
+          "evidence_refs": [
+            "no_show_check.total_wait_min"
+          ],
+          "clauses": [
+            "NS-1.6"
+          ]
+        }
+      ],
+      "weaknesses_acknowledged": [
+        "The record does not meet NS-1.5: the driver sent 0 message(s) and made 1 call(s); the policy requires at least one of each."
+      ]
+    }
+  ],
+  "ruling": {
+    "dispute_id": "DISP-106",
+    "outcome": "charge_reversed",
+    "amount_sgd": 5.0,
+    "confidence": 0.9,
+    "clauses_cited": [
+      "NS-1.5",
+      "NS-1.7"
+    ],
+    "explanation_rider": "The driver did not both message and call the rider, so the no-show conditions were not met. The S$5.00 fee is reversed and refunded to you.",
+    "explanation_driver": "The no-show fee is reversed because you did not both message and call the rider. The policy needs every step met before the fee applies, so no fee is charged.",
+    "conduct_flag": false,
+    "escalated": false,
+    "escalation_reason": null
+  }
+}

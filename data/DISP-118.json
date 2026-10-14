@@ -1,0 +1,227 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-118",
+    "trip_id": "TRIP-2026-11018",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a longer way and drove dangerously fast. I felt scared and want this reported.",
+    "filed_at": "2026-10-12T21:03:27+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9117",
+    "name": "Victor Sim",
+    "account_age_days": 749,
+    "total_trips": 173,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8117",
+    "name": "Rashid Osman",
+    "account_age_days": 1235,
+    "total_trips": 3290,
+    "avg_rating": 4.7,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Honda City (SLB 6711 C)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11018",
+    "rider_id": "R-9117",
+    "driver_id": "D-8117",
+    "pickup_location": {
+      "name": "NEX Serangoon",
+      "lat": 1.3507,
+      "lng": 103.8725
+    },
+    "dropoff_location": {
+      "name": "Junction 8 Bishan",
+      "lat": 1.3507,
+      "lng": 103.8485
+    },
+    "scheduled_time": "2026-10-12T20:25:00+08:00",
+    "driver_arrival_time": "2026-10-12T20:23:00+08:00",
+    "driver_wait_start": "2026-10-12T20:23:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "NEX Serangoon",
+        "lat": 1.3507,
+        "lng": 103.8725
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.3507,
+        "lng": 103.8605
+      },
+      {
+        "name": "Junction 8 Bishan",
+        "lat": 1.3507,
+        "lng": 103.8485
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 6.66,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 3.16,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-12T20:25:00+08:00",
+      "lat": 1.3507,
+      "lng": 103.8725,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-12T20:26:03+08:00",
+      "lat": 1.346614,
+      "lng": 103.8695,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:27:06+08:00",
+      "lat": 1.342528,
+      "lng": 103.8665,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:28:10+08:00",
+      "lat": 1.338442,
+      "lng": 103.8635,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:29:13+08:00",
+      "lat": 1.334356,
+      "lng": 103.8605,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:30:17+08:00",
+      "lat": 1.338442,
+      "lng": 103.8575,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:31:20+08:00",
+      "lat": 1.342528,
+      "lng": 103.8545,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:32:23+08:00",
+      "lat": 1.346614,
+      "lng": 103.8515,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-12T20:33:27+08:00",
+      "lat": 1.3507,
+      "lng": 103.8485,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-12T20:23:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at NEX Serangoon. Honda City (SLB 6711 C)."
+    },
+    {
+      "timestamp": "2026-10-12T20:24:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-12T20:29:13+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-12T20:29:43+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-12T20:30:55+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "You are driving recklessly and I feel unsafe. Please slow down."
+    },
+    {
+      "timestamp": "2026-10-12T20:33:27+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $6.66 (metered, RydeTAXI). Distance: 4.51 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-12T20:13:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9117 booked trip TRIP-2026-11018 from NEX Serangoon to Junction 8 Bishan. Scheduled pickup 20:25. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-12T20:13:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8117 (Rashid Osman, Honda City (SLB 6711 C)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-12T20:23:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-12T20:25:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-12T20:33:27+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Junction 8 Bishan. Total distance: 4.51 km. Total fare: $6.66."
+    },
+    {
+      "timestamp": "2026-10-12T20:33:32+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $6.66 charged to rider payment method (credit_card). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-12T21:03:27+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-103",
+    "trip_id": "TRIP-2026-11003",
+    "filed_by": "rider",
+    "dispute_type": "no_show_charge",
+    "description": "The driver only waited about three minutes before cancelling. I was walking over from the car park.",
+    "filed_at": "2026-10-03T12:26:00+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9102",
+    "name": "Priya Nair",
+    "account_age_days": 194,
+    "total_trips": 38,
+    "avg_rating": 4.3,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8102",
+    "name": "Lee Chin Hock",
+    "account_age_days": 410,
+    "total_trips": 740,
+    "avg_rating": 4.7,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Toyota Prius (SLK 5521 D)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11003",
+    "rider_id": "R-9102",
+    "driver_id": "D-8102",
+    "pickup_location": {
+      "name": "Tampines Mall",
+      "lat": 1.3525,
+      "lng": 103.9453
+    },
+    "dropoff_location": {
+      "name": "Paya Lebar Quarter",
+      "lat": 1.3178,
+      "lng": 103.8923
+    },
+    "scheduled_time": "2026-10-03T12:00:00+08:00",
+    "driver_arrival_time": "2026-10-03T11:58:00+08:00",
+    "driver_wait_start": "2026-10-03T11:58:00+08:00",
+    "cancellation_time": "2026-10-03T12:01:00+08:00",
+    "cancellation_fee": 5.0,
+    "cancellation_reason": "rider_no_show",
+    "planned_route": null,
+    "fare_breakdown": null
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-03T11:46:00+08:00",
+      "lat": 1.3705,
+      "lng": 103.9561,
+      "speed_kmh": 42,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T11:49:00+08:00",
+      "lat": 1.3635,
+      "lng": 103.9519,
+      "speed_kmh": 36,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T11:52:00+08:00",
+      "lat": 1.3575,
+      "lng": 103.9483,
+      "speed_kmh": 22,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T11:55:00+08:00",
+      "lat": 1.3541,
+      "lng": 103.94626,
+      "speed_kmh": 10,
+      "status": "en_route"
+    },
+    {
+      "timestamp": "2026-10-03T11:58:00+08:00",
+      "lat": 1.3525,
+      "lng": 103.9453,
+      "speed_kmh": 0,
+      "status": "arrived"
+    },
+    {
+      "timestamp": "2026-10-03T11:59:00+08:00",
+      "lat": 1.3525,
+      "lng": 103.9453,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-03T12:00:00+08:00",
+      "lat": 1.3525,
+      "lng": 103.9453,
+      "speed_kmh": 0,
+      "status": "waiting"
+    },
+    {
+      "timestamp": "2026-10-03T12:01:00+08:00",
+      "lat": 1.3525,
+      "lng": 103.9453,
+      "speed_kmh": 0,
+      "status": "cancelled"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-03T11:58:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I've arrived at Tampines Mall. Toyota Prius (SLK 5521 D)."
+    },
+    {
+      "timestamp": "2026-10-03T11:59:20+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I'm waiting at the pickup point."
+    },
+    {
+      "timestamp": "2026-10-03T11:59:39+08:00",
+      "sender": "driver",
+      "type": "call",
+      "content": "Outgoing call to rider — not answered (rang 22s, no response)."
+    },
+    {
+      "timestamp": "2026-10-03T12:01:00+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip cancelled by driver. Reason: rider_no_show. Cancellation fee of $5.00 applied."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-03T11:45:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9102 booked trip TRIP-2026-11003 from Tampines Mall to Paya Lebar Quarter. Scheduled pickup 12:00."
+    },
+    {
+      "timestamp": "2026-10-03T11:45:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8102 (Lee Chin Hock, Toyota Prius (SLK 5521 D)) assigned."
+    },
+    {
+      "timestamp": "2026-10-03T11:45:20+08:00",
+      "event_type": "driver_en_route",
+      "details": "Driver started navigating to pickup location. Live tracking enabled."
+    },
+    {
+      "timestamp": "2026-10-03T11:58:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-03T11:58:05+08:00",
+      "event_type": "rider_notified",
+      "details": "Push notification + in-app alert sent to rider: 'Your driver has arrived.'"
+    },
+    {
+      "timestamp": "2026-10-03T11:58:10+08:00",
+      "event_type": "wait_timer_started",
+      "details": "Free wait timer started. 5 min free wait period ends at 12:03."
+    },
+    {
+      "timestamp": "2026-10-03T11:59:39+08:00",
+      "event_type": "driver_called_rider",
+      "details": "Driver initiated in-app call to rider. Call rang 22s, no answer."
+    },
+    {
+      "timestamp": "2026-10-03T12:01:00+08:00",
+      "event_type": "cancellation_fee_applied",
+      "details": "$5.00 cancellation fee charged to rider payment method (e-wallet)."
+    },
+    {
+      "timestamp": "2026-10-03T12:01:05+08:00",
+      "event_type": "driver_released",
+      "details": "Driver D-8102 released from trip. Trip status: cancelled (rider_no_show)."
+    }
+  ],
+  "cancellation_policy": {
+    "free_wait_time_min": 5,
+    "cancellation_fee_after_wait": 5.0,
+    "no_show_threshold_min": 8,
+    "fee_goes_to": "driver_compensation"
+  }
+}

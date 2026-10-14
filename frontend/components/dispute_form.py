@@ -29,42 +29,14 @@ TYPE_HELP = {
     },
 }
 
-DRIVER_DESCRIPTION = {
-    "no_show_charge": (
-        "The rider is disputing the no-show fee for my trip from {pickup} to {dropoff} on {date}. "
-        "I believe the fee is correct. I want the charge to stand."
-    ),
-    "route_deviation": (
-        "The rider says I took a longer route from {pickup} to {dropoff} on {date}. "
-        "I followed the route I believed was best. I want the fare to stand."
-    ),
-}
-
 
 def _role() -> str:
     return st.session_state.get("form_filed_by") or "rider"
 
 
-def _default_description(case: dict) -> str:
-    """The trip record's own text is the rider's words, so the driver gets a short draft of their own side."""
-    if _role() == "driver":
-        return DRIVER_DESCRIPTION[case["dispute_type"]].format(
-            pickup=case["pickup"], dropoff=case["dropoff"], date=case["date"] or "the trip date"
-        )
-    return case["description"]
-
-
-def _apply_trip_defaults() -> None:
-    """When the trip changes, show that trip's record as the description."""
-    case = _selected_case()
-    if case:
-        st.session_state.form_description = _default_description(case)
-
-
 def _on_type_change() -> None:
     options = cases_for_type(st.session_state.form_dispute_type)
     st.session_state.form_trip = options[0]["dispute_id"] if options else None
-    _apply_trip_defaults()
 
 
 def _selected_case() -> dict | None:
@@ -82,7 +54,7 @@ def render_dispute_form() -> dict | None:
     st.caption("I am the")
     filer = st.segmented_control(
         "I am the", ["rider", "driver"], default="rider", key="form_filed_by",
-        format_func=str.capitalize, label_visibility="collapsed", on_change=_apply_trip_defaults,
+        format_func=str.capitalize, label_visibility="collapsed",
     )
     role = _role()
     st.radio(
@@ -94,12 +66,13 @@ def render_dispute_form() -> dict | None:
     options = cases_for_type(st.session_state.form_dispute_type)
     by_id = {c["dispute_id"]: c for c in options}
     st.selectbox(
-        "Which trip?", list(by_id), key="form_trip", on_change=_apply_trip_defaults,
+        "Which trip?", list(by_id), key="form_trip",
         format_func=lambda i: case_label(by_id[i]),
     )
     st.text_area(
         "What happened, in your words" if role == "rider" else "What happened, from your side",
         height=110, key="form_description",
+        placeholder="Tell us what happened, in your own words." if role == "rider" else "Tell us what happened from your side.",
     )
     st.caption("For this demo, the review uses the record we already hold for the trip you pick.")
 

@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-112",
+    "trip_id": "TRIP-2026-11012",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "We went a long way around and the meter ran up. I want the extra distance refunded.",
+    "filed_at": "2026-10-09T15:16:40+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9111",
+    "name": "Arjun Pillai",
+    "account_age_days": 527,
+    "total_trips": 119,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "credit_card"
+  },
+  "driver_profile": {
+    "driver_id": "D-8111",
+    "name": "Dinesh Raj",
+    "account_age_days": 905,
+    "total_trips": 2270,
+    "avg_rating": 4.6,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "Hyundai Avante (SMH 5538 W)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11012",
+    "rider_id": "R-9111",
+    "driver_id": "D-8111",
+    "pickup_location": {
+      "name": "Bugis Junction",
+      "lat": 1.2993,
+      "lng": 103.8559
+    },
+    "dropoff_location": {
+      "name": "HarbourFront Centre",
+      "lat": 1.2656,
+      "lng": 103.82
+    },
+    "scheduled_time": "2026-10-09T14:30:00+08:00",
+    "driver_arrival_time": "2026-10-09T14:28:00+08:00",
+    "driver_wait_start": "2026-10-09T14:28:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Bugis Junction",
+        "lat": 1.2993,
+        "lng": 103.8559
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.2824,
+        "lng": 103.838
+      },
+      {
+        "name": "HarbourFront Centre",
+        "lat": 1.2656,
+        "lng": 103.82
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 9.73,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 6.23,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-09T14:30:00+08:00",
+      "lat": 1.2993,
+      "lng": 103.8559,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-09T14:32:05+08:00",
+      "lat": 1.289341,
+      "lng": 103.856809,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:34:10+08:00",
+      "lat": 1.279382,
+      "lng": 103.857719,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:36:15+08:00",
+      "lat": 1.269423,
+      "lng": 103.858628,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:38:20+08:00",
+      "lat": 1.259464,
+      "lng": 103.859538,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:40:25+08:00",
+      "lat": 1.260998,
+      "lng": 103.849653,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:42:30+08:00",
+      "lat": 1.262532,
+      "lng": 103.839769,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:44:35+08:00",
+      "lat": 1.264066,
+      "lng": 103.829884,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-09T14:46:40+08:00",
+      "lat": 1.2656,
+      "lng": 103.82,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-09T14:28:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Bugis Junction. Hyundai Avante (SMH 5538 W)."
+    },
+    {
+      "timestamp": "2026-10-09T14:29:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-09T14:38:20+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-09T14:38:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-09T14:46:40+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $9.73 (metered, RydeTAXI). Distance: 8.90 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-09T14:18:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9111 booked trip TRIP-2026-11012 from Bugis Junction to HarbourFront Centre. Scheduled pickup 14:30. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-09T14:18:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8111 (Dinesh Raj, Hyundai Avante (SMH 5538 W)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-09T14:28:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-09T14:30:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-09T14:46:40+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at HarbourFront Centre. Total distance: 8.90 km. Total fare: $9.73."
+    },
+    {
+      "timestamp": "2026-10-09T14:46:45+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $9.73 charged to rider payment method (credit_card). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-09T15:16:40+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}

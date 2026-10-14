@@ -1,0 +1,221 @@
+{
+  "dispute_ticket": {
+    "dispute_id": "DISP-119",
+    "trip_id": "TRIP-2026-11019",
+    "filed_by": "rider",
+    "dispute_type": "route_deviation",
+    "description": "The driver took a very roundabout way to Clementi. I want my money back for the extra distance.",
+    "filed_at": "2026-10-13T10:45:40+08:00",
+    "status": "open"
+  },
+  "rider_profile": {
+    "rider_id": "R-9118",
+    "name": "Isabelle Chan",
+    "account_age_days": 786,
+    "total_trips": 182,
+    "avg_rating": 4.0,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "fraud_flag_details": null,
+    "payment_method": "e-wallet"
+  },
+  "driver_profile": {
+    "driver_id": "D-8118",
+    "name": "Poh Cheng Kok",
+    "account_age_days": 1290,
+    "total_trips": 3460,
+    "avg_rating": 4.8,
+    "dispute_history": {
+      "total_disputes": 1,
+      "upheld_against": 0,
+      "rejected": 1
+    },
+    "fraud_flags": 0,
+    "vehicle": "BYD Atto 3 (SNK 3350 X)"
+  },
+  "trip_data": {
+    "trip_id": "TRIP-2026-11019",
+    "rider_id": "R-9118",
+    "driver_id": "D-8118",
+    "pickup_location": {
+      "name": "Jurong East MRT",
+      "lat": 1.333,
+      "lng": 103.7436
+    },
+    "dropoff_location": {
+      "name": "Clementi Mall",
+      "lat": 1.3151,
+      "lng": 103.7653
+    },
+    "scheduled_time": "2026-10-13T10:05:00+08:00",
+    "driver_arrival_time": "2026-10-13T10:03:00+08:00",
+    "driver_wait_start": "2026-10-13T10:03:00+08:00",
+    "cancellation_time": null,
+    "cancellation_fee": null,
+    "cancellation_reason": null,
+    "planned_route": [
+      {
+        "name": "Jurong East MRT",
+        "lat": 1.333,
+        "lng": 103.7436
+      },
+      {
+        "name": "Planned route",
+        "lat": 1.324,
+        "lng": 103.7544
+      },
+      {
+        "name": "Clementi Mall",
+        "lat": 1.3151,
+        "lng": 103.7653
+      }
+    ],
+    "fare_breakdown": {
+      "fare_type": "metered",
+      "actual_fare_sgd": 7.48,
+      "per_km_rate_sgd": 0.7,
+      "flag_down_fare_sgd": 3.5,
+      "distance_charge_sgd": 3.98,
+      "surge_applied": false,
+      "service_type": "RydeTAXI"
+    }
+  },
+  "gps_telemetry": [
+    {
+      "timestamp": "2026-10-13T10:05:00+08:00",
+      "lat": 1.333,
+      "lng": 103.7436,
+      "speed_kmh": 0,
+      "status": "trip_started"
+    },
+    {
+      "timestamp": "2026-10-13T10:06:20+08:00",
+      "lat": 1.334886,
+      "lng": 103.749716,
+      "speed_kmh": 37,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:07:40+08:00",
+      "lat": 1.336772,
+      "lng": 103.755832,
+      "speed_kmh": 44,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:09:00+08:00",
+      "lat": 1.338659,
+      "lng": 103.761948,
+      "speed_kmh": 35,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:10:20+08:00",
+      "lat": 1.340545,
+      "lng": 103.768064,
+      "speed_kmh": 42,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:11:40+08:00",
+      "lat": 1.334184,
+      "lng": 103.767373,
+      "speed_kmh": 33,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:13:00+08:00",
+      "lat": 1.327822,
+      "lng": 103.766682,
+      "speed_kmh": 40,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:14:20+08:00",
+      "lat": 1.321461,
+      "lng": 103.765991,
+      "speed_kmh": 31,
+      "status": "in_trip"
+    },
+    {
+      "timestamp": "2026-10-13T10:15:40+08:00",
+      "lat": 1.3151,
+      "lng": 103.7653,
+      "speed_kmh": 0,
+      "status": "trip_completed"
+    }
+  ],
+  "chat_logs": [
+    {
+      "timestamp": "2026-10-13T10:03:00+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "Hi, I've arrived at Jurong East MRT. BYD Atto 3 (SNK 3350 X)."
+    },
+    {
+      "timestamp": "2026-10-13T10:04:00+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Coming down now, give me a minute."
+    },
+    {
+      "timestamp": "2026-10-13T10:10:20+08:00",
+      "sender": "rider",
+      "type": "message",
+      "content": "Are we going the right way? This seems longer than usual."
+    },
+    {
+      "timestamp": "2026-10-13T10:10:50+08:00",
+      "sender": "driver",
+      "type": "message",
+      "content": "I know this area well, it's fine."
+    },
+    {
+      "timestamp": "2026-10-13T10:15:40+08:00",
+      "sender": "system",
+      "type": "system",
+      "content": "Trip completed. Fare: $7.48 (metered, RydeTAXI). Distance: 5.69 km."
+    }
+  ],
+  "app_events": [
+    {
+      "timestamp": "2026-10-13T09:53:00+08:00",
+      "event_type": "booking_confirmed",
+      "details": "Rider R-9118 booked trip TRIP-2026-11019 from Jurong East MRT to Clementi Mall. Scheduled pickup 10:05. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-13T09:53:15+08:00",
+      "event_type": "driver_assigned",
+      "details": "Driver D-8118 (Poh Cheng Kok, BYD Atto 3 (SNK 3350 X)) assigned. Service type: RydeTAXI."
+    },
+    {
+      "timestamp": "2026-10-13T10:03:00+08:00",
+      "event_type": "driver_arrived",
+      "details": "Driver GPS within 10m of pickup point. Speed 0 km/h. Auto-arrival confirmed."
+    },
+    {
+      "timestamp": "2026-10-13T10:05:00+08:00",
+      "event_type": "trip_started",
+      "details": "Rider boarded. Trip started. Metered fare activated. Flag-down: $3.50. Per-km rate: $0.70."
+    },
+    {
+      "timestamp": "2026-10-13T10:15:40+08:00",
+      "event_type": "trip_completed",
+      "details": "Trip completed at Clementi Mall. Total distance: 5.69 km. Total fare: $7.48."
+    },
+    {
+      "timestamp": "2026-10-13T10:15:45+08:00",
+      "event_type": "fare_charged",
+      "details": "Fare of $7.48 charged to rider payment method (e-wallet). No surge applied."
+    },
+    {
+      "timestamp": "2026-10-13T10:45:40+08:00",
+      "event_type": "dispute_filed",
+      "details": "Rider filed route_deviation dispute."
+    }
+  ]
+}
