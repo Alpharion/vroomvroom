@@ -221,3 +221,64 @@ def test_parse_model_reply_strips_leading_text():
     ruling = parse_model_reply(reply, Ruling)
     assert isinstance(ruling, Ruling)
     assert ruling.outcome == "charge_upheld"
+
+
+# ---- Hung requests are retried ----
+
+
+def _flaky_transport(hangs: int, seen: list) -> httpx.MockTransport:
+    """Time out the first *hangs* requests, then return the normal SSE body."""
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(json.loads(request.content))
+        if len(seen) <= hangs:
+            raise httpx.ReadTimeout("no data", request=request)
+        return httpx.Response(200, content=_MOCK_SSE_BODY.encode(),
+                              headers={"content-type": "text/event-stream"})
+    return httpx.MockTransport(handler)
+
+
+@pytest.mark.asyncio
+async def test_hung_request_retried_with_fresh_ids(tmp_path):
+    seen: list = []
+    with _patch_env(ADP_APP_KEY="test-key-not-real", USE_MOCK_LLM="false"):
+        result = await chat(_AGENT, _SYSTEM_PROMPT, _USER_MESSAGE,
+                            cache_dir=tmp_path, transport=_flaky_transport(2, seen))
+    assert result.text == "PONG"
+    assert len(seen) == 3
+    assert len({b["RequestId"] for b in seen}) == 3
+    assert len({b["ConversationId"] for b in seen}) == 3
+
+
+@pytest.mark.asyncio
+async def test_request_hanging_every_time_raises_clear_error(tmp_path):
+    seen: list = []
+    with _patch_env(ADP_APP_KEY="test-key-not-real", USE_MOCK_LLM="false"):
+        with pytest.raises(LLMError, match="ADP did not respond for judge after 3 attempts"):
+            await chat(_AGENT, _SYSTEM_PROMPT, _USER_MESSAGE,
+                       cache_dir=tmp_path, transport=_flaky_transport(3, seen))
+    assert len(seen) == 3
+
+
+@pytest.mark.asyncio
+async def test_retry_switches_to_fallback_model(tmp_path):
+    """The first model hangs; the retry asks ADP for the fallback model."""
+    seen: list = []
+    env = {"ADP_APP_KEY": "test-key-not-real", "USE_MOCK_LLM": "false",
+           "ADP_MODEL_NAME": "DeepSeek-V3.2", "ADP_FALLBACK_MODEL_NAME": "Kimi-K2.5"}
+    with _patch_env(**env):
+        result = await chat(_AGENT, _SYSTEM_PROMPT, _USER_MESSAGE,
+                            cache_dir=tmp_path, transport=_flaky_transport(1, seen))
+    assert result.text == "PONG"
+    assert [b["ModelName"] for b in seen] == ["DeepSeek-V3.2", "Kimi-K2.5"]
+
+
+@pytest.mark.asyncio
+async def test_no_model_name_by_default(tmp_path):
+    """Without the env vars, the app's own model is used (no ModelName sent)."""
+    seen: list = []
+    env = {"ADP_APP_KEY": "test-key-not-real", "USE_MOCK_LLM": "false",
+           "ADP_MODEL_NAME": "", "ADP_FALLBACK_MODEL_NAME": ""}
+    with _patch_env(**env):
+        await chat(_AGENT, _SYSTEM_PROMPT, _USER_MESSAGE,
+                   cache_dir=tmp_path, transport=_flaky_transport(0, seen))
+    assert "ModelName" not in seen[0]

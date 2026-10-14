@@ -175,6 +175,18 @@ Outcome = Literal[
 ]
 
 
+ClaimVerdict = Literal["consistent", "contradicted", "unverifiable"]
+
+
+class ClaimCheck(_Strict):
+    """One factual claim from the filer's description, checked against records."""
+
+    claim: str  # what the filer says, e.g. "I paid $50"
+    record: str  # what Ryde's records show, e.g. "Charged S$5.00 (cancellation fee)"
+    evidence_refs: list[str] = []  # e.g. "fare_validate.actual_fare_sgd"
+    verdict: ClaimVerdict
+
+
 class Ruling(_Strict):
     dispute_id: str
     outcome: Outcome
@@ -186,6 +198,9 @@ class Ruling(_Strict):
     conduct_flag: bool = False
     escalated: bool = False
     escalation_reason: str | None = None
+    # The filer's claims checked against the records by the Judge. Reported
+    # only: outcome and amount always come from the records via code.
+    claim_checks: list[ClaimCheck] = []
 
     @model_validator(mode="after")
     def _escalation_consistent(self):

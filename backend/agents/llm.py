@@ -31,7 +31,11 @@ _ADP_CHAT_URL = os.environ.get(
     "ADP_CHAT_URL", "https://wss.lke.tencentcloud.com/adp/v2/chat",
 )
 _VISITOR_ID = "vroomvroom-backend"
-_TIMEOUT = 90.0
+# This long without a byte means the request has hung: give up and retry.
+# The Judge's large prompt can take Kimi-K2.5 over 30 s before the first
+# byte, so 60 s; a stalled model (DeepSeek-V3.2 on 14 Oct 2026) never answers.
+_TIMEOUT = httpx.Timeout(connect=10.0, read=60.0, write=10.0, pool=10.0)
+_ATTEMPTS = 3
 _CACHE_DIR = Path(__file__).resolve().parents[1] / ".llm_cache"
 
 # Per-agent env-var suffix mapping (uppercase, matches .env conventions).
@@ -181,6 +185,21 @@ def _parse_sse_stream(lines: list[str]) -> tuple[str, dict[str, Any] | None]:
 # ---------- HTTP call ----------
 
 
+def _model_for_attempt(attempt: int) -> str | None:
+    """Model to request on *attempt* (1-based); None means the app's default.
+
+    ADP_MODEL_NAME overrides the app's model for every call.  Retries use
+    ADP_FALLBACK_MODEL_NAME when set, so a call that hangs on one model (as
+    DeepSeek-V3.2 did on 14 Oct 2026) is retried on another instead of the
+    same stalled one.
+    """
+    primary = os.environ.get("ADP_MODEL_NAME") or None
+    fallback = os.environ.get("ADP_FALLBACK_MODEL_NAME") or None
+    if attempt > 1 and fallback:
+        return fallback
+    return primary
+
+
 async def _call_adp(
     agent: str,
     system_prompt: str,
@@ -189,9 +208,7 @@ async def _call_adp(
 ) -> LLMResult:
     """Make a live ADP call and return an ``LLMResult``."""
     appkey = _get_appkey(agent)
-    body = {
-        "RequestId": uuid.uuid4().hex,
-        "ConversationId": uuid.uuid4().hex,
+    base_body = {
         "AppKey": appkey,
         "Contents": [{"Type": "text", "Text": user_message}],
         "VisitorId": _VISITOR_ID,
@@ -199,7 +216,12 @@ async def _call_adp(
         "Stream": "enable",
     }
 
-    async def _do_request(client: httpx.AsyncClient) -> list[str]:
+    async def _do_request(client: httpx.AsyncClient, attempt: int) -> list[str]:
+        # Fresh IDs per attempt, so a retry is never mistaken for the stuck request.
+        body = {**base_body, "RequestId": uuid.uuid4().hex, "ConversationId": uuid.uuid4().hex}
+        model = _model_for_attempt(attempt)
+        if model:
+            body["ModelName"] = model
         lines: list[str] = []
         async with client.stream("POST", _ADP_CHAT_URL, json=body) as resp:
             if resp.status_code >= 500:
@@ -212,15 +234,25 @@ async def _call_adp(
                 lines.append(line)
         return lines
 
-    # Retry once on network error or 5xx.
+    # Retry on a hung request (timeout), network error or 5xx.
     async with httpx.AsyncClient(
         timeout=_TIMEOUT, transport=transport,
     ) as client:
-        try:
-            lines = await _do_request(client)
-        except (httpx.HTTPStatusError, httpx.HTTPError) as exc:
-            logger.info("Retrying %s after error: %s", agent, exc)
-            lines = await _do_request(client)
+        for attempt in range(1, _ATTEMPTS + 1):
+            try:
+                lines = await _do_request(client, attempt)
+                break
+            except httpx.HTTPError as exc:
+                if attempt == _ATTEMPTS:
+                    raise LLMError(
+                        f"ADP did not respond for {agent} after {_ATTEMPTS} attempts "
+                        f"({type(exc).__name__})."
+                    ) from exc
+                logger.warning(
+                    "Retrying %s (attempt %d of %d, model %s) after %s",
+                    agent, attempt + 1, _ATTEMPTS,
+                    _model_for_attempt(attempt + 1) or "app default", type(exc).__name__,
+                )
 
     text, stat_info = _parse_sse_stream(lines)
     return LLMResult(

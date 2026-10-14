@@ -37,17 +37,26 @@ def load_trip_geo(dispute_id: str) -> dict[str, Any] | None:
     return None
 
 
+# RGB versions of the theme's --plum, --accent and --fg, per mode, so the
+# map matches the legend and stays readable on the dark basemap.
+_MAP_COLORS = {
+    "light": {"planned": [91, 42, 134], "actual": [224, 53, 111], "points": [42, 24, 34]},
+    "dark": {"planned": [169, 155, 196], "actual": [217, 128, 158], "points": [232, 228, 231]},
+}
+
+
 def render_route_map(geo: dict[str, Any]) -> None:
+    colors = _MAP_COLORS["dark" if is_dark() else "light"]
     layers = []
     if len(geo["planned"]) >= 2:
         layers.append(pdk.Layer(
             "PathLayer", [{"path": geo["planned"]}], get_path="path",
-            get_color=[91, 42, 134], width_min_pixels=4,
+            get_color=colors["planned"], width_min_pixels=4,
         ))
     if len(geo["actual"]) >= 2:
         layers.append(pdk.Layer(
             "PathLayer", [{"path": geo["actual"]}], get_path="path",
-            get_color=[224, 53, 111], width_min_pixels=4,
+            get_color=colors["actual"], width_min_pixels=4,
         ))
     points = [
         {"pos": [p["lng"], p["lat"]], "name": p.get("name", label)}
@@ -57,7 +66,7 @@ def render_route_map(geo: dict[str, Any]) -> None:
     points += [{"pos": pt, "name": "GPS point"} for pt in geo["actual"]]
     layers.append(pdk.Layer(
         "ScatterplotLayer", points, get_position="pos", get_radius=40,
-        get_fill_color=[42, 24, 34], pickable=True,
+        get_fill_color=colors["points"], pickable=True,
     ))
     all_pts = geo["planned"] + geo["actual"] or [p["pos"] for p in points]
     if not all_pts:
@@ -72,8 +81,8 @@ def render_route_map(geo: dict[str, Any]) -> None:
         map_style="dark" if is_dark() else "light",
     ))
     st.markdown(
-        '<div class="vp-legend"><span><i style="background:#5b2a86"></i>Planned route</span>'
-        '<span><i style="background:#e0356f"></i>Actual GPS path</span>'
-        '<span><i style="background:#2a1822"></i>Pickup, drop-off and GPS points</span></div>',
+        '<div class="vp-legend"><span><i style="background:var(--plum)"></i>Planned route</span>'
+        '<span><i style="background:var(--accent)"></i>Actual GPS path</span>'
+        '<span><i style="background:var(--fg)"></i>Pickup, drop-off and GPS points</span></div>',
         unsafe_allow_html=True,
     )

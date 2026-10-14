@@ -15,10 +15,15 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from agents.advocates import _ref_is_valid
 from agents.context import case_summary
 from agents.llm import LLMError, chat, parse_model_reply
-from app.policy_constants import SPOT_CHECK_THRESHOLD
-from schemas import AdvocateBrief, DisputeCase, EvidenceOutput, Ruling
+from app.policy_constants import (
+    DEVIATION_AUTO_RULE_KM,
+    ROUTE_DEVIATION_CONFIDENCE_THRESHOLD,
+    SPOT_CHECK_THRESHOLD,
+)
+from schemas import AdvocateBrief, ClaimCheck, DisputeCase, EvidenceOutput, Ruling
 from tools.no_show_check import compute_no_show_outcome
 from tools.route_deviation import compute_route_deviation_outcome
 from tools.safety_check import safety_override
@@ -35,6 +40,8 @@ class JudgeDecision(BaseModel):
     clauses_cited: list[str] = Field(min_length=1)
     explanation_rider: str
     explanation_driver: str
+    # Defaults to empty so a reply that omits it doesn't fail the dispute.
+    claim_checks: list[ClaimCheck] = []
 
 
 _SYSTEM_PROMPT = """\
@@ -61,6 +68,24 @@ Weigh both advocates' briefs equally, regardless of order or length \
 (E-1.2).
 
 Base your confidence on how complete and clear the evidence is.
+
+Check the filer's account against the records. The dispute description \
+(case_summary.dispute_ticket.description) is what the filer says happened; \
+it is a claim, not evidence. For each factual claim in it (amounts paid or \
+charged, times, waiting, locations, distances, contact, what was said), add \
+one entry to `claim_checks`:
+- `claim`: the claim in a few words, e.g. "Paid $50 for the trip".
+- `record`: what the records show, quoting the value, e.g. "Charged \
+S$5.00 (cancellation fee)".
+- `evidence_refs`: the fields you compared it with, e.g. \
+fare_validate.actual_fare_sgd, chat_logs.3, trip_data.cancellation_time.
+- `verdict`: "consistent" if the records support it, "contradicted" if \
+they show otherwise, "unverifiable" if the records do not cover it. \
+"consistent" and "contradicted" need at least one evidence ref.
+Skip opinions and requests ("I want a refund"). If there are no factual \
+claims, return an empty list. Claims never change the outcome or amount; \
+when a claim is contradicted, say so plainly in the filer's explanation \
+(e.g. "You mentioned paying $50; Ryde's records show a S$5.00 charge.").
 
 The explanations must match the outcome that your findings produce in \
 the outcome table provided.
@@ -121,6 +146,41 @@ def _build_user_message(
         "outcome_table": outcome_table_or_precomputed,
     }
     return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
+def _claim_ref_problems(
+    decision: JudgeDecision,
+    evidence: list[EvidenceOutput],
+    summary: dict[str, Any],
+) -> list[str]:
+    """Describe claim checks citing fields that don't exist, or lacking refs."""
+    problems: list[str] = []
+    for check in decision.claim_checks:
+        bad = [r for r in check.evidence_refs if not _ref_is_valid(r, evidence, summary)]
+        if bad:
+            problems.append(
+                f"claim_checks: invalid evidence refs {bad} for claim '{check.claim}'."
+            )
+        elif check.verdict != "unverifiable" and not check.evidence_refs:
+            problems.append(
+                f"claim_checks: '{check.verdict}' claim '{check.claim}' needs an evidence ref."
+            )
+    return problems
+
+
+def _sanitize_claim_checks(
+    checks: list[ClaimCheck],
+    evidence: list[EvidenceOutput],
+    summary: dict[str, Any],
+) -> list[ClaimCheck]:
+    """After the retry: drop invalid refs; a verdict left unsupported becomes
+    "unverifiable", so the report never shows an uncited verdict."""
+    cleaned = []
+    for check in checks:
+        refs = [r for r in check.evidence_refs if _ref_is_valid(r, evidence, summary)]
+        verdict = check.verdict if refs else "unverifiable"
+        cleaned.append(check.model_copy(update={"evidence_refs": refs, "verdict": verdict}))
+    return cleaned
 
 
 def _validate_decision(
@@ -218,6 +278,7 @@ async def run_judge(
         driver_first=driver_first,
     )
 
+    summary = case_summary(case)
     last_error: str | None = None
     for attempt in range(2):
         msg = user_message
@@ -233,11 +294,21 @@ async def run_judge(
         try:
             decision = parse_model_reply(result.text, JudgeDecision)
             _validate_decision(decision, clauses, dispute_type)
-            break
         except LLMError as exc:
             last_error = str(exc)
             if attempt == 1:
                 raise
+            continue
+
+        claim_problems = _claim_ref_problems(decision, evidence, summary)
+        if not claim_problems:
+            break
+        if attempt == 1:
+            decision = decision.model_copy(update={
+                "claim_checks": _sanitize_claim_checks(decision.claim_checks, evidence, summary),
+            })
+            break
+        last_error = "\n".join(claim_problems)
     else:
         raise LLMError("Judge failed after retry.")
 
@@ -282,18 +353,29 @@ async def run_judge(
             )
         elif missing:
             escalation_reason = "Missing evidence: " + ", ".join(missing)
+        elif "RD-2.8" in formula_clauses:
+            escalation_reason = (
+                f"Route was {facts['excess_distance_km']:.2f} km longer than the "
+                f"baseline, over the {DEVIATION_AUTO_RULE_KM:g} km limit for "
+                "automatic rulings (RD-2.8)"
+            )
         else:
             escalation_reason = "[Judge] Escalation required"
 
-    # Low confidence forces escalation (E-1.6).
-    if decision.confidence < SPOT_CHECK_THRESHOLD:
+    # Low confidence forces escalation (E-1.6).  Route deviation rulings
+    # need at least 80% (organiser policy v2.1 §6.2).
+    required = SPOT_CHECK_THRESHOLD
+    if dispute_type == "route_deviation":
+        required = max(required, ROUTE_DEVIATION_CONFIDENCE_THRESHOLD)
+    if decision.confidence < required:
+        low = f"Low confidence ({decision.confidence:.0%}, needs {required:.0%})"
         outcome = "escalate"
         amount = 0.0
         escalated = True
         if escalation_reason is None:
-            escalation_reason = "Low confidence"
+            escalation_reason = low
         else:
-            escalation_reason = "Low confidence; " + escalation_reason
+            escalation_reason = low + "; " + escalation_reason
 
     ruling = Ruling(
         dispute_id=dispute_id,
@@ -303,6 +385,7 @@ async def run_judge(
         clauses_cited=merged_clauses,
         explanation_rider=decision.explanation_rider,
         explanation_driver=decision.explanation_driver,
+        claim_checks=decision.claim_checks,
         conduct_flag=conduct,
         escalated=escalated,
         escalation_reason=escalation_reason,

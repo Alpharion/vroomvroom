@@ -23,6 +23,7 @@ from pydantic import BaseModel
 from agents.graph import dispute_graph
 from app.review_queue import ReviewDecision, review_queue
 from schemas import AdvocateBrief, AgentLogMessage, Argument, DisputeCase, EvidenceOutput, Ruling
+from schemas.models import DisputeType, Side
 from tools.history_lookup import history_lookup
 from tools.no_show_check import compute_no_show_outcome, no_show_check
 from tools.route_deviation import compute_route_deviation_outcome, route_deviation
@@ -50,17 +51,20 @@ _TC_PREFIX_RE = re.compile(r"^(TC-\d+)")
 
 
 class DisputeTicketRequest(BaseModel):
-    """Lightweight dispute-ticket model: only dispute_id is required.
+    """The dispute as filed in the UI form: only dispute_id is required.
 
-    Other fields are accepted but ignored. We deliberately do NOT validate
-    against schemas.DisputeTicket because it requires filed_at and status
-    which the frontend does not send.
+    dispute_id picks the trip record (GPS, chat logs, fare, histories) from
+    data/, standing in for Ryde's trip databases.  What the filer entered
+    (filed_by, dispute_type, description) replaces the stored ticket fields;
+    see ``_apply_form``.  We deliberately do NOT validate against
+    schemas.DisputeTicket because it requires filed_at and status, which
+    the frontend does not send.
     """
 
     dispute_id: str
-    trip_id: str | None = None
-    filed_by: str | None = None
-    dispute_type: str | None = None
+    trip_id: str | None = None  # informational; the record is found by dispute_id
+    filed_by: Side | None = None
+    dispute_type: DisputeType | None = None
     description: str | None = None
 
 
@@ -136,6 +140,28 @@ def _lookup_case(dispute_id: str) -> DisputeCase:
     if case is None:
         raise HTTPException(status_code=404, detail=f"Unknown dispute_id: {dispute_id}")
     return case
+
+
+def _apply_form(case: DisputeCase, form: DisputeTicketRequest) -> DisputeCase:
+    """Return *case* with the filer's own entries from the form.
+
+    The trip evidence stays as recorded; the filer's role, dispute type and
+    description ("What happened, in your words") are what the agents, the
+    safety check and the review queue see.  Blank fields keep the stored
+    value.  The cached case in ``_CASE_INDEX`` is never modified.
+    """
+    updates: dict[str, Any] = {}
+    if form.filed_by:
+        updates["filed_by"] = form.filed_by
+    if form.dispute_type:
+        updates["dispute_type"] = form.dispute_type
+    if form.description and form.description.strip():
+        updates["description"] = form.description.strip()
+    if not updates:
+        return case
+    return case.model_copy(
+        update={"dispute_ticket": case.dispute_ticket.model_copy(update=updates)}
+    )
 
 
 # ---------- Mock agent log ----------
@@ -418,7 +444,7 @@ async def resolve_dispute(req: ResolveRequest):
 
     Runs the real agents (LangGraph) unless ``USE_STUB_AGENTS=true``.
     """
-    case = _lookup_case(req.dispute_ticket.dispute_id)
+    case = _apply_form(_lookup_case(req.dispute_ticket.dispute_id), req.dispute_ticket)
     if os.environ.get("USE_STUB_AGENTS", "").lower() == "true":
         stream = _stub_stream(case)
     else:

@@ -121,3 +121,87 @@ def test_llm_failure_streams_error_line():
     lines = _post("DISP-002", failing_chat)
     assert lines[-1] == {"type": "error", "content": "App key invalid"}
     assert not any(l["type"] == "ruling_data" for l in lines)
+
+
+# ---------- The filer's form entries reach the agents ----------
+
+
+def _advocate_case_summary(seen: list) -> dict:
+    msg = next(m for agent, m in seen if agent == "rider_advocate")
+    return json.loads(msg)["case_summary"]["dispute_ticket"]
+
+
+def test_form_description_and_role_reach_the_agents():
+    seen: list = []
+    typed = "I waited outside the main entrance the whole time and nobody came."
+    _post("DISP-002", _fake_chat("no_show_check.total_wait_min", "NS-1.4", seen=seen),
+          **{"dispute_ticket": {"dispute_id": "DISP-002", "description": typed, "filed_by": "driver"}})
+    ticket = _advocate_case_summary(seen)
+    assert ticket["description"] == typed
+    assert ticket["filed_by"] == "driver"
+
+
+def test_typed_threat_escalates_as_safety_incident(review_queue):
+    """DISP-002's stored text has no threat; the filer types one in the form."""
+    typed = "The driver threatened me when I complained about the fee."
+    lines = _post("DISP-002", _fake_chat("no_show_check.total_wait_min", "NS-1.4"),
+                  **{"dispute_ticket": {"dispute_id": "DISP-002", "description": typed}})
+    safety = next(l["data"] for l in lines if l["type"] == "evidence_data" and l["data"]["tool"] == "safety_check")
+    assert safety["facts"]["safety_incident"] is True
+    assert safety["facts"]["flagged_messages"][-1] == {"sender": "dispute_description", "content": typed}
+    ruling = next(l["data"] for l in lines if l["type"] == "ruling_data")
+    assert ruling["outcome"] == "escalate"
+    [item] = review_queue.list_items()
+    assert item["description"] == typed
+    assert item["priority"] == "high"
+
+
+def test_blank_form_description_keeps_stored_text():
+    from app.main import _CASE_INDEX
+
+    seen: list = []
+    _post("DISP-002", _fake_chat("no_show_check.total_wait_min", "NS-1.4", seen=seen),
+          **{"dispute_ticket": {"dispute_id": "DISP-002", "description": "   "}})
+    stored = _CASE_INDEX["DISP-002"].dispute_ticket.description
+    assert _advocate_case_summary(seen)["description"] == stored
+
+
+def test_form_entries_do_not_change_the_stored_case():
+    from app.main import _CASE_INDEX
+
+    before = _CASE_INDEX["DISP-002"].dispute_ticket.description
+    _post("DISP-002", _fake_chat("no_show_check.total_wait_min", "NS-1.4"),
+          **{"dispute_ticket": {"dispute_id": "DISP-002", "description": "Something else entirely."}})
+    assert _CASE_INDEX["DISP-002"].dispute_ticket.description == before
+
+
+def test_invalid_form_role_rejected():
+    resp = client.post("/api/disputes/resolve",
+                       json={"dispute_ticket": {"dispute_id": "DISP-002", "filed_by": "passenger"}})
+    assert resp.status_code == 422
+
+
+def test_typed_claim_checked_in_ruling_data():
+    """The rider types 'I paid $50'; the ruling reports it against the record."""
+    base_chat = _fake_chat("no_show_check.total_wait_min", "NS-1.4")
+    seen: list = []
+
+    async def chat(agent, system_prompt, user_message, **kwargs):
+        seen.append((agent, user_message))
+        result = await base_chat(agent, system_prompt, user_message)
+        if agent != "judge":
+            return result
+        reply = json.loads(result.text)
+        reply["claim_checks"] = [{
+            "claim": "Paid $50", "record": "Charged S$5.00 (cancellation fee)",
+            "evidence_refs": ["fare_validate.actual_fare_sgd"], "verdict": "contradicted",
+        }]
+        return _result(reply)
+
+    typed = "The driver never came and I paid $50 for nothing."
+    lines = _post("DISP-002", chat, **{"dispute_ticket": {"dispute_id": "DISP-002", "description": typed}})
+    judge_msg = json.loads(next(m for a, m in seen if a == "judge"))
+    assert judge_msg["case_summary"]["dispute_ticket"]["description"] == typed
+    ruling = lines[-1]["data"]
+    assert ruling["amount_sgd"] == 5.0
+    assert ruling["claim_checks"][0]["verdict"] == "contradicted"

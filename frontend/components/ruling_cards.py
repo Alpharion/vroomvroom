@@ -118,6 +118,41 @@ def render_ruling_card(
             st.markdown(policy_refs_html(clauses, popup_align), unsafe_allow_html=True)
 
 
+_CLAIM_VERDICTS = {
+    "consistent": ("good", "✓ Matches records"),
+    "contradicted": ("bad", "✗ Records show otherwise"),
+    "unverifiable": ("warn", "? Not in records"),
+}
+
+
+def claim_checks_html(ruling: dict[str, Any], said: str = "You said") -> str:
+    """The filer's claims checked against Ryde's records, or "" when there are none.
+
+    Claims are reported only: the outcome and amount always come from the records.
+    *said* labels the filer's words: "You said" for the filer, "Filer said" for reviewers.
+    """
+    checks = ruling.get("claim_checks") or []
+    if not checks:
+        return ""
+    rows = []
+    for check in checks:
+        cls, label = _CLAIM_VERDICTS.get(check.get("verdict"), _CLAIM_VERDICTS["unverifiable"])
+        refs = "".join(f"<code>{html.escape(r)}</code>" for r in check.get("evidence_refs") or [])
+        rows.append(
+            f'<div class="vp-claim"><span class="vp-pill {cls}">{label}</span>'
+            f'<div><p class="vp-claim-said"><b>{html.escape(said)}:</b> {html.escape(check.get("claim", ""))}</p>'
+            f'<p class="vp-claim-record"><b>Ryde\'s records:</b> {html.escape(check.get("record", ""))}</p>'
+            + (f'<p class="vp-claim-refs">{refs}</p>' if refs else "")
+            + "</div></div>"
+        )
+    return (
+        '<div class="vp-claims"><span class="vp-refs-label">Checked against Ryde\'s records</span>'
+        + "".join(rows)
+        + '<p class="vp-claim-note">Your account is compared with the trip records. '
+        "The decision is based on the records.</p></div>"
+    )
+
+
 _TILE_KEYS = {
     "no_show_check": [
         ("total_wait_min", "min", "Driver waited"),

@@ -43,8 +43,10 @@ streamlit run app.py
 ```
 
 The UI builds against mock data (`mock_ruling.json`, `mock_agent_log.json`) so it
-is not blocked on the backend. Demo mode (sidebar toggle, default on) replays them. Turn it off and, with the FastAPI backend running, the courtroom
-log streams real agent messages from `POST /api/disputes/resolve`.
+is not blocked on the backend. By default the courtroom log streams real agent
+messages from `POST /api/disputes/resolve`, so the FastAPI backend must be running.
+Demo mode (sidebar → Developer tools, default off) replays recorded hearings instead;
+it does not read what the filer types.
 
 Copy `.streamlit/secrets.example.toml` to `.streamlit/secrets.toml` to point at a
 non-default backend URL.
