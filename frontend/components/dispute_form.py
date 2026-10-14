@@ -6,22 +6,59 @@ import streamlit as st
 from cases import case_label, cases_for_type, list_test_scenarios
 from state import load_dispute_types
 
+# Wording per role: the same two dispute types, seen from each side of the trip.
 TYPE_SUB = {
-    "no_show_charge": "The driver says I did not turn up",
-    "route_deviation": "The fare is higher than it should be",
+    "rider": {
+        "no_show_charge": "The driver says I did not turn up",
+        "route_deviation": "The fare is higher than it should be",
+    },
+    "driver": {
+        "no_show_charge": "The rider says they were at the pickup point",
+        "route_deviation": "The rider says the fare is too high",
+    },
 }
 
 TYPE_HELP = {
-    "no_show_charge": "I was charged a no-show fee",
-    "route_deviation": "The driver took a longer route",
+    "rider": {
+        "no_show_charge": "I was charged a no-show fee",
+        "route_deviation": "The driver took a longer route",
+    },
+    "driver": {
+        "no_show_charge": "A rider is disputing my no-show fee",
+        "route_deviation": "A rider says I took a longer route",
+    },
 }
+
+DRIVER_DESCRIPTION = {
+    "no_show_charge": (
+        "The rider is disputing the no-show fee for my trip from {pickup} to {dropoff} on {date}. "
+        "I believe the fee is correct. I want the charge to stand."
+    ),
+    "route_deviation": (
+        "The rider says I took a longer route from {pickup} to {dropoff} on {date}. "
+        "I followed the route I believed was best. I want the fare to stand."
+    ),
+}
+
+
+def _role() -> str:
+    return st.session_state.get("form_filed_by") or "rider"
+
+
+def _default_description(case: dict) -> str:
+    """The trip record's own text is the rider's words, so the driver gets a short draft of their own side."""
+    if _role() == "driver":
+        return DRIVER_DESCRIPTION[case["dispute_type"]].format(
+            pickup=case["pickup"], dropoff=case["dropoff"], date=case["date"] or "the trip date"
+        )
+    return case["description"]
 
 
 def _apply_trip_defaults() -> None:
     """When the trip changes, show that trip's record as the description."""
     case = _selected_case()
     if case:
-        st.session_state.form_description = case["description"]
+        st.session_state.form_description = _default_description(case)
 
 
 def _on_type_change() -> None:
@@ -45,12 +82,13 @@ def render_dispute_form() -> dict | None:
     st.caption("I am the")
     filer = st.segmented_control(
         "I am the", ["rider", "driver"], default="rider", key="form_filed_by",
-        format_func=str.capitalize, label_visibility="collapsed",
+        format_func=str.capitalize, label_visibility="collapsed", on_change=_apply_trip_defaults,
     )
+    role = _role()
     st.radio(
         "What is this about?", types, key="form_dispute_type", on_change=_on_type_change,
-        format_func=lambda v: TYPE_HELP.get(v, v),
-        captions=[TYPE_SUB.get(t, "") for t in types],
+        format_func=lambda v: TYPE_HELP[role].get(v, v),
+        captions=[TYPE_SUB[role].get(t, "") for t in types],
     )
 
     options = cases_for_type(st.session_state.form_dispute_type)
@@ -59,7 +97,10 @@ def render_dispute_form() -> dict | None:
         "Which trip?", list(by_id), key="form_trip", on_change=_apply_trip_defaults,
         format_func=lambda i: case_label(by_id[i]),
     )
-    st.text_area("What happened, in your words", height=110, key="form_description")
+    st.text_area(
+        "What happened, in your words" if role == "rider" else "What happened, from your side",
+        height=110, key="form_description",
+    )
     st.caption("For this demo, the review uses the record we already hold for the trip you pick.")
 
     scenarios = {c["dispute_id"]: c for c in list_test_scenarios()}
