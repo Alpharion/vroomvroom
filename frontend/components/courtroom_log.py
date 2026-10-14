@@ -32,9 +32,19 @@ def _prettify(text: str) -> str:
     return text[:1].upper() + text[1:]
 
 
+# Advocates may also cite the case record itself, e.g. "chat_logs.3" or
+# "app_events.7.details"; label list items by position, counting from 1.
+_RECORD_LISTS = {"chat_logs": "Chat message", "app_events": "App event"}
+
+
 def humanize_ref(ref: str) -> str:
     """'no_show_check.driver_within_arrival_radius' -> 'Driver reached the pickup point'."""
     tool, _, rest = ref.partition(".")
+    first = rest.split(".")[0] if rest else ""
+    if tool in _RECORD_LISTS:
+        return f"{_RECORD_LISTS[tool]} {int(first) + 1}" if first.isdigit() else _RECORD_LISTS[tool] + "s"
+    if tool == "dispute_ticket" and first == "description":
+        return "The filer's description"
     key = rest.split(".")[-1] if rest else ""
     if tool == "history_lookup" and key in ("rider", "driver"):
         return f"{key.capitalize()} history"
