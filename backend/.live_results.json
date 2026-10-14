@@ -183,8 +183,75 @@
       "RD-2.7",
       "E-1.5"
     ],
-    "escalation_reason": "Low confidence; Missing evidence: gps_telemetry",
-    "duration_s": 15.3,
+    "escalation_reason": "Low confidence (65%, needs 80%); Missing evidence: gps_telemetry",
+    "duration_s": 19.2,
+    "error": null
+  },
+  {
+    "case_id": "TC-12",
+    "dispute_id": "DISP-002-T12",
+    "dispute_type": "no_show_charge",
+    "outcome": "charge_reversed",
+    "amount_sgd": 5.0,
+    "confidence": 0.95,
+    "escalated": false,
+    "clauses_cited": [
+      "NS-1.5",
+      "NS-1.7"
+    ],
+    "escalation_reason": null,
+    "duration_s": 27.6,
+    "error": null
+  },
+  {
+    "case_id": "TC-13",
+    "dispute_id": "DISP-001-T13",
+    "dispute_type": "route_deviation",
+    "outcome": "no_action",
+    "amount_sgd": 0.0,
+    "confidence": 0.95,
+    "escalated": false,
+    "clauses_cited": [
+      "RD-2.5",
+      "RD-2.2",
+      "RD-2.3",
+      "RD-2.4",
+      "RD-2.8"
+    ],
+    "escalation_reason": null,
+    "duration_s": 30.1,
+    "error": null
+  },
+  {
+    "case_id": "TC-14",
+    "dispute_id": "DISP-001-T14",
+    "dispute_type": "route_deviation",
+    "outcome": "escalate",
+    "amount_sgd": 0.0,
+    "confidence": 0.9,
+    "escalated": true,
+    "clauses_cited": [
+      "RD-2.8",
+      "E-1.5"
+    ],
+    "escalation_reason": "Route was 6.60 km longer than the baseline, over the 2 km limit for automatic rulings (RD-2.8)",
+    "duration_s": 27.7,
+    "error": null
+  },
+  {
+    "case_id": "TC-15",
+    "dispute_id": "DISP-001-T15",
+    "dispute_type": "route_deviation",
+    "outcome": "escalate",
+    "amount_sgd": 0.0,
+    "confidence": 0.95,
+    "escalated": true,
+    "clauses_cited": [
+      "S-1.1",
+      "S-1.2"
+    ],
+    "escalation_reason": "Safety incident: keyword: reckless, unsafe",
+    "duration_s": 19.1,
     "error": null
   }
 ]

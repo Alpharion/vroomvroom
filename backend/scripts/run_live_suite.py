@@ -1,4 +1,4 @@
-"""Run TC-01 through TC-11 against live ADP and collect results.
+"""Run TC-01 through TC-15 against live ADP and collect results.
 
 Usage (from backend/):
     USE_MOCK_LLM=false python scripts/run_live_suite.py
@@ -71,10 +71,10 @@ async def run_one(case_id: str) -> dict:
 
 
 async def main():
-    case_ids = [f"TC-{i:02d}" for i in range(1, 12)]
+    case_ids = [f"TC-{i:02d}" for i in range(1, 16)]
 
     print("=" * 70)
-    print("  Live ADP Integration Test Suite — TC-01 through TC-11")
+    print("  Live ADP Integration Test Suite — TC-01 through TC-15")
     print("=" * 70)
     print(f"  USE_MOCK_LLM={os.environ.get('USE_MOCK_LLM', 'not set')}")
     print(f"  Started: {time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
