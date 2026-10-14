@@ -18,21 +18,24 @@ _LIGHT = """
   --line:#f0d9e2; --line-strong:#d9a3b8; --line-input:#bf7a98; --accent:#e0356f; --accent-ink:#ffffff; --accent-soft:#fde1ec; --plum:#5b2a86;
   --rider:#0e8a82; --rider-soft:#dff4f1; --driver:#c26a12; --driver-soft:#fdeed8; --judge-soft:#eee4f8;
   --good:#1f8a4c; --warn:#b7791f; --warn-soft:#fbf0d9; --shadow:0 6px 24px rgba(120,40,80,.10);
+  --avatar-ink:#ffffff; --verdict-a:#d8326a; --verdict-b:#5b2a86; --review-a:#a8680f;
 """
+# Dark: neutral charcoal and muted, desaturated accents, so nothing glares.
 _DARK = """
-  --bg:#1a1015; --surface:#25161e; --surface-2:#301c27; --fg:#fbeef3; --muted:#b9a1ad;
-  --line:#5a3a50; --line-strong:#8f6680; --line-input:#8f6680; --accent:#ff5b94; --accent-ink:#2a0a17; --accent-soft:#4a1d33; --plum:#c9a2f5;
-  --rider:#4fd1c5; --rider-soft:#123532; --driver:#f0a04b; --driver-soft:#3b2712; --judge-soft:#2f2043;
-  --good:#5fd08a; --warn:#f0c060; --warn-soft:#3b2d12; --shadow:0 6px 24px rgba(0,0,0,.35);
+  --bg:#141315; --surface:#1c1b1e; --surface-2:#242227; --fg:#e8e4e7; --muted:#a29ba1;
+  --line:#34313a; --line-strong:#4c4852; --line-input:#5e5964; --accent:#d9809e; --accent-ink:#1b1218; --accent-soft:#33232b; --plum:#a99bc4;
+  --rider:#79aea7; --rider-soft:#1e2928; --driver:#c79e72; --driver-soft:#2b241c; --judge-soft:#25222d;
+  --good:#8dbb9b; --warn:#cdb17a; --warn-soft:#2b261b; --shadow:0 6px 24px rgba(0,0,0,.45);
+  --avatar-ink:#141315; --verdict-a:#5e3445; --verdict-b:#33294a; --review-a:#5a4626;
 """
 
 _FONTS = (
-    "@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700"
+    "@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700"
     "&family=Nunito+Sans:wght@400;600;700;800&display=swap');"
 )
 
 _CSS = """
-:root{--z-popup:1000010;--font-display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+:root{--z-popup:1000010;--font-display:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
       --font-body:'Nunito Sans',system-ui,-apple-system,'Segoe UI',sans-serif;}
 
 /* ---- Streamlit surfaces ---- */
@@ -192,7 +195,7 @@ _CSS = """
 .vp-msg.driver{margin-left:auto;grid-template-columns:minmax(0,1fr) 40px;}
 .vp-msg.driver .vp-avatar{order:2;}
 .vp-msg.judge{max-width:100%;margin-inline:auto;width:min(660px,100%);}
-.vp-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:#fff;}
+.vp-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:var(--avatar-ink);}
 .rider .vp-avatar{background:var(--rider);} .driver .vp-avatar{background:var(--driver);} .judge .vp-avatar{background:var(--plum);}
 .vp-bubble{font-size:.96rem;line-height:1.5;border-radius:18px;padding:12px 16px;min-width:0;overflow-wrap:anywhere;color:var(--fg);}
 .rider .vp-bubble{background:var(--rider-soft);border-top-left-radius:6px;}
@@ -228,9 +231,9 @@ _CSS = """
 .vp-typing i:nth-child(2){animation-delay:.15s;} .vp-typing i:nth-child(3){animation-delay:.3s;}
 
 /* ---- Verdict and ruling cards ---- */
-.vp-verdict{background:linear-gradient(135deg,#d8326a,#5b2a86);color:#fff;border-radius:26px;padding:26px;display:flex;gap:20px;
+.vp-verdict{background:linear-gradient(135deg,var(--verdict-a),var(--verdict-b));color:#fff;border-radius:26px;padding:26px;display:flex;gap:20px;
   align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:var(--shadow);animation:vp-pop .6s cubic-bezier(.2,1.3,.4,1) both;}
-.vp-verdict.review{background:linear-gradient(135deg,#a8680f,#5b2a86);}
+.vp-verdict.review{background:linear-gradient(135deg,var(--review-a),var(--verdict-b));}
 .vp-verdict h3{font-size:clamp(1.3rem,3.2vw,1.9rem);margin:0 0 4px;color:#fff!important;}
 .vp-verdict p{margin:0;color:#fff!important;opacity:.92;}
 .vp-amount{font-family:var(--font-display);font-weight:700;font-size:3rem;font-variant-numeric:tabular-nums;color:#fff;}
@@ -245,6 +248,16 @@ _CSS = """
 .vp-why{color:var(--fg);margin:8px 0;}
 .vp-refs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
 .vp-refs-label{font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-right:2px;}
+.vp-pill.bad{background:var(--accent-soft);color:var(--accent);}
+.vp-claims{margin-top:18px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface);}
+.vp-claim{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line);}
+.vp-claim:last-of-type{border-bottom:0;}
+.vp-claim p{margin:0 0 2px;}
+.vp-claim .vp-pill{white-space:nowrap;}
+.vp-claim-record{color:var(--muted);}
+.vp-claim-refs code{font-size:.75rem;margin-right:6px;}
+.vp-claim-note{margin:8px 0 0;font-size:.82rem;color:var(--muted);}
+@media (max-width:640px){.vp-claim{grid-template-columns:1fr;}}
 .vp-clause{position:relative;display:inline-block;font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;cursor:help;
   background:var(--surface);color:var(--fg);border:1px solid var(--line-strong);transition:border-color .15s,background .15s;}
 .vp-clause:hover,.vp-clause:focus{border-color:var(--accent);background:var(--accent-soft);outline:none;}
